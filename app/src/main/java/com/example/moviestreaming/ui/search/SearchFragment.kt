@@ -1,4 +1,4 @@
-package com.example.moviestreaming.ui.dashboard
+package com.example.moviestreaming.ui.search
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -6,27 +6,29 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
-import com.example.moviestreaming.databinding.FragmentDashboardBinding
+import com.example.moviestreaming.databinding.FragmentSearchBinding
+import dagger.hilt.android.AndroidEntryPoint
 
-class DashboardFragment : Fragment() {
+@AndroidEntryPoint
+class SearchFragment : Fragment() {
 
-    private var _binding: FragmentDashboardBinding? = null
+    private var _binding: FragmentSearchBinding? = null
     private val binding get() = _binding!!
+    private val searchViewModel: SearchViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val dashboardViewModel =
-            ViewModelProvider(this).get(DashboardViewModel::class.java)
 
-        _binding = FragmentDashboardBinding.inflate(inflater, container, false)
+        _binding = FragmentSearchBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
         val textView: TextView = binding.textDashboard
-        dashboardViewModel.text.observe(viewLifecycleOwner) {
+        searchViewModel.text.observe(viewLifecycleOwner) {
             textView.text = it
         }
         return root
