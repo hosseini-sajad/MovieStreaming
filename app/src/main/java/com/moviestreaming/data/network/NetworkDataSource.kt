@@ -1,7 +1,8 @@
 package com.moviestreaming.data.network
 
-import com.moviestreaming.data.dto.GenreResponse.Genre
+import com.moviestreaming.data.model.GenreEntity
+import kotlinx.coroutines.flow.Flow
 
 interface NetworkDataSource {
-    suspend fun getGenres(): List<Genre>
+    suspend fun getGenres(): Flow<List<GenreEntity>>
 }
