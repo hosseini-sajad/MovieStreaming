@@ -1,4 +1,4 @@
-package com.example.moviestreaming.ui.search
+package com.moviestreaming.ui.home
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -7,28 +7,27 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.ViewModelProvider
-import com.example.moviestreaming.databinding.FragmentSearchBinding
+import com.moviestreaming.databinding.FragmentHomeBinding
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class SearchFragment : Fragment() {
+class HomeFragment : Fragment() {
 
-    private var _binding: FragmentSearchBinding? = null
+    private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
-    private val searchViewModel: SearchViewModel by viewModels()
+    private val homeViewModel: HomeViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View {
 
-        _binding = FragmentSearchBinding.inflate(inflater, container, false)
+        _binding = FragmentHomeBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
-        val textView: TextView = binding.textDashboard
-        searchViewModel.text.observe(viewLifecycleOwner) {
+        val textView: TextView = binding.textHome
+        homeViewModel.text.observe(viewLifecycleOwner) {
             textView.text = it
         }
         return root

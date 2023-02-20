@@ -1,4 +1,4 @@
-package com.example.moviestreaming.ui.search
+package com.moviestreaming.ui.search
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

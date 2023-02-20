@@ -1,4 +1,4 @@
-package com.example.core.network
+package com.moviestreaming.data.network
 
 import retrofit2.http.GET
 

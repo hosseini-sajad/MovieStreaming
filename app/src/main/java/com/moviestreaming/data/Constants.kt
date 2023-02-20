@@ -1,4 +1,4 @@
-package com.example.core
+package com.moviestreaming.data
 
 object Constants {
     const val API_KEY_STRING = "api_key"

@@ -1,4 +1,4 @@
-package com.example.moviestreaming.ui.home
+package com.moviestreaming.ui.home
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
