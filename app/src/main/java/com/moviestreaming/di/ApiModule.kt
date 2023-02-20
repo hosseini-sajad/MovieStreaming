@@ -1,8 +1,8 @@
 package com.moviestreaming.di
 
-import com.moviestreaming.BuildConfig
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
+import com.moviestreaming.BuildConfig
 import com.moviestreaming.data.Constants.API_KEY
 import com.moviestreaming.data.Constants.API_KEY_STRING
 import com.moviestreaming.data.Constants.BASE_URL
@@ -40,9 +40,15 @@ object ApiModule {
     @Singleton
     fun provideOkHttpClient(networkTimeout: Long): OkHttpClient {
         val headerInterceptor = Interceptor { chain ->
+            val url = chain.request()
+                .url
+                .newBuilder()
+                .addQueryParameter(API_KEY_STRING, API_KEY)
+                .build()
+
             val request = chain.request()
                 .newBuilder()
-                .addHeader(API_KEY_STRING, API_KEY)
+                .url(url)
                 .build()
 
             chain.proceed(request)
