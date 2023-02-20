@@ -1,4 +1,6 @@
 package com.moviestreaming.data.model
 
-class Genre {
-}
+data class GenreEntity(
+    val id: Int,
+    val name: String
+)
