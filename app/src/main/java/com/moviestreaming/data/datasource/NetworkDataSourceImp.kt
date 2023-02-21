@@ -1,16 +1,16 @@
-package com.moviestreaming.datasource
+package com.moviestreaming.data.datasource
 
 import com.moviestreaming.data.network.ApiService
 import com.moviestreaming.data.network.NetworkDataSource
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
-class MovieNetworkDataSource @Inject constructor(private val apiService: ApiService):
+class NetworkDataSourceImp @Inject constructor(private val apiService: ApiService):
     NetworkDataSource {
     override suspend fun getGenres() = flow {
-        val genres = apiService.getAllGenre().genres.map {
+        apiService.getAllGenre().genres.map {
             it.toEntity()
         }
-        emit(genres)
+        emit(apiService.getAllGenre().genres)
     }
 }
