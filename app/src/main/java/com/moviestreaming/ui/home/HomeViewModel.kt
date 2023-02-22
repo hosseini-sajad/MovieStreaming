@@ -6,17 +6,18 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.moviestreaming.data.model.GenreEntity
 import com.moviestreaming.repository.MovieRepository
+import com.moviestreaming.utils.UiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(private val movieRepository: MovieRepository) : ViewModel() {
 
-    private val users = MutableStateFlow(HomeUiState.Success(emptyList()))
-    val user: StateFlow<HomeUiState> get() = users
+    private val mutableStateGenres = MutableStateFlow<UiState<List<GenreEntity>>>(UiState.Loading())
+    val genres = mutableStateGenres.asStateFlow()
 
     private val _text = MutableLiveData<String>().apply {
         value = "This is home Fragment"
@@ -26,7 +27,7 @@ class HomeViewModel @Inject constructor(private val movieRepository: MovieReposi
     fun getGenres() {
         viewModelScope.launch {
             movieRepository.getGenres().collect {
-                users.value = HomeUiState.Success(it)
+                mutableStateGenres.value = UiState.Success(it)
             }
         }
     }

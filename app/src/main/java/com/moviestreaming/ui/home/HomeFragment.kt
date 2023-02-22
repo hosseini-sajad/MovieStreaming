@@ -11,6 +11,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.moviestreaming.databinding.FragmentHomeBinding
+import com.moviestreaming.utils.UiState
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -30,24 +31,17 @@ class HomeFragment : Fragment() {
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
-        // Start a coroutine in the lifecycle scope
         viewLifecycleOwner.lifecycleScope.launch {
-            // repeatOnLifecycle launches the block in a new coroutine every time the
-            // lifecycle is in the STARTED state (or above) and cancels it when it's STOPPED.
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                // Trigger the flow and start listening for values.
-                // Note that this happens when lifecycle is STARTED and stops
-                // collecting when the lifecycle is STOPPED
-                homeViewModel.user.collect { uiState ->
-                    // New value received
+                homeViewModel.genres.collect { uiState ->
                     when (uiState) {
-                        is HomeUiState.Success -> {
-                            Log.d("JJJJJJJJ", "onCreateView: Yesssssss")
-                            uiState.news.onEach {
+                        is UiState.Success -> {
+                            uiState.data.onEach {
                                 Log.d("MMMMMMMMMM", "onCreateView: ${it.name}")
                             }
                         }
-                        is HomeUiState.Error -> Log.d("JJJJJJJJ", "onCreateView: Noooooooo")
+                        is UiState.Error -> Log.d("JJJJJJJJ", "onCreateView: Noooooooo")
+                        else -> Log.d("JJJJJJJJ", "onCreateView: Errorrrr")
                     }
                 }
             }
