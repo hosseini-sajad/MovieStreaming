@@ -12,13 +12,16 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import okhttp3.HttpUrl
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
+import okhttp3.Request
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
 import javax.inject.Singleton
+
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -40,18 +43,22 @@ object ApiModule {
     @Singleton
     fun provideOkHttpClient(networkTimeout: Long): OkHttpClient {
         val headerInterceptor = Interceptor { chain ->
-            val url = chain.request()
-                .url
-                .newBuilder()
+            val original: Request = chain.request()
+            val originalHttpUrl: HttpUrl = original.url
+
+            val url = originalHttpUrl.newBuilder()
                 .addQueryParameter(API_KEY_STRING, API_KEY)
                 .build()
 
-            val request = chain.request()
-                .newBuilder()
-                .url(url)
-                .build()
+            // Request customization: add request headers
 
-            chain.proceed(request)
+            // Request customization: add request headers
+            val requestBuilder: Request.Builder = original.newBuilder()
+                .url(url)
+
+            val request: Request = requestBuilder.build()
+
+            return@Interceptor chain.proceed(request)
         }
 
         val httpClient = OkHttpClient.Builder()
