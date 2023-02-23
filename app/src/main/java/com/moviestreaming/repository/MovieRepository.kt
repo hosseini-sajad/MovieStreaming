@@ -7,7 +7,7 @@ import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 class MovieRepository @Inject constructor(private val networkDataSource: NetworkDataSource) {
-    suspend fun getGenres() = networkDataSource.getGenres().map {
-        it.map { it.toEntity() }
+    suspend fun getTrending() = networkDataSource.getTrending().map {
+        it.map { trendingMovie -> trendingMovie.toEntity() }
     }.flowOn(IO)
 }

@@ -33,11 +33,11 @@ class HomeFragment : Fragment() {
 
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                homeViewModel.genres.collect { uiState ->
+                homeViewModel.trending.collect { uiState ->
                     when (uiState) {
                         is UiState.Success -> {
                             uiState.data.onEach {
-                                Log.d("MMMMMMMMMM", "onCreateView: ${it.name}")
+                                Log.d("MMMMMMMMMM", "onCreateView: ${it.title}")
                             }
                         }
                         is UiState.Error -> Log.d("JJJJJJJJ", "onCreateView: Noooooooo")

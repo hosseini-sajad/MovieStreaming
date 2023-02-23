@@ -1,9 +1,9 @@
 package com.moviestreaming.data.network
 
-import com.moviestreaming.data.dto.GenreResponse
+import com.moviestreaming.data.dto.TrendingResponse
 import retrofit2.http.GET
 
 interface ApiService {
-    @GET("genre/movie/list")
-    suspend fun getAllGenre(): GenreResponse
+    @GET("trending/all/week")
+    suspend fun getTrending(): TrendingResponse
 }

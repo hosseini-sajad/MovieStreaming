@@ -1,8 +1,8 @@
 package com.moviestreaming.data.model
 
-data class TrendingMovieEntity(
+data class TrendingEntity(
     val id: Int,
-    val name: String,
+    val title: String?,
     val image: String,
     val media_type: String
 )
