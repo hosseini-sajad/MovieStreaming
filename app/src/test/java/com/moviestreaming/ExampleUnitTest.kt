@@ -1,4 +1,4 @@
-package com.example.moviestreaming
+package com.moviestreaming
 
 import org.junit.Test
 
