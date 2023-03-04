@@ -4,6 +4,7 @@ import com.moviestreaming.data.datasource.FakeNetworkDataSource
 import com.moviestreaming.data.dto.TrendingResponse
 import com.moviestreaming.data.model.TrendingEntity
 import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertEquals
@@ -66,7 +67,7 @@ internal class MovieRepositoryTest() {
         "tv2"
     )
 
-    private val remoteTrending = flowOf(movie1, movie2)
+    private val remoteTrending = flowOf(listOf( movie1, movie2))
     private val remoteTrending2 = flowOf(movie3, movie4, movie4)
 
     private lateinit var networkDataSource: FakeNetworkDataSource
@@ -83,7 +84,7 @@ internal class MovieRepositoryTest() {
         runBlocking {
             val trending = movieRepository.getTrending()
 
-            assertEquals(trending.toList(), remoteTrending.toList().map { it.toEntity() })
+            assertEquals(remoteTrending.map { it.map { it.toEntity() } }.toList(), trending.toList())
         }
     }
 
