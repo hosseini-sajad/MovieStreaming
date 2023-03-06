@@ -1,10 +1,10 @@
-package com.moviestreaming.data.dto
+package com.moviestreaming.data.source.network.dto
 
 
 import androidx.annotation.Keep
 import com.google.gson.annotations.SerializedName
 import com.moviestreaming.data.model.TrendingEntity
-import com.moviestreaming.utils.DomainMapper
+import com.moviestreaming.utils.mapper.DomainMapper
 
 @Keep
 data class TrendingResponse(

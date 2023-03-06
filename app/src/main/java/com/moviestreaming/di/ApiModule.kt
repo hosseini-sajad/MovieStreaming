@@ -3,11 +3,11 @@ package com.moviestreaming.di
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.moviestreaming.BuildConfig
-import com.moviestreaming.data.Constants.API_KEY
-import com.moviestreaming.data.Constants.API_KEY_STRING
-import com.moviestreaming.data.Constants.BASE_URL
-import com.moviestreaming.data.Constants.NETWORK_TIMEOUT
-import com.moviestreaming.data.network.ApiService
+import com.moviestreaming.utils.Constants.API_KEY
+import com.moviestreaming.utils.Constants.API_KEY_STRING
+import com.moviestreaming.utils.Constants.BASE_URL
+import com.moviestreaming.utils.Constants.NETWORK_TIMEOUT
+import com.moviestreaming.data.source.network.ApiService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

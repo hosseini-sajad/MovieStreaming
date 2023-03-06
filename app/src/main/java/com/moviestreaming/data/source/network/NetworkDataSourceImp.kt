@@ -1,7 +1,6 @@
-package com.moviestreaming.data.datasource
+package com.moviestreaming.data.source.network
 
-import com.moviestreaming.data.network.ApiService
-import com.moviestreaming.data.network.NetworkDataSource
+import com.moviestreaming.data.source.NetworkDataSource
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 

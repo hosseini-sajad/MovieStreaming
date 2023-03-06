@@ -1,7 +1,7 @@
 package com.moviestreaming.di
 
-import com.moviestreaming.data.datasource.NetworkDataSourceImp
-import com.moviestreaming.data.network.NetworkDataSource
+import com.moviestreaming.data.source.NetworkDataSource
+import com.moviestreaming.data.source.network.NetworkDataSourceImp
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn

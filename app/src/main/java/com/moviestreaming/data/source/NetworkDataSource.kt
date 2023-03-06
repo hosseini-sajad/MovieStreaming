@@ -1,6 +1,6 @@
-package com.moviestreaming.data.network
+package com.moviestreaming.data.source
 
-import com.moviestreaming.data.dto.TrendingResponse.Trending
+import com.moviestreaming.data.source.network.dto.TrendingResponse.Trending
 import kotlinx.coroutines.flow.Flow
 
 interface NetworkDataSource {

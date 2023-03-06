@@ -1,6 +1,6 @@
-package com.moviestreaming.data.network
+package com.moviestreaming.data.source.network
 
-import com.moviestreaming.data.dto.TrendingResponse
+import com.moviestreaming.data.source.network.dto.TrendingResponse
 import retrofit2.http.GET
 
 interface ApiService {
