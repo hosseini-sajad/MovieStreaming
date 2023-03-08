@@ -12,15 +12,21 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class HomeViewModel @Inject constructor(private val movieRepository: MovieRepository) : ViewModel() {
+class HomeViewModel @Inject constructor(private val movieRepository: MovieRepository) :
+    ViewModel() {
 
-    private val mutableStateTrending = MutableStateFlow<UiState<List<TrendingEntity>>>(UiState.Loading())
+    private val mutableStateTrending =
+        MutableStateFlow<UiState<List<TrendingEntity>>>(UiState.Loading())
     val trending = mutableStateTrending.asStateFlow()
 
-    fun getGenres() {
+    fun getTrending() {
         viewModelScope.launch {
             movieRepository.getTrending().collect {
-                mutableStateTrending.value = UiState.Success(it)
+                if (it.isNotEmpty()) {
+                    mutableStateTrending.value = UiState.Success(it)
+                } else {
+                    mutableStateTrending.value = UiState.Error("Server problem")
+                }
             }
         }
     }

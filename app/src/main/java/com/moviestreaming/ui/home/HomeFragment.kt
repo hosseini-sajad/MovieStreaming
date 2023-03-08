@@ -40,7 +40,9 @@ class HomeFragment : Fragment() {
                                 Log.d("MMMMMMMMMM", "onCreateView: ${it.title}")
                             }
                         }
-                        is UiState.Error -> Log.d("JJJJJJJJ", "onCreateView: Noooooooo")
+                        is UiState.Error -> {
+                            Log.d("JJJJJJJJ", "onCreateView: ${uiState.message}")
+                        }
                         else -> Log.d("JJJJJJJJ", "onCreateView: Errorrrr")
                     }
                 }
@@ -52,7 +54,7 @@ class HomeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        homeViewModel.getGenres()
+        homeViewModel.getTrending()
     }
 
     override fun onDestroyView() {
