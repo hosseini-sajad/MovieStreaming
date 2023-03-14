@@ -44,7 +44,7 @@ class HomeViewModelTest {
     }
 
     @Test
-    fun getAllTrendingFromServer() = runTest {
+    fun `trending from server, return success`() = runTest {
         movieRepository.addTrending(listOfTrending)
         homeViewModel.getTrending()
         val collectJob = backgroundScope.launch(UnconfinedTestDispatcher(testScheduler)) { homeViewModel.trending.collect() }
@@ -58,7 +58,7 @@ class HomeViewModelTest {
     }
 
     @Test
-    fun `empty data from server, return error`() = runTest {
+    fun `empty trending from server, return error`() = runTest {
         homeViewModel.getTrending()
         val collectJob = backgroundScope.launch(UnconfinedTestDispatcher(testScheduler)) { homeViewModel.trending.collect()}
         val trending = homeViewModel.trending.value
