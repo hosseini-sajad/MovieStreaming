@@ -57,4 +57,15 @@ class HomeViewModelTest {
 
     }
 
+    @Test
+    fun `empty data from server, return error`() = runTest {
+        homeViewModel.getTrending()
+        val collectJob = backgroundScope.launch(UnconfinedTestDispatcher(testScheduler)) { homeViewModel.trending.collect()}
+        val trending = homeViewModel.trending.value
+        assertTrue(trending is UiState.Error)
+        val message = trending.message
+        assertEquals("Server problem", message)
+        collectJob.cancel()
+    }
+
 }
