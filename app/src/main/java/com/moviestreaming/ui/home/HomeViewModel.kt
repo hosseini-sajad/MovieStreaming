@@ -7,7 +7,7 @@ import com.moviestreaming.repository.MovieRepository
 import com.moviestreaming.utils.UiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -17,7 +17,7 @@ class HomeViewModel @Inject constructor(private val movieRepository: MovieReposi
 
     private val mutableStateTrending =
         MutableStateFlow<UiState<List<TrendingEntity>>>(UiState.Loading())
-    val trending = mutableStateTrending.asStateFlow()
+    val trending: StateFlow<UiState<List<TrendingEntity>>> = mutableStateTrending
 
     fun getTrending() {
         viewModelScope.launch {

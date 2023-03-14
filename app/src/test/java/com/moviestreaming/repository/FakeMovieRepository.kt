@@ -2,22 +2,21 @@ package com.moviestreaming.repository
 
 import com.moviestreaming.data.model.TrendingEntity
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.flow
 
 class FakeMovieRepository() : MovieRepository {
-    private val trending: MutableList<TrendingEntity>? = null
+    private var trending: MutableList<TrendingEntity> = mutableListOf()
     override suspend fun getTrending(): Flow<List<TrendingEntity>> {
         return flow {
-            if (trending != null) {
+            if (trending.isNotEmpty()) {
                 emit(trending)
                 return@flow
             }
-            emptyFlow<List<TrendingEntity>>()
+            emit(emptyList())
         }
     }
 
     fun addTrending(lisOfTrending: List<TrendingEntity>) {
-       trending?.addAll(lisOfTrending)
+       trending.addAll(lisOfTrending)
     }
 }

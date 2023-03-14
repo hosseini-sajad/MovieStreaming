@@ -1,16 +1,29 @@
 package com.moviestreaming.ui.home
 
+import com.moviestreaming.MainCoroutineRule
 import com.moviestreaming.data.model.TrendingEntity
 import com.moviestreaming.repository.FakeMovieRepository
+import com.moviestreaming.utils.UiState
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.test.UnconfinedTestDispatcher
+import kotlinx.coroutines.test.runTest
 import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
+import kotlin.test.assertEquals
+import kotlin.test.assertTrue
 
+@ExperimentalCoroutinesApi
 class HomeViewModelTest {
 
-
+    @get:Rule
+    val mainDispatcherRule = MainCoroutineRule()
 
     private lateinit var movieRepository: FakeMovieRepository
     private lateinit var homeViewModel: HomeViewModel
+    private lateinit var listOfTrending: List<TrendingEntity>
 
     @Before
     fun createViewModel() {
@@ -19,16 +32,29 @@ class HomeViewModelTest {
         val trending3 = TrendingEntity(3, "x3", "y3", "tv3")
         val trending4 = TrendingEntity(4, "x4", "y4", "tv4")
 
-        val listOfTrending = listOf(trending1, trending2, trending3, trending4)
+        listOfTrending = listOf(trending1, trending2, trending3, trending4)
 
         movieRepository = FakeMovieRepository()
-        movieRepository.addTrending(listOfTrending)
         homeViewModel = HomeViewModel(movieRepository)
     }
 
     @Test
-    fun get_TrendingFromRepository() {
-        homeViewModel.trending
+    fun stateIsInitiallyLoading() = runTest {
+        assertTrue(homeViewModel.trending.value is UiState.Loading)
+    }
+
+    @Test
+    fun getAllTrendingFromServer() = runTest {
+        movieRepository.addTrending(listOfTrending)
+        homeViewModel.getTrending()
+        val collectJob = backgroundScope.launch(UnconfinedTestDispatcher(testScheduler)) { homeViewModel.trending.collect() }
+
+        assertTrue(homeViewModel.trending.value is UiState.Success)
+        val item = (homeViewModel.trending.value as UiState.Success<List<TrendingEntity>>).data
+        assertEquals(listOfTrending, item)
+
+        collectJob.cancel()
+
     }
 
 }
