@@ -16,8 +16,8 @@ class HomeViewModel @Inject constructor(private val movieRepository: MovieReposi
     ViewModel() {
 
     private val mutableStateTrending =
-        MutableStateFlow<UiState<List<TrendingEntity>>>(UiState.Loading())
-    val trending: StateFlow<UiState<List<TrendingEntity>>> = mutableStateTrending
+        MutableStateFlow<UiState<List<TrendingEntity>?>>(UiState.Loading())
+    val trending: StateFlow<UiState<List<TrendingEntity>?>> = mutableStateTrending
 
     fun getTrending() {
         viewModelScope.launch {

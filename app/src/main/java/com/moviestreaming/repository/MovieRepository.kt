@@ -5,5 +5,5 @@ import com.moviestreaming.utils.UiState
 import kotlinx.coroutines.flow.Flow
 
 interface MovieRepository {
-    suspend fun getTrending(): Flow<UiState<List<TrendingEntity>>>
+    suspend fun getTrending(): Flow<UiState<List<TrendingEntity>?>>
 }

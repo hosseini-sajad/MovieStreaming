@@ -36,7 +36,7 @@ class HomeFragment : Fragment() {
                 homeViewModel.trending.collect { uiState ->
                     when (uiState) {
                         is UiState.Success -> {
-                            uiState.data.onEach {
+                            uiState.data?.onEach {
                                 Log.d("MMMMMMMMMM", "onCreateView: ${it.title}")
                             }
                         }
