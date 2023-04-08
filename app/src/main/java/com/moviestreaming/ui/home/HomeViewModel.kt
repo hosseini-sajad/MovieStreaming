@@ -22,11 +22,8 @@ class HomeViewModel @Inject constructor(private val movieRepository: MovieReposi
     fun getTrending() {
         viewModelScope.launch {
             movieRepository.getTrending().collect {
-                if (it.isNotEmpty()) {
-                    mutableStateTrending.value = UiState.Success(it)
-                } else {
-                    mutableStateTrending.value = UiState.Error("Server problem")
-                }
+                mutableStateTrending.value = it
+
             }
         }
     }

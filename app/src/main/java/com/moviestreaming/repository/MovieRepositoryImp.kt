@@ -1,6 +1,8 @@
 package com.moviestreaming.repository
 
 import com.moviestreaming.data.source.NetworkDataSource
+import com.moviestreaming.utils.UiState
+import com.moviestreaming.utils.parsError
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
@@ -10,9 +12,10 @@ class MovieRepositoryImp @Inject constructor(private val networkDataSource: Netw
     MovieRepository {
     override suspend fun getTrending() = flow {
         try {
-            emit(networkDataSource.getTrending().map { it.toEntity() })
+            emit(UiState.Success(networkDataSource.getTrending().map { it.toEntity() }))
         } catch (e: Exception) {
-            emit(emptyList())
+            val errorResponse = parsError(e)
+            emit(UiState.Error(errorResponse.statusMessage))
         }
     }.flowOn(IO)
 
