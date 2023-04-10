@@ -11,7 +11,7 @@ data class TrendingResponse(
     @SerializedName("page")
     val page: Int,
     @SerializedName("results")
-    val trending: List<Trending>,
+    val trending: List<Trending>?,
     @SerializedName("total_pages")
     val totalPages: Int,
     @SerializedName("total_results")
