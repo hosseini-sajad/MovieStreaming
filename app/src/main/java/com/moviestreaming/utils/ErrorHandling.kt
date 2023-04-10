@@ -8,10 +8,10 @@ fun parsError(e: Exception): ErrorResponse =
     when (e) {
         is HttpException -> {
             try {
-                Gson().fromJson(e.response()?.errorBody().toString(), ErrorResponse::class.java)
+                Gson().fromJson(e.response()?.errorBody()?.string(), ErrorResponse::class.java)
             } catch (exp: Exception) {
                 exp.printStackTrace()
-                ErrorResponse(null, e.message(), false)
+                ErrorResponse(-1, e.message(), false)
             }
         }
         else -> {
