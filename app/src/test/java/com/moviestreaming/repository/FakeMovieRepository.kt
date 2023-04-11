@@ -1,19 +1,19 @@
 package com.moviestreaming.repository
 
 import com.moviestreaming.data.model.TrendingEntity
-import com.moviestreaming.utils.UiState
+import com.moviestreaming.utils.Result
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
 class FakeMovieRepository() : MovieRepository {
     private var trending: MutableList<TrendingEntity> = mutableListOf()
-    override suspend fun getTrending(): Flow<UiState<List<TrendingEntity>?>> {
+    override suspend fun getTrending(): Flow<Result<List<TrendingEntity>>> {
         return flow {
             if (trending.isNotEmpty()) {
-                emit(UiState.Success(trending))
+                emit(Result.Success(trending))
                 return@flow
             }
-            emit(UiState.Error("Server problem"))
+            emit(Result.Error("Server problem, please try later!"))
         }
     }
 

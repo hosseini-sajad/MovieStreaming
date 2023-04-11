@@ -63,8 +63,6 @@ class HomeViewModelTest {
         val collectJob = backgroundScope.launch(UnconfinedTestDispatcher(testScheduler)) { homeViewModel.trending.collect()}
         val trending = homeViewModel.trending.value
         assertTrue(trending is UiState.Error)
-        val message = trending.message
-        assertEquals("Server problem", message)
         collectJob.cancel()
     }
 

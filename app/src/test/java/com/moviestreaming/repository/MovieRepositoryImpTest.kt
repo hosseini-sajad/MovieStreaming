@@ -3,7 +3,7 @@ package com.moviestreaming.repository
 import com.moviestreaming.data.model.TrendingEntity
 import com.moviestreaming.data.source.FakeNetworkDataSource
 import com.moviestreaming.data.source.network.dto.TrendingResponse
-import com.moviestreaming.utils.UiState
+import com.moviestreaming.utils.Result
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.toList
@@ -87,7 +87,7 @@ internal class MovieRepositoryImpTest() {
         runBlocking {
             val trending = movieRepositoryImp.getTrending()
 
-            assertEquals(UiState.Success(remoteTrending.map { it.toEntity() }.toList()), trending.toList().first())
+            assertEquals(Result.Success(remoteTrending.map { it.toEntity() }.toList()), trending.toList().first())
         }
     }
 
@@ -97,7 +97,7 @@ internal class MovieRepositoryImpTest() {
         movieRepositoryImp = MovieRepositoryImp(networkDataSource)
         runBlocking {
             val trending = movieRepositoryImp.getTrending().first()
-            assertTrue(trending is UiState.Error)
+            assertTrue(trending is Result.Error)
         }
     }
 
