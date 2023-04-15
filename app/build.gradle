@@ -66,4 +66,16 @@ dependencies {
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4"
     testImplementation 'org.jetbrains.kotlin:kotlin-test-junit5:1.7.10'
 
+    // Lottie
+    implementation 'com.airbnb.android:lottie:6.0.0'
+
+    // Indicator
+    implementation 'com.romandanylyk:pageindicatorview:1.0.3'
+
+    // Viewpager 2
+    implementation("androidx.viewpager2:viewpager2:1.0.0")
+
+    // Glide
+    implementation 'com.github.bumptech.glide:glide:4.15.1'
+
 }

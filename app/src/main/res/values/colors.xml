@@ -4,13 +4,16 @@
     <color name="colorPrimaryDark">#1B1B1B</color>
     <color name="colorPrimaryLight">#2E2E2E</color>
 
+    <color name="gray_400">#08202020</color>
+    <color name="gray_500">#CC202020</color>
+    <color name="gray_600">#99202020</color>
+
     <color name="dark">#252525</color>
     <color name="dark_light">#303030</color>
     <color name="colorAccent">#F8CB06</color>
     <color name="colorAccent_light">#9AF8CB06</color>
     <color name="colorAccentDark">#B69400</color>
     <color name="selectedBottomNav">#9FF8CB06</color>
-    <color name="textColor">#ffffff</color>
     <color name="otherColor">#06172b</color>
     <color name="white">#ffff</color>
     <color name="gray">#CACACA</color>
@@ -20,5 +23,11 @@
     <color name="pink">#FFADBB</color>
     <color name="material_pink">#E91E63</color>
     <color name="green">#378F3B</color>
+
+    <color name="slider_gradient_center">@color/gray_600</color>
+    <color name="slider_gradient_end">@color/gray_400</color>
+    <color name="slider_gradient_start">@color/gray_500</color>
+
+    <color name="text_color">#fff</color>
 
 </resources>
