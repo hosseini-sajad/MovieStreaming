@@ -26,6 +26,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:lottie_autoPlay="true"
         app:lottie_loop="true"
+        app:lottie_rawRes="@raw/loading3"
         app:layout_constraintBottom_toBottomOf="@+id/viewpager"
         android:layout_marginTop="10dp"/>
 
