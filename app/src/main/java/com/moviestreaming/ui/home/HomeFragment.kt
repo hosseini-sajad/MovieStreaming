@@ -15,6 +15,7 @@ import com.moviestreaming.databinding.FragmentHomeBinding
 import com.moviestreaming.ui.ItemClickListener
 import com.moviestreaming.ui.home.adapter.SliderAdapter
 import com.moviestreaming.utils.UiState
+import com.moviestreaming.utils.mapper.SliderPageUtil
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -38,20 +39,23 @@ class HomeFragment : Fragment(), ItemClickListener<TrendingEntity> {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 homeViewModel.trending.collect { uiState ->
                     when (uiState) {
+                        is UiState.Loading -> binding.animProgress.visibility = View.VISIBLE
                         is UiState.Success -> {
+                            binding.animProgress.visibility = View.GONE
                             val viewPagerAdapter = SliderAdapter(uiState.data, this@HomeFragment)
                             val viewPager = binding.viewpager
                             viewPager.apply {
+                                SliderPageUtil.sliderAutoChange(requireActivity(), uiState.data.size, this)
                                 adapter = viewPagerAdapter
                             }
-//                            Methods.sliderAutoChanger(activity, list.size, binding.viewpager)
+
 //                            Methods.viewPageTransformer(binding.viewpager)
 //                            setSliderIndicator(list.size)
                         }
                         is UiState.Error -> {
+                            binding.animProgress.visibility = View.GONE
                             Log.d("JJJJJJJJ", "onCreateView: ${uiState.message}")
                         }
-                        else -> Log.d("JJJJJJJJ", "onCreateView: Errorrrr")
                     }
                 }
             }
