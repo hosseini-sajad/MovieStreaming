@@ -28,6 +28,8 @@
     <color name="slider_gradient_end">@color/gray_400</color>
     <color name="slider_gradient_start">@color/gray_500</color>
 
+    <color name="topic_color">@color/colorAccent</color>
+
     <color name="text_color">#fff</color>
 
 </resources>
