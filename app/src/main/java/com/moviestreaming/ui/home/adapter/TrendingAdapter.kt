@@ -10,8 +10,8 @@ import com.bumptech.glide.Glide
 import com.moviestreaming.R
 import com.moviestreaming.data.model.TrendingEntity
 import com.moviestreaming.ui.ItemClickListener
-import com.moviestreaming.utils.Constants.POSTER_BASE_URL
-import java.util.*
+import com.moviestreaming.utils.getImageUrl
+import java.util.Objects
 
 /*
 class TrendingAdapter(private val itemClickListener: ItemClickListener<TrendingEntity>?) : RecyclerView.Adapter<TrendingViewHolder>() {
@@ -62,7 +62,7 @@ class TrendingViewHolder constructor(itemView: View) : RecyclerView.ViewHolder(i
     }
 }*/
 
-class SliderAdapter(
+class TrendingAdapter(
     private val lisOfTrending: List<TrendingEntity>,
     private val itemClickListener: ItemClickListener<TrendingEntity>?,
 ) : PagerAdapter() {
@@ -74,7 +74,7 @@ class SliderAdapter(
         val name = itemView.findViewById<AppCompatTextView>(R.id.name)
         val item = lisOfTrending[position]
 
-        val url = POSTER_BASE_URL + item.image
+        val url = getImageUrl(item.image)
         Glide.with(imageSlider.context)
             .load(url)
 //            .error(R.drawable.ic_image_error)

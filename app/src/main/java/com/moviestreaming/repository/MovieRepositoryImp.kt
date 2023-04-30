@@ -10,7 +10,16 @@ class MovieRepositoryImp @Inject constructor(private val networkDataSource: Netw
     MovieRepository {
     override suspend fun getTrending() = flow {
         try {
-            emit(Result.Success(networkDataSource.getTrending()!!.map { it.toEntity() }.take(5)))
+            emit(Result.Success(networkDataSource.getTrending()!!.map { it.toEntity() }))
+        } catch (e: Exception) {
+            val errorResponse = parsError(e)
+            emit(Result.Error(errorResponse.statusMessage))
+        }
+    }
+
+    override suspend fun getTopRateMovie() = flow {
+        try {
+            emit(Result.Success(networkDataSource.getTopRateMovie()!!.map { it.toEntity() }))
         } catch (e: Exception) {
             val errorResponse = parsError(e)
             emit(Result.Error(errorResponse.statusMessage))

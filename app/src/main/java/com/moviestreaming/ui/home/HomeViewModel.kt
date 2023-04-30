@@ -2,6 +2,7 @@ package com.moviestreaming.ui.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.moviestreaming.data.model.TopRateMovieEntity
 import com.moviestreaming.data.model.TrendingEntity
 import com.moviestreaming.repository.MovieRepository
 import com.moviestreaming.utils.Result
@@ -19,14 +20,28 @@ class HomeViewModel @Inject constructor(private val movieRepository: MovieReposi
     private val mutableStateTrending = MutableStateFlow<UiState<List<TrendingEntity>>>(UiState.Loading())
     val trending: StateFlow<UiState<List<TrendingEntity>>> = mutableStateTrending
 
+    private val mutableStateTopRateMovie = MutableStateFlow<UiState<List<TopRateMovieEntity>>>(UiState.Loading())
+    val topRateMovie: StateFlow<UiState<List<TopRateMovieEntity>>> = mutableStateTopRateMovie
+
     fun getTrending() {
         viewModelScope.launch {
             movieRepository.getTrending().collect {
                 when (it) {
-                    is Result.Success -> mutableStateTrending.value = UiState.Success(it.data)
+                    is Result.Success -> mutableStateTrending.value = UiState.Success(it.data.take(5))
                     is Result.Error -> mutableStateTrending.value = UiState.Error(it.message)
                 }
 
+            }
+        }
+    }
+
+    fun getTopRateMovie() {
+        viewModelScope.launch {
+            movieRepository.getTopRateMovie().collect {
+                when(it) {
+                    is Result.Success -> mutableStateTopRateMovie.value = UiState.Success(it.data.take(5))
+                    is Result.Error -> mutableStateTopRateMovie.value = UiState.Error(it.message)
+                }
             }
         }
     }
