@@ -1,11 +1,10 @@
 package com.moviestreaming.repository
 
-import com.moviestreaming.data.model.TrendingEntity
 import com.moviestreaming.data.source.FakeNetworkDataSource
+import com.moviestreaming.data.source.network.dto.TopRateMovieResponse
 import com.moviestreaming.data.source.network.dto.TrendingResponse
 import com.moviestreaming.utils.Result
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertEquals
@@ -54,22 +53,22 @@ internal class MovieRepositoryImpTest() {
         10
     )
 
-    val movie3 = TrendingEntity(
-        1,
-        "got",
-        "PPPP",
-        "tv"
+    private val topRateMovie = TopRateMovieResponse.TopRateMovie(
+        false,"/bOGkgRGdhrBYJSLpXaxhXVstddV.jpg", listOf(1, 2),
+        1, "en", "Wally", "ww", 11.8,
+        "/bOGkgRGdhrBYJSLpXaxhXVstddV.jpg", "2000", "Wally",
+        false, 8.8, 8
     )
 
-    val movie4 = TrendingEntity(
-        2,
-        "got2",
-        "PPPP2",
-        "tv2"
+    private val topRateMovie2 = TopRateMovieResponse.TopRateMovie(
+        false,"/bOGkgRGdhrBYJSLpXaxhXVstddV.jpg", listOf(2, 3),
+        1, "en", "Wally2", "ww2", 10.5,
+        "/bOGkgRGdhrBYJSLpXaxhXVstddV.jpg", "2001", "Wall2y",
+        false, 5.8, 7
     )
 
     private val remoteTrending = listOf( movie1, movie2)
-    private val remoteTrending2 = flowOf(movie3, movie4, movie4)
+    private val remoteTopRateMovies = listOf(topRateMovie, topRateMovie2)
 
     private lateinit var networkDataSource: FakeNetworkDataSource
     private lateinit var movieRepositoryImp: MovieRepositoryImp
@@ -82,7 +81,8 @@ internal class MovieRepositoryImpTest() {
 
     @Test
     fun getTrending_RequestAllTrendingFromNetworkDatasource() {
-        networkDataSource = FakeNetworkDataSource(remoteTrending)
+        networkDataSource = FakeNetworkDataSource()
+        networkDataSource.addTrending(remoteTrending)
         movieRepositoryImp = MovieRepositoryImp(networkDataSource)
         runBlocking {
             val trending = movieRepositoryImp.getTrending()
@@ -92,8 +92,20 @@ internal class MovieRepositoryImpTest() {
     }
 
     @Test
+    fun getTopRateMovie_From_Network_Datasource() {
+        networkDataSource = FakeNetworkDataSource()
+        networkDataSource.addTopReteMovies(remoteTopRateMovies)
+        movieRepositoryImp = MovieRepositoryImp(networkDataSource)
+        runBlocking {
+            val topRateMovies = movieRepositoryImp.getTopRateMovie()
+
+            assertEquals(Result.Success(remoteTopRateMovies.map { it.toEntity() }.toList()), topRateMovies.toList().first())
+        }
+    }
+
+    @Test
     fun `null trending, return error`() {
-        networkDataSource = FakeNetworkDataSource(null)
+        networkDataSource = FakeNetworkDataSource()
         movieRepositoryImp = MovieRepositoryImp(networkDataSource)
         runBlocking {
             val trending = movieRepositoryImp.getTrending().first()

@@ -1,6 +1,7 @@
 package com.moviestreaming.ui.home
 
 import com.moviestreaming.MainCoroutineRule
+import com.moviestreaming.data.model.TopRateMovieEntity
 import com.moviestreaming.data.model.TrendingEntity
 import com.moviestreaming.repository.FakeMovieRepository
 import com.moviestreaming.utils.UiState
@@ -24,6 +25,7 @@ class HomeViewModelTest {
     private lateinit var movieRepository: FakeMovieRepository
     private lateinit var homeViewModel: HomeViewModel
     private lateinit var listOfTrending: List<TrendingEntity>
+    private lateinit var listOfTopRateMovies: List<TopRateMovieEntity>
 
     @Before
     fun createViewModel() {
@@ -33,6 +35,12 @@ class HomeViewModelTest {
         val trending4 = TrendingEntity(4, "x4", "y4", "tv4")
 
         listOfTrending = listOf(trending1, trending2, trending3, trending4)
+
+        val topRateMovie1 = TopRateMovieEntity(1, "a", "b", 1, "movie", 8.5)
+        val topRateMovie2 = TopRateMovieEntity(2, "a2", "b2", 2, "movie", 8.8)
+        val topRateMovie3 = TopRateMovieEntity(3, "a3", "b3", 3, "movie", 8.9)
+
+        listOfTopRateMovies = listOf(topRateMovie1, topRateMovie2, topRateMovie3)
 
         movieRepository = FakeMovieRepository()
         homeViewModel = HomeViewModel(movieRepository)
