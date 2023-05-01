@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorPrimaryDark"
     tools:context="com.moviestreaming.ui.home.HomeFragment">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
     <androidx.viewpager.widget.ViewPager
         android:id="@+id/viewpager"
@@ -70,10 +74,11 @@
         app:layout_constraintEnd_toEndOf="parent" />
 
     <com.mlsdev.animatedrv.AnimatedRecyclerView
-        android:id="@+id/imdb_recyclerview"
+        android:id="@+id/imdbRecyclerview"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layoutManagerType="grid"
+        android:minHeight="200dp"
         tools:listitem="@layout/imdb_item_list"
         app:animationDuration="600"
         app:layoutAnimation="@anim/layout_animation_from_bottom_scale"
@@ -83,4 +88,49 @@
         app:layout_constraintTop_toBottomOf="@id/topImdbText"
         android:layout_margin="8dp" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/newMoviesText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/rounded_text_background"
+            android:fontFamily="@font/nexa_bold"
+            android:padding="5dp"
+            android:text="@string/new_movies"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/imdbRecyclerview" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/newMoviesMoreText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="12dp"
+            android:fontFamily="@font/nexa_bold"
+            android:textColor="@color/topic_color"
+            android:padding="5dp"
+            android:text="@string/more"
+            app:layout_constraintBaseline_toBaselineOf="@+id/newMoviesText"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <com.mlsdev.animatedrv.AnimatedRecyclerView
+            android:id="@+id/newMoviesRecyclerview"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layoutManagerType="grid"
+            android:minHeight="200dp"
+            tools:listitem="@layout/imdb_item_list"
+            app:animationDuration="600"
+            app:layoutAnimation="@anim/layout_animation_from_bottom_scale"
+            app:layoutManagerReverse="true"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/newMoviesText"
+            android:layout_margin="8dp" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</ScrollView>
