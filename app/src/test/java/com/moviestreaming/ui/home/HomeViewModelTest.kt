@@ -66,10 +66,33 @@ class HomeViewModelTest {
     }
 
     @Test
+    fun `top rate movies from server, return success`() = runTest {
+        movieRepository.addTopRateMovies(listOfTopRateMovies)
+        homeViewModel.getTopRateMovie()
+        val collectJob = backgroundScope.launch(UnconfinedTestDispatcher(testScheduler)) { homeViewModel.topRateMovie.collect() }
+
+        assertTrue(homeViewModel.topRateMovie.value is UiState.Success)
+        val item = (homeViewModel.topRateMovie.value as UiState.Success<List<TopRateMovieEntity>>).data
+        assertEquals(listOfTopRateMovies, item)
+
+        collectJob.cancel()
+
+    }
+
+    @Test
     fun `empty trending from server, return error`() = runTest {
         homeViewModel.getTrending()
         val collectJob = backgroundScope.launch(UnconfinedTestDispatcher(testScheduler)) { homeViewModel.trending.collect()}
         val trending = homeViewModel.trending.value
+        assertTrue(trending is UiState.Error)
+        collectJob.cancel()
+    }
+
+    @Test
+    fun `empty top rate movies from server, return error`() = runTest {
+        homeViewModel.getTopRateMovie()
+        val collectJob = backgroundScope.launch(UnconfinedTestDispatcher(testScheduler)) { homeViewModel.topRateMovie.collect()}
+        val trending = homeViewModel.topRateMovie.value
         assertTrue(trending is UiState.Error)
         collectJob.cancel()
     }

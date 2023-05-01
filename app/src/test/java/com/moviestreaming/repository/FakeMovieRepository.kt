@@ -21,11 +21,19 @@ class FakeMovieRepository() : MovieRepository {
 
     override suspend fun getTopRateMovie(): Flow<Result<List<TopRateMovieEntity>>> {
         return flow {
+            if (topRateMovies.isNotEmpty()) {
+                emit(Result.Success(topRateMovies))
+                return@flow
+            }
             emit(Result.Error("Server problem, please try later!"))
         }
     }
 
     fun addTrending(lisOfTrending: List<TrendingEntity>) {
         trending.addAll(lisOfTrending)
+    }
+
+    fun addTopRateMovies(topRateList: List<TopRateMovieEntity>) {
+        topRateMovies.addAll(topRateList)
     }
 }
