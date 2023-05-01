@@ -23,6 +23,9 @@ class HomeViewModel @Inject constructor(private val movieRepository: MovieReposi
     private val mutableStateTopRateMovie = MutableStateFlow<UiState<List<TopRateMovieEntity>>>(UiState.Loading())
     val topRateMovie: StateFlow<UiState<List<TopRateMovieEntity>>> = mutableStateTopRateMovie
 
+    private val mutableStatePopularMovies = MutableStateFlow<UiState<List<TopRateMovieEntity>>>(UiState.Loading())
+    val popularMovies: StateFlow<UiState<List<TopRateMovieEntity>>> = mutableStatePopularMovies
+
     fun getTrending() {
         viewModelScope.launch {
             movieRepository.getTrending().collect {
@@ -41,6 +44,17 @@ class HomeViewModel @Inject constructor(private val movieRepository: MovieReposi
                 when(it) {
                     is Result.Success -> mutableStateTopRateMovie.value = UiState.Success(it.data.take(5))
                     is Result.Error -> mutableStateTopRateMovie.value = UiState.Error(it.message)
+                }
+            }
+        }
+    }
+
+    fun getPopularMovies() {
+        viewModelScope.launch {
+            movieRepository.getPopularMovies().collect {
+                when(it) {
+                    is Result.Success -> mutableStatePopularMovies.value = UiState.Success(it.data.take(5))
+                    is Result.Error -> mutableStatePopularMovies.value = UiState.Error(it.message)
                 }
             }
         }

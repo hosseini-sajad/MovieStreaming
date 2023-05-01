@@ -26,4 +26,13 @@ class MovieRepositoryImp @Inject constructor(private val networkDataSource: Netw
         }
     }
 
+    override suspend fun getPopularMovies() = flow {
+        try {
+            emit(Result.Success(networkDataSource.getPopularMovies()!!.map { it.toEntity() }))
+        } catch (e: Exception) {
+            val errorResponse = parsError(e)
+            emit(Result.Error(errorResponse.statusMessage))
+        }
+    }
+
 }

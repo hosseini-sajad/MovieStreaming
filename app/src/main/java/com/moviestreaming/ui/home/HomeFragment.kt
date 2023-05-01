@@ -11,6 +11,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.moviestreaming.data.model.TopRateMovieEntity
 import com.moviestreaming.data.model.TrendingEntity
 import com.moviestreaming.databinding.FragmentHomeBinding
@@ -55,9 +56,6 @@ class HomeFragment : Fragment(), ItemClickListener<TrendingEntity> {
                                 )
                                 adapter = viewPagerAdapter
                             }
-
-//                            Methods.viewPageTransformer(binding.viewpager)
-//                            setSliderIndicator(list.size)
                         }
 
                         is UiState.Error -> {
@@ -75,10 +73,25 @@ class HomeFragment : Fragment(), ItemClickListener<TrendingEntity> {
                     when (uiState) {
                         is UiState.Loading -> {}
                         is UiState.Success -> {
-                            setupImdbRecyclerView(uiState)
+                            setupImdbRecyclerView(uiState, binding.imdbRecyclerview)
+                        }
 
-//                            Methods.viewPageTransformer(binding.viewpager)
-//                            setSliderIndicator(list.size)
+                        is UiState.Error -> {
+                            binding.animProgress.visibility = View.GONE
+                            Log.d("JJJJJJJJ", "onCreateView: ${uiState.message}")
+                        }
+                    }
+                }
+            }
+        }
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                homeViewModel.popularMovies.collect { uiState ->
+                    when (uiState) {
+                        is UiState.Loading -> {}
+                        is UiState.Success -> {
+                            setupImdbRecyclerView(uiState, binding.newMoviesRecyclerview)
                         }
 
                         is UiState.Error -> {
@@ -97,11 +110,11 @@ class HomeFragment : Fragment(), ItemClickListener<TrendingEntity> {
         super.onViewCreated(view, savedInstanceState)
         homeViewModel.getTrending()
         homeViewModel.getTopRateMovie()
+        homeViewModel.getPopularMovies()
     }
 
-    private fun setupImdbRecyclerView(uiState: UiState.Success<List<TopRateMovieEntity>>) {
-        val recyclerview = binding.imdbRecyclerview
-        recyclerview.apply {
+    private fun setupImdbRecyclerView(uiState: UiState.Success<List<TopRateMovieEntity>>, recyclerView: RecyclerView) {
+        recyclerView.apply {
             layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
             adapter = TopRateMovieAdapter(uiState.data, object : ItemClickListener<TopRateMovieEntity> {
                 override fun onItemClickListener(model: TopRateMovieEntity) {

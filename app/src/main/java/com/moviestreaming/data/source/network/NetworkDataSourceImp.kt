@@ -7,4 +7,5 @@ class NetworkDataSourceImp @Inject constructor(private val apiService: ApiServic
     NetworkDataSource {
     override suspend fun getTrending() = apiService.getTrending().trending
     override suspend fun getTopRateMovie() = apiService.getTopRateMovie().topRateMovies
+    override suspend fun getPopularMovies() = apiService.getpopularMovies().topRateMovies
 }

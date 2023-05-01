@@ -43,6 +43,7 @@ class TopRateMovieViewHolder constructor(itemView: View) : RecyclerView.ViewHold
         val url = getImageUrl(item.image)
         Glide.with(imageSlider.context)
             .load(url)
+            .override(130, 160)
 //            .error(R.drawable.ic_image_error)
             .into(imageSlider)
 
