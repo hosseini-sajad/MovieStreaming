@@ -69,6 +69,7 @@ internal class MovieRepositoryImpTest() {
 
     private val remoteTrending = listOf( movie1, movie2)
     private val remoteTopRateMovies = listOf(topRateMovie, topRateMovie2)
+    private val remotePopularMovies = listOf(topRateMovie, topRateMovie2)
 
     private lateinit var networkDataSource: FakeNetworkDataSource
     private lateinit var movieRepositoryImp: MovieRepositoryImp
@@ -100,6 +101,18 @@ internal class MovieRepositoryImpTest() {
             val topRateMovies = movieRepositoryImp.getTopRateMovie()
 
             assertEquals(Result.Success(remoteTopRateMovies.map { it.toEntity() }.toList()), topRateMovies.toList().first())
+        }
+    }
+
+    @Test
+    fun getPopularMovie_From_Network_Datasource() {
+        networkDataSource = FakeNetworkDataSource()
+        networkDataSource.addPopularMovies(remoteTopRateMovies)
+        movieRepositoryImp = MovieRepositoryImp(networkDataSource)
+        runBlocking {
+            val topRateMovies = movieRepositoryImp.getPopularMovies()
+
+            assertEquals(Result.Success(remotePopularMovies.map { it.toEntity() }.toList()), topRateMovies.toList().first())
         }
     }
 

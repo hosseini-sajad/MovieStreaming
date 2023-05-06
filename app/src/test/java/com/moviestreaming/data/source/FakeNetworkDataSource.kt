@@ -8,6 +8,7 @@ internal class FakeNetworkDataSource():
 
     private val trendingMovies: MutableList<TrendingResponse.Trending>? = mutableListOf()
     private val topRateMovies: MutableList<TopRateMovieResponse.TopRateMovie>? = mutableListOf()
+    private val popularMovies: MutableList<TopRateMovieResponse.TopRateMovie>? = mutableListOf()
 
     override suspend fun getTrending(): List<TrendingResponse.Trending>? {
         trendingMovies?.let {
@@ -23,12 +24,23 @@ internal class FakeNetworkDataSource():
         return null
     }
 
+    override suspend fun getPopularMovies(): List<TopRateMovieResponse.TopRateMovie>? {
+        popularMovies?.let {
+            return it
+        }
+        return null
+    }
+
     fun addTrending(trending: List<TrendingResponse.Trending>) {
         trendingMovies?.addAll(trending)
     }
 
     fun addTopReteMovies(topRate: List<TopRateMovieResponse.TopRateMovie>) {
         topRateMovies?.addAll(topRate)
+    }
+
+    fun addPopularMovies(popularMoviesList: List<TopRateMovieResponse.TopRateMovie>) {
+        popularMovies?.addAll(popularMoviesList)
     }
 
 }

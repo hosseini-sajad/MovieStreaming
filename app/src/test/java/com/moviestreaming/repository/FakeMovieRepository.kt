@@ -9,6 +9,7 @@ import kotlinx.coroutines.flow.flow
 class FakeMovieRepository() : MovieRepository {
     private var trending: MutableList<TrendingEntity> = mutableListOf()
     private var topRateMovies: MutableList<TopRateMovieEntity> = mutableListOf()
+    private var popularMovies: MutableList<TopRateMovieEntity> = mutableListOf()
     override suspend fun getTrending(): Flow<Result<List<TrendingEntity>>> {
         return flow {
             if (trending.isNotEmpty()) {
@@ -23,6 +24,16 @@ class FakeMovieRepository() : MovieRepository {
         return flow {
             if (topRateMovies.isNotEmpty()) {
                 emit(Result.Success(topRateMovies))
+                return@flow
+            }
+            emit(Result.Error("Server problem, please try later!"))
+        }
+    }
+
+    override suspend fun getPopularMovies(): Flow<Result<List<TopRateMovieEntity>>> {
+        return flow {
+            if (popularMovies.isNotEmpty()) {
+                emit(Result.Success(popularMovies))
                 return@flow
             }
             emit(Result.Error("Server problem, please try later!"))

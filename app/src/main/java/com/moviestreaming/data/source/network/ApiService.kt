@@ -12,5 +12,5 @@ interface ApiService {
     suspend fun getTopRateMovie(): TopRateMovieResponse
 
     @GET("movie/popular")
-    suspend fun getpopularMovies(): TopRateMovieResponse
+    suspend fun getPopularMovies(): TopRateMovieResponse
 }
