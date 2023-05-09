@@ -7,12 +7,12 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
 class FakeMovieRepository() : MovieRepository {
-    private var trending: MutableList<TrendingEntity> = mutableListOf()
-    private var topRateMovies: MutableList<TopRateMovieEntity> = mutableListOf()
-    private var popularMovies: MutableList<TopRateMovieEntity> = mutableListOf()
+    private lateinit var trending: MutableList<TrendingEntity>
+    private lateinit var topRateMovies: MutableList<TopRateMovieEntity>
+    private lateinit var popularMovies: MutableList<TopRateMovieEntity>
     override suspend fun getTrending(): Flow<Result<List<TrendingEntity>>> {
         return flow {
-            if (trending.isNotEmpty()) {
+            if (::trending.isInitialized) {
                 emit(Result.Success(trending))
                 return@flow
             }
@@ -22,7 +22,7 @@ class FakeMovieRepository() : MovieRepository {
 
     override suspend fun getTopRateMovie(): Flow<Result<List<TopRateMovieEntity>>> {
         return flow {
-            if (topRateMovies.isNotEmpty()) {
+            if (::topRateMovies.isInitialized) {
                 emit(Result.Success(topRateMovies))
                 return@flow
             }
@@ -32,7 +32,7 @@ class FakeMovieRepository() : MovieRepository {
 
     override suspend fun getPopularMovies(): Flow<Result<List<TopRateMovieEntity>>> {
         return flow {
-            if (popularMovies.isNotEmpty()) {
+            if (::popularMovies.isInitialized) {
                 emit(Result.Success(popularMovies))
                 return@flow
             }
@@ -41,10 +41,18 @@ class FakeMovieRepository() : MovieRepository {
     }
 
     fun addTrending(lisOfTrending: List<TrendingEntity>) {
+        trending = mutableListOf()
         trending.addAll(lisOfTrending)
     }
 
     fun addTopRateMovies(topRateList: List<TopRateMovieEntity>) {
+        topRateMovies = mutableListOf()
         topRateMovies.addAll(topRateList)
     }
+
+    fun addPopularMovies(popularList: List<TopRateMovieEntity>) {
+        popularMovies = mutableListOf()
+        popularMovies.addAll(popularList)
+    }
+
 }

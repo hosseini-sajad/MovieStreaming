@@ -26,6 +26,7 @@ class HomeViewModelTest {
     private lateinit var homeViewModel: HomeViewModel
     private lateinit var listOfTrending: List<TrendingEntity>
     private lateinit var listOfTopRateMovies: List<TopRateMovieEntity>
+    private lateinit var listOfPopularMovies: List<TopRateMovieEntity>
 
     @Before
     fun createViewModel() {
@@ -41,6 +42,8 @@ class HomeViewModelTest {
         val topRateMovie3 = TopRateMovieEntity(3, "a3", "b3", 3, "movie", 8.9)
 
         listOfTopRateMovies = listOf(topRateMovie1, topRateMovie2, topRateMovie3)
+
+        listOfPopularMovies = listOf(topRateMovie1, topRateMovie2, topRateMovie3)
 
         movieRepository = FakeMovieRepository()
         homeViewModel = HomeViewModel(movieRepository)
@@ -80,6 +83,20 @@ class HomeViewModelTest {
     }
 
     @Test
+    fun `popular movies from server, return success`() = runTest {
+        movieRepository.addPopularMovies(listOfPopularMovies)
+        homeViewModel.getPopularMovies()
+        val collectJob = backgroundScope.launch(UnconfinedTestDispatcher(testScheduler)) { homeViewModel.popularMovies.collect() }
+
+        assertTrue(homeViewModel.popularMovies.value is UiState.Success)
+        val item = (homeViewModel.popularMovies.value as UiState.Success<List<TopRateMovieEntity>>).data
+        assertEquals(listOfPopularMovies, item)
+
+        collectJob.cancel()
+
+    }
+
+    @Test
     fun `empty trending from server, return error`() = runTest {
         homeViewModel.getTrending()
         val collectJob = backgroundScope.launch(UnconfinedTestDispatcher(testScheduler)) { homeViewModel.trending.collect()}
@@ -93,6 +110,15 @@ class HomeViewModelTest {
         homeViewModel.getTopRateMovie()
         val collectJob = backgroundScope.launch(UnconfinedTestDispatcher(testScheduler)) { homeViewModel.topRateMovie.collect()}
         val trending = homeViewModel.topRateMovie.value
+        assertTrue(trending is UiState.Error)
+        collectJob.cancel()
+    }
+
+    @Test
+    fun `empty popular movies from server, return error`() = runTest {
+        homeViewModel.getPopularMovies()
+        val collectJob = backgroundScope.launch(UnconfinedTestDispatcher(testScheduler)) { homeViewModel.popularMovies.collect()}
+        val trending = homeViewModel.popularMovies.value
         assertTrue(trending is UiState.Error)
         collectJob.cancel()
     }
