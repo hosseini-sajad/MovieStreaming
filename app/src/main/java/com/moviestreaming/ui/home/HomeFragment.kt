@@ -13,7 +13,6 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.moviestreaming.data.model.TopRateMovieEntity
-import com.moviestreaming.data.model.TrendingEntity
 import com.moviestreaming.data.model.base.BaseEntity
 import com.moviestreaming.databinding.FragmentHomeBinding
 import com.moviestreaming.ui.ItemClickListener
@@ -25,7 +24,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class HomeFragment : Fragment(), ItemClickListener<BaseEntity> {
+class HomeFragment : Fragment() {
 
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
@@ -47,7 +46,11 @@ class HomeFragment : Fragment(), ItemClickListener<BaseEntity> {
                         is UiState.Loading -> binding.animProgress.visibility = View.VISIBLE
                         is UiState.Success -> {
                             binding.animProgress.visibility = View.GONE
-                            val viewPagerAdapter = TrendingAdapter(uiState.data, this@HomeFragment)
+                            val viewPagerAdapter = TrendingAdapter(uiState.data, object : ItemClickListener<BaseEntity> {
+                                override fun onItemClickListener(model: BaseEntity) {
+
+                                }
+                            })
                             val viewPager = binding.viewpager
                             viewPager.apply {
                                 SliderPageUtil.sliderAutoChange(
@@ -120,24 +123,16 @@ class HomeFragment : Fragment(), ItemClickListener<BaseEntity> {
     ) {
         recyclerView.apply {
             layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-            adapter = TopRateMovieAdapter(uiState.data, this@HomeFragment)
+            adapter = TopRateMovieAdapter(uiState.data, object : ItemClickListener<BaseEntity> {
+                override fun onItemClickListener(model: BaseEntity) {
+                    TODO("Not yet implemented")
+                }
+            })
         }
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
-    }
-
-    override fun onItemClickListener(model: BaseEntity) {
-        when (model) {
-            is TopRateMovieEntity -> {
-                Log.d("JJJJJJJ", "onItemClickListener: NOOOOOOOOOOOOOOOO")
-            }
-
-            is TrendingEntity -> {
-                Log.d("JJJJJJJ", "onItemClickListener: YESSSSSSSSSSSSSS")
-            }
-        }
     }
 }

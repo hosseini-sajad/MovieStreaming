@@ -5,6 +5,6 @@ import com.moviestreaming.data.model.base.BaseEntity
 data class TrendingEntity(
     override val id: Int,
     override val title: String?,
-    val image: String,
-    val media_type: String
-) : BaseEntity(id, title)
+    override val image: String,
+    override val mediaType: String
+) : BaseEntity(id, title, image, mediaType)

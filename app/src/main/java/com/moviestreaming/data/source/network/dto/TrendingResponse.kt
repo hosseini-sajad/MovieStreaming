@@ -60,7 +60,7 @@ data class TrendingResponse(
     ): DomainMapper<TrendingEntity> {
         override fun toEntity(): TrendingEntity = TrendingEntity(
             id = id, title = name ?: originalTitle
-            , image = backdropPath, media_type = mediaType
+            , image = backdropPath, mediaType = mediaType
         )
     }
 }

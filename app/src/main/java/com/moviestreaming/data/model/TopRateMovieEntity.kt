@@ -5,8 +5,8 @@ import com.moviestreaming.data.model.base.BaseEntity
 data class TopRateMovieEntity(
     override val id: Int,
     override val title: String?,
-    val image: String,
+    override val image: String,
+    override val mediaType: String = "movie",
     val genre: Int,
-    val media_type: String = "movie",
     val rate: Double
-): BaseEntity(id, title)
+): BaseEntity(id, title, image, mediaType)
