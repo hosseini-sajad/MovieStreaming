@@ -10,6 +10,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.moviestreaming.data.model.TopRateMovieEntity
@@ -48,7 +49,7 @@ class HomeFragment : Fragment() {
                             binding.animProgress.visibility = View.GONE
                             val viewPagerAdapter = TrendingAdapter(uiState.data, object : ItemClickListener<BaseEntity> {
                                 override fun onItemClickListener(model: BaseEntity) {
-
+                                    findNavController().navigate(HomeFragmentDirections.actionNavigationHomeToDetailFragment())
                                 }
                             })
                             val viewPager = binding.viewpager
@@ -125,7 +126,7 @@ class HomeFragment : Fragment() {
             layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
             adapter = TopRateMovieAdapter(uiState.data, object : ItemClickListener<BaseEntity> {
                 override fun onItemClickListener(model: BaseEntity) {
-                    TODO("Not yet implemented")
+                    findNavController().navigate(HomeFragmentDirections.actionNavigationHomeToDetailFragment())
                 }
             })
         }
