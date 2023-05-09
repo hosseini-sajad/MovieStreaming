@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.moviestreaming.data.model.TopRateMovieEntity
 import com.moviestreaming.data.model.TrendingEntity
+import com.moviestreaming.data.model.base.BaseEntity
 import com.moviestreaming.databinding.FragmentHomeBinding
 import com.moviestreaming.ui.ItemClickListener
 import com.moviestreaming.ui.home.adapter.TopRateMovieAdapter
@@ -24,7 +25,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class HomeFragment : Fragment(), ItemClickListener<TrendingEntity> {
+class HomeFragment : Fragment(), ItemClickListener<BaseEntity> {
 
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
@@ -113,14 +114,13 @@ class HomeFragment : Fragment(), ItemClickListener<TrendingEntity> {
         homeViewModel.getPopularMovies()
     }
 
-    private fun setupImdbRecyclerView(uiState: UiState.Success<List<TopRateMovieEntity>>, recyclerView: RecyclerView) {
+    private fun setupImdbRecyclerView(
+        uiState: UiState.Success<List<TopRateMovieEntity>>,
+        recyclerView: RecyclerView,
+    ) {
         recyclerView.apply {
             layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-            adapter = TopRateMovieAdapter(uiState.data, object : ItemClickListener<TopRateMovieEntity> {
-                override fun onItemClickListener(model: TopRateMovieEntity) {
-                    Log.d("YYYYYYYYY", "Noooooooooo")
-                }
-            })
+            adapter = TopRateMovieAdapter(uiState.data, this@HomeFragment)
         }
     }
 
@@ -129,7 +129,15 @@ class HomeFragment : Fragment(), ItemClickListener<TrendingEntity> {
         _binding = null
     }
 
-    override fun onItemClickListener(model: TrendingEntity) {
-        Log.d("YYYYYYYYY", "Yesssssss")
+    override fun onItemClickListener(model: BaseEntity) {
+        when (model) {
+            is TopRateMovieEntity -> {
+                Log.d("JJJJJJJ", "onItemClickListener: NOOOOOOOOOOOOOOOO")
+            }
+
+            is TrendingEntity -> {
+                Log.d("JJJJJJJ", "onItemClickListener: YESSSSSSSSSSSSSS")
+            }
+        }
     }
 }

@@ -9,12 +9,13 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.moviestreaming.R
 import com.moviestreaming.data.model.TopRateMovieEntity
+import com.moviestreaming.data.model.base.BaseEntity
 import com.moviestreaming.ui.ItemClickListener
 import com.moviestreaming.utils.getImageUrl
 
 class TopRateMovieAdapter(
     private val listOfTopRAteMovie: List<TopRateMovieEntity>,
-    private val itemClickListener: ItemClickListener<TopRateMovieEntity>?,
+    private val itemClickListener: ItemClickListener<BaseEntity>?,
 ) : RecyclerView.Adapter<TopRateMovieViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TopRateMovieViewHolder {
@@ -38,7 +39,7 @@ class TopRateMovieViewHolder constructor(itemView: View) : RecyclerView.ViewHold
 
     fun bind(
         item: TopRateMovieEntity,
-        listener: ItemClickListener<TopRateMovieEntity>?,
+        listener: ItemClickListener<BaseEntity>?,
     ) {
         val url = getImageUrl(item.image)
         Glide.with(imageSlider.context)

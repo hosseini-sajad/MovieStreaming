@@ -9,6 +9,7 @@ import androidx.viewpager.widget.PagerAdapter
 import com.bumptech.glide.Glide
 import com.moviestreaming.R
 import com.moviestreaming.data.model.TrendingEntity
+import com.moviestreaming.data.model.base.BaseEntity
 import com.moviestreaming.ui.ItemClickListener
 import com.moviestreaming.utils.getImageUrl
 import java.util.Objects
@@ -64,7 +65,7 @@ class TrendingViewHolder constructor(itemView: View) : RecyclerView.ViewHolder(i
 
 class TrendingAdapter(
     private val lisOfTrending: List<TrendingEntity>,
-    private val itemClickListener: ItemClickListener<TrendingEntity>?,
+    private val itemClickListener: ItemClickListener<BaseEntity>?,
 ) : PagerAdapter() {
     override fun getCount() = lisOfTrending.size
 
@@ -83,6 +84,10 @@ class TrendingAdapter(
         name.text = item.title
 
         Objects.requireNonNull(container).addView(itemView);
+
+        itemView.setOnClickListener {
+            itemClickListener?.onItemClickListener(item)
+        }
 
         return itemView
     }
