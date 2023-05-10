@@ -4,6 +4,7 @@
     <color name="colorPrimaryDark">#1B1B1B</color>
     <color name="colorPrimaryLight">#2E2E2E</color>
 
+    <color name="gray_300">#7EAFAFAF</color>
     <color name="gray_400">#08202020</color>
     <color name="gray_500">#CC202020</color>
     <color name="gray_600">#99202020</color>
@@ -27,9 +28,8 @@
     <color name="slider_gradient_center">@color/gray_600</color>
     <color name="slider_gradient_end">@color/gray_400</color>
     <color name="slider_gradient_start">@color/gray_500</color>
-
     <color name="topic_color">@color/colorAccent</color>
-
     <color name="text_color">#fff</color>
+    <color name="light_gray_background">@color/gray_300</color>
 
 </resources>

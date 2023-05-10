@@ -5,4 +5,9 @@
     <string name="top_imdb">Top IMDB</string>
     <string name="more">More ></string>
     <string name="new_movies">New Movies</string>
+    <string name="director">Director</string>
+    <string name="budget">Budget</string>
+    <string name="description">Description</string>
+    <string name="cast">Cast</string>
+    <string name="similar_movies">Similar Movies</string>
 </resources>

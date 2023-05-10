@@ -1,14 +1,350 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/colorPrimaryDark"
     tools:context=".ui.detail.DetailFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/transparent"
+        android:fitsSystemWindows="true">
+
+        <com.google.android.material.appbar.CollapsingToolbarLayout
+            android:id="@+id/collapsingToolbar"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fitsSystemWindows="true"
+            app:contentScrim="?attr/colorPrimaryDark"
+            app:expandedTitleMarginEnd="64dp"
+            app:expandedTitleMarginStart="48dp"
+            app:layout_scrollFlags="scroll|exitUntilCollapsed">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:layout_width="match_parent"
+                android:layout_height="250dp"
+                android:scaleType="centerCrop"
+                app:layout_collapseMode="parallax" />
+
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                app:layout_collapseMode="pin">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <androidx.appcompat.widget.AppCompatImageView
+                        android:id="@+id/backButton"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:elevation="2dp"
+                        android:src="@drawable/ic_back"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:tint="@color/colorAccent" />
+
+                    <androidx.appcompat.widget.AppCompatImageView
+                        android:id="@+id/bookmarkButton"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_margin="10dp"
+                        android:elevation="2dp"
+                        android:src="@drawable/ic_bookmark_inactive"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:tint="@color/colorAccent" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+            </androidx.appcompat.widget.Toolbar>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                app:layout_collapseMode="parallax">
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="100dp"
+                    android:background="@drawable/slider_gradient"
+                    app:layout_constraintBottom_toBottomOf="parent" />
+
+                <TextView
+                    android:id="@+id/name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginBottom="5dp"
+                    android:fontFamily="@font/nexa_bold"
+                    android:textColor="@color/white"
+                    android:textSize="20sp"
+                    app:layout_constraintBottom_toTopOf="@id/genresText"
+                    app:layout_constraintStart_toStartOf="parent"
+                    tools:text="john wick" />
+
+                <TextView
+                    android:id="@+id/genresText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginBottom="20dp"
+                    android:background="@drawable/light_gray_background"
+                    android:fontFamily="@font/helvetica"
+                    android:paddingLeft="5dp"
+                    android:paddingTop="3dp"
+                    android:paddingRight="5dp"
+                    android:paddingBottom="3dp"
+                    android:textColor="@color/white"
+                    android:textSize="12sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    tools:text="action" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </com.google.android.material.appbar.CollapsingToolbarLayout>
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/playButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="10dp"
+        android:src="@drawable/ic_play"
+        android:tint="@color/colorPrimary"
+        app:layout_anchor="@+id/appBar"
+        app:layout_anchorGravity="bottom|end"
+        app:layout_scrollFlags="scroll|enterAlways|enterAlwaysCollapsed" />
+
+    <ScrollView
+        android:id="@+id/scrollView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="test" />
+        android:background="@color/colorPrimaryDark"
+        android:paddingTop="10dp"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-</FrameLayout>
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/imdbImage"
+                android:layout_width="30dp"
+                android:layout_height="20dp"
+                android:layout_gravity="start|center_vertical"
+                android:layout_marginStart="10dp"
+                android:scaleType="centerCrop"
+                android:src="@drawable/ic_imdb"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/rate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="10dp"
+                android:fontFamily="@font/helvetica"
+                android:textColor="@color/white"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toEndOf="@id/imdbImage"
+                app:layout_constraintTop_toTopOf="@id/imdbImage"
+                tools:text="8.4" />
+
+            <View
+                android:id="@+id/dividerOne"
+                android:layout_width="2dp"
+                android:layout_height="18dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="3dp"
+                android:layout_marginBottom="3dp"
+                android:background="@color/colorAccent"
+                app:layout_constraintBottom_toBottomOf="@id/rate"
+                app:layout_constraintStart_toEndOf="@id/rate"
+                app:layout_constraintTop_toTopOf="@id/rate" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/published"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="10dp"
+                android:fontFamily="@font/helvetica"
+                android:textColor="@color/white"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                app:layout_constraintBaseline_toBaselineOf="@+id/rate"
+                app:layout_constraintStart_toEndOf="@id/dividerOne"
+                tools:text="2018" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/directorText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="10dp"
+                android:fontFamily="@font/helvetica"
+                android:text="@string/director"
+                android:textColor="@color/white"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/imdbImage" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/director"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="10dp"
+                android:fontFamily="@font/helvetica"
+                android:textColor="@color/white"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                app:layout_constraintBaseline_toBaselineOf="@+id/directorText"
+                app:layout_constraintStart_toEndOf="@id/directorText"
+                tools:text="Chad Stahelski" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/budgetText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="10dp"
+                android:fontFamily="@font/helvetica"
+                android:text="@string/budget"
+                android:textColor="@color/white"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/directorText" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/budget"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="10dp"
+                android:fontFamily="@font/helvetica"
+                android:textColor="@color/white"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                app:layout_constraintBaseline_toBaselineOf="@+id/budgetText"
+                app:layout_constraintStart_toEndOf="@id/budgetText"
+                tools:text="200 million USD" />
+
+            <TextView
+                android:id="@+id/descriptionText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/rounded_text_background"
+                android:fontFamily="@font/nexa_bold"
+                android:padding="5dp"
+                android:text="@string/description"
+                android:textColor="@color/colorPrimaryDark"
+                android:textSize="15sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/budgetText" />
+
+            <TextView
+                android:id="@+id/description"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="10dp"
+                android:fontFamily="@font/helvetica"
+                android:lineSpacingExtra="5dp"
+                android:textColor="@color/white"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                app:layout_constraintTop_toBottomOf="@+id/descriptionText" />
+
+            <TextView
+                android:id="@+id/tv_cast"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/rounded_text_background"
+                android:fontFamily="@font/nexa_bold"
+                android:padding="5dp"
+                android:text="@string/cast"
+                android:textColor="@color/colorPrimaryDark"
+                android:textSize="15sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/description" />
+
+            <com.mlsdev.animatedrv.AnimatedRecyclerView
+                android:id="@+id/castRecyclerview"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                app:animationDuration="600"
+                app:layoutAnimation="@anim/layout_animation_from_bottom_scale"
+                app:layoutManagerReverse="true"
+                app:layoutManagerType="grid"
+                app:layout_constraintTop_toBottomOf="@+id/tv_cast" />
+
+            <com.airbnb.lottie.LottieAnimationView
+                android:id="@+id/loading"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:scaleType="centerCrop"
+                android:visibility="visible"
+                app:layout_constraintBottom_toBottomOf="@+id/castRecyclerview"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/castRecyclerview"
+                app:lottie_autoPlay="true"
+                app:lottie_loop="true"
+                app:lottie_rawRes="@raw/loading3"
+                app:lottie_speed="1" />
+
+            <TextView
+                android:id="@+id/tv_similarMovies"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/rounded_text_background"
+                android:fontFamily="@font/nexa_bold"
+                android:padding="5dp"
+                android:text="@string/similar_movies"
+                android:textColor="@color/colorPrimaryDark"
+                android:textSize="15sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/castRecyclerview" />
+
+            <com.mlsdev.animatedrv.AnimatedRecyclerView
+                android:id="@+id/similarMovieRecyclerview"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                app:animationDuration="600"
+                app:layoutAnimation="@anim/layout_animation_from_bottom_scale"
+                app:layoutManagerReverse="true"
+                app:layoutManagerType="grid"
+                app:layout_constraintTop_toBottomOf="@+id/tv_similarMovies" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </ScrollView>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
