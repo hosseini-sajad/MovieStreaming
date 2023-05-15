@@ -9,4 +9,5 @@ interface NetworkDataSource {
     suspend fun getTopRateMovie(): List<TopRateMovie>?
 
     suspend fun getPopularMovies(): List<TopRateMovie>?
+    suspend fun getMovieDetail(): List<TopRateMovie>?
 }

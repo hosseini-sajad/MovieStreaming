@@ -13,6 +13,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.moviestreaming.R
 import com.moviestreaming.data.model.TopRateMovieEntity
 import com.moviestreaming.data.model.base.BaseEntity
 import com.moviestreaming.databinding.FragmentHomeBinding
@@ -47,11 +48,13 @@ class HomeFragment : Fragment() {
                         is UiState.Loading -> binding.animProgress.visibility = View.VISIBLE
                         is UiState.Success -> {
                             binding.animProgress.visibility = View.GONE
-                            val viewPagerAdapter = TrendingAdapter(uiState.data, object : ItemClickListener<BaseEntity> {
-                                override fun onItemClickListener(model: BaseEntity) {
-                                    findNavController().navigate(HomeFragmentDirections.actionNavigationHomeToDetailFragment())
-                                }
-                            })
+                            val viewPagerAdapter = TrendingAdapter(
+                                uiState.data,
+                                object : ItemClickListener<BaseEntity> {
+                                    override fun onItemClickListener(model: BaseEntity) {
+                                        findNavController().navigate(HomeFragmentDirections.actionNavigationHomeToDetailFragment())
+                                    }
+                                })
                             val viewPager = binding.viewpager
                             viewPager.apply {
                                 SliderPageUtil.sliderAutoChange(
@@ -126,7 +129,9 @@ class HomeFragment : Fragment() {
             layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
             adapter = TopRateMovieAdapter(uiState.data, object : ItemClickListener<BaseEntity> {
                 override fun onItemClickListener(model: BaseEntity) {
-                    findNavController().navigate(HomeFragmentDirections.actionNavigationHomeToDetailFragment())
+                    if (findNavController().currentDestination?.id == R.id.navigation_home) {
+                        findNavController().navigate(HomeFragmentDirections.actionNavigationHomeToDetailFragment())
+                    }
                 }
             })
         }
