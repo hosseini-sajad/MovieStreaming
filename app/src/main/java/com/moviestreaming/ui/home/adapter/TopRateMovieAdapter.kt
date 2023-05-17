@@ -12,6 +12,7 @@ import com.moviestreaming.data.model.TopRateMovieEntity
 import com.moviestreaming.data.model.base.BaseEntity
 import com.moviestreaming.ui.ItemClickListener
 import com.moviestreaming.utils.getImageUrl
+import com.moviestreaming.utils.roundedTo2Decimal
 
 class TopRateMovieAdapter(
     private val listOfTopRAteMovie: List<TopRateMovieEntity>,
@@ -50,7 +51,7 @@ class TopRateMovieViewHolder constructor(itemView: View) : RecyclerView.ViewHold
 
         movieName.text = item.title
         movieGenre.text = item.genre.toString()
-        rate.text = item.rate.toString()
+        rate.text = roundedTo2Decimal(item.rate).toString()
 
         itemView.setOnClickListener {
             listener?.onItemClickListener(item)

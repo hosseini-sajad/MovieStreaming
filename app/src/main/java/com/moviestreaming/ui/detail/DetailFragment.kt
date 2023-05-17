@@ -10,11 +10,20 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.moviestreaming.R
 import com.moviestreaming.data.model.GenreEntity
 import com.moviestreaming.data.model.MovieDetailEntity
+import com.moviestreaming.data.model.TopRateMovieEntity
+import com.moviestreaming.data.model.base.BaseEntity
 import com.moviestreaming.databinding.FragmentDetailBinding
+import com.moviestreaming.ui.ItemClickListener
+import com.moviestreaming.ui.home.HomeFragmentDirections
+import com.moviestreaming.ui.home.adapter.TopRateMovieAdapter
 import com.moviestreaming.utils.UiState
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -52,6 +61,25 @@ class DetailFragment : Fragment() {
             }
         }
 
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                detailViewModel.similarMovies.collect { uiState ->
+                    when (uiState) {
+                        is UiState.Loading -> binding.similarLoading.visibility = View.VISIBLE
+                        is UiState.Success -> {
+                            binding.similarLoading.visibility = View.INVISIBLE
+                            setupSimilarMoviesRecyclerView(uiState.data, binding.similarMovieRecyclerview)
+                        }
+                        is UiState.Error -> {
+                            binding.similarLoading.visibility = View.INVISIBLE
+                            Log.d("JJJJJJJJ", "onCreateView: ${uiState.message}")
+                        }
+                    }
+
+                }
+            }
+        }
+
 
         return binding.root
     }
@@ -59,7 +87,9 @@ class DetailFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        detailViewModel.getMovieDetail(args.movieId)
+        val movieId = args.movieId
+        detailViewModel.getMovieDetail(movieId)
+        detailViewModel.getSimilarMovies(movieId)
     }
 
     private fun showMovieDetail(movieDetailEntity: MovieDetailEntity) {
@@ -76,10 +106,26 @@ class DetailFragment : Fragment() {
         binding.description.text = movieDetailEntity.description
     }
 
+    private fun setupSimilarMoviesRecyclerView(
+        data: List<TopRateMovieEntity>,
+        recyclerView: RecyclerView,
+    ) {
+        recyclerView.apply {
+            layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+            adapter = TopRateMovieAdapter(data, object : ItemClickListener<BaseEntity> {
+                override fun onItemClickListener(model: BaseEntity) {
+                    if (findNavController().currentDestination?.id == R.id.navigation_home) {
+                        findNavController().navigate(HomeFragmentDirections.actionNavigationHomeToDetailFragment(model.id))
+                    }
+                }
+            })
+        }
+    }
+
     private fun appendGenres(genres: List<GenreEntity>): String? {
         var genreFormat : String? = null
         genres.forEach{
-            genreFormat = it.name + ", "
+            genreFormat = it.name
         }
         return genreFormat
     }

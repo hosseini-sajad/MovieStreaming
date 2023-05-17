@@ -14,4 +14,6 @@ interface MovieRepository {
     suspend fun getPopularMovies(): Flow<Result<List<TopRateMovieEntity>>>
 
     suspend fun getMovieDetails(movieId: Int): Flow<Result<MovieDetailEntity>>
+
+    suspend fun getSimilarMovies(movieId: Int): Flow<Result<List<TopRateMovieEntity>>>
 }
