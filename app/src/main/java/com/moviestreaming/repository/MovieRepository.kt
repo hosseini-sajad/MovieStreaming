@@ -1,5 +1,6 @@
 package com.moviestreaming.repository
 
+import com.moviestreaming.data.model.MovieDetailEntity
 import com.moviestreaming.data.model.TopRateMovieEntity
 import com.moviestreaming.data.model.TrendingEntity
 import com.moviestreaming.utils.Result
@@ -11,4 +12,6 @@ interface MovieRepository {
     suspend fun getTopRateMovie(): Flow<Result<List<TopRateMovieEntity>>>
 
     suspend fun getPopularMovies(): Flow<Result<List<TopRateMovieEntity>>>
+
+    suspend fun getMovieDetails(movieId: Int): Flow<Result<MovieDetailEntity>>
 }
