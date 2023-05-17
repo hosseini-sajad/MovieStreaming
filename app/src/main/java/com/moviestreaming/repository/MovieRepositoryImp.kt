@@ -7,6 +7,7 @@ import com.moviestreaming.utils.Result
 import com.moviestreaming.utils.getImageUrl
 import com.moviestreaming.utils.parsError
 import com.moviestreaming.utils.roundedTo2Decimal
+import com.moviestreaming.utils.showYear
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
@@ -50,7 +51,7 @@ class MovieRepositoryImp @Inject constructor(private val networkDataSource: Netw
                 getImageUrl(movieDetail.backdropPath),
                 Constants.MOVIE,
                 roundedTo2Decimal(movieDetail.voteAverage),
-                movieDetail.releaseDate,
+                showYear(movieDetail.releaseDate),
                 movieDetail.budget,
                 movieDetail.overview,
                 movieDetail.genresDto.map { it.toEntity() }
