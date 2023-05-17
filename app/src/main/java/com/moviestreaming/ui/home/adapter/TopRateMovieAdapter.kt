@@ -42,11 +42,11 @@ class TopRateMovieViewHolder constructor(itemView: View) : RecyclerView.ViewHold
         item: TopRateMovieEntity,
         listener: ItemClickListener<BaseEntity>?,
     ) {
-        val url = getImageUrl(item.image)
+        val url = item.image?.let { getImageUrl(it) }
         Glide.with(imageSlider.context)
             .load(url)
             .override(130, 160)
-//            .error(R.drawable.ic_image_error)
+            .error(R.drawable.ic_image_error)
             .into(imageSlider)
 
         movieName.text = item.title

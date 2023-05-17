@@ -6,7 +6,7 @@ import com.moviestreaming.utils.Constants
 data class TopRateMovieEntity(
     override val id: Int,
     override val title: String?,
-    override val image: String,
+    override val image: String?,
     override val mediaType: String = Constants.MOVIE,
     val genre: Int,
     val rate: Double
