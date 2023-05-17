@@ -1,9 +1,9 @@
 package com.moviestreaming.data.model
 
 data class CreditsEntity(
+    val id: Int,
     val castDto: List<Cast>,
     val crewDto: List<Crew>,
-    val id: Int,
 ) {
     data class Cast(
         val castId: Int,

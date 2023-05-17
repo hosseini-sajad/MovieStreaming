@@ -9,7 +9,7 @@ data class MovieDetailEntity(
     override val mediaType: String,
     val rate: Double,
     val releasedDate: String,
-    val director: String,
     val budget: Int,
-    val description: String
+    val description: String,
+    val genres: List<GenreEntity>,
 ) : BaseEntity(id, title, image, mediaType)

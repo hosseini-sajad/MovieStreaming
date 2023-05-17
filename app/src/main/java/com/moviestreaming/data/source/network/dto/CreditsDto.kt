@@ -3,6 +3,9 @@ package com.moviestreaming.data.source.network.dto
 
 import androidx.annotation.Keep
 import com.google.gson.annotations.SerializedName
+import com.moviestreaming.data.model.CreditsEntity.Cast
+import com.moviestreaming.data.model.CreditsEntity.Crew
+import com.moviestreaming.utils.mapper.DomainMapper
 
 @Keep
 data class CreditsDto(
@@ -39,7 +42,10 @@ data class CreditsDto(
         val popularity: Double,
         @SerializedName("profile_path")
         val profilePath: String,
-    )
+    ): DomainMapper<Cast> {
+        override fun toEntity() = Cast(id, originalName, character, knownForDepartment, profilePath, gender, popularity, creditId)
+
+    }
 
     @Keep
     data class CrewDto(
@@ -65,5 +71,8 @@ data class CreditsDto(
         val popularity: Double,
         @SerializedName("profile_path")
         val profilePath: String,
-    )
+    ): DomainMapper<Crew> {
+        override fun toEntity() = Crew(creditId, department, gender, job, originalName, profilePath, popularity)
+
+    }
 }

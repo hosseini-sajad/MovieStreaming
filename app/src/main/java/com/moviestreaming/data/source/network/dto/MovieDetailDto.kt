@@ -3,9 +3,11 @@ package com.moviestreaming.data.source.network.dto
 
 import androidx.annotation.Keep
 import com.google.gson.annotations.SerializedName
+import com.moviestreaming.data.model.GenreEntity
+import com.moviestreaming.utils.mapper.DomainMapper
 
 @Keep
-data class MovieDetailResponse(
+data class MovieDetailDto(
     @SerializedName("adult")
     val adult: Boolean,
     @SerializedName("backdrop_path")
@@ -15,7 +17,7 @@ data class MovieDetailResponse(
     @SerializedName("budget")
     val budget: Int,
     @SerializedName("genres")
-    val genres: List<Genre>,
+    val genresDto: List<GenreDto>,
     @SerializedName("homepage")
     val homepage: String,
     @SerializedName("id")
@@ -33,9 +35,9 @@ data class MovieDetailResponse(
     @SerializedName("poster_path")
     val posterPath: String,
     @SerializedName("production_companies")
-    val productionCompanies: List<ProductionCompany>,
+    val productionCompaniesDto: List<ProductionCompanyDto>,
     @SerializedName("production_countries")
-    val productionCountries: List<ProductionCountry>,
+    val productionCountriesDto: List<ProductionCountryDto>,
     @SerializedName("release_date")
     val releaseDate: String,
     @SerializedName("revenue")
@@ -43,7 +45,7 @@ data class MovieDetailResponse(
     @SerializedName("runtime")
     val runtime: Int,
     @SerializedName("spoken_languages")
-    val spokenLanguages: List<SpokenLanguage>,
+    val spokenLanguagesDto: List<SpokenLanguageDto>,
     @SerializedName("status")
     val status: String,
     @SerializedName("tagline")
@@ -55,18 +57,20 @@ data class MovieDetailResponse(
     @SerializedName("vote_average")
     val voteAverage: Double,
     @SerializedName("vote_count")
-    val voteCount: Int
+    val voteCount: Int,
 ) {
     @Keep
-    data class Genre(
+    data class GenreDto(
         @SerializedName("id")
         val id: Int,
         @SerializedName("name")
         val name: String
-    )
+    ): DomainMapper<GenreEntity> {
+        override fun toEntity() = GenreEntity(id, name)
+    }
 
     @Keep
-    data class ProductionCompany(
+    data class ProductionCompanyDto(
         @SerializedName("id")
         val id: Int,
         @SerializedName("logo_path")
@@ -78,7 +82,7 @@ data class MovieDetailResponse(
     )
 
     @Keep
-    data class ProductionCountry(
+    data class ProductionCountryDto(
         @SerializedName("iso_3166_1")
         val iso31661: String,
         @SerializedName("name")
@@ -86,7 +90,7 @@ data class MovieDetailResponse(
     )
 
     @Keep
-    data class SpokenLanguage(
+    data class SpokenLanguageDto(
         @SerializedName("english_name")
         val englishName: String,
         @SerializedName("iso_639_1")
