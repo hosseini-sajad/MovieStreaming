@@ -24,6 +24,10 @@
         android:id="@+id/detailFragment"
         android:name="com.moviestreaming.ui.detail.DetailFragment"
         android:label="fragment_detail"
-        tools:layout="@layout/fragment_detail" />
+        tools:layout="@layout/fragment_detail" >
+        <argument
+            android:name="movieId"
+            app:argType="integer" />
+    </fragment>
 
 </navigation>

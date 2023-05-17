@@ -52,7 +52,7 @@ class HomeFragment : Fragment() {
                                 uiState.data,
                                 object : ItemClickListener<BaseEntity> {
                                     override fun onItemClickListener(model: BaseEntity) {
-                                        findNavController().navigate(HomeFragmentDirections.actionNavigationHomeToDetailFragment())
+                                        findNavController().navigate(HomeFragmentDirections.actionNavigationHomeToDetailFragment(model.id))
                                     }
                                 })
                             val viewPager = binding.viewpager
@@ -130,7 +130,7 @@ class HomeFragment : Fragment() {
             adapter = TopRateMovieAdapter(uiState.data, object : ItemClickListener<BaseEntity> {
                 override fun onItemClickListener(model: BaseEntity) {
                     if (findNavController().currentDestination?.id == R.id.navigation_home) {
-                        findNavController().navigate(HomeFragmentDirections.actionNavigationHomeToDetailFragment())
+                        findNavController().navigate(HomeFragmentDirections.actionNavigationHomeToDetailFragment(model.id))
                     }
                 }
             })
