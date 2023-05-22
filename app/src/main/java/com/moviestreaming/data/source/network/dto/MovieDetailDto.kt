@@ -4,7 +4,12 @@ package com.moviestreaming.data.source.network.dto
 import androidx.annotation.Keep
 import com.google.gson.annotations.SerializedName
 import com.moviestreaming.data.model.GenreEntity
+import com.moviestreaming.data.model.MovieDetailEntity
+import com.moviestreaming.utils.Constants
+import com.moviestreaming.utils.getImageUrl
 import com.moviestreaming.utils.mapper.DomainMapper
+import com.moviestreaming.utils.roundedTo2Decimal
+import com.moviestreaming.utils.showYear
 
 @Keep
 data class MovieDetailDto(
@@ -58,7 +63,7 @@ data class MovieDetailDto(
     val voteAverage: Double,
     @SerializedName("vote_count")
     val voteCount: Int,
-) {
+): DomainMapper<MovieDetailEntity?> {
     @Keep
     data class GenreDto(
         @SerializedName("id")
@@ -96,6 +101,18 @@ data class MovieDetailDto(
         @SerializedName("iso_639_1")
         val iso6391: String,
         @SerializedName("name")
-        val name: String
+        val name: String,
+    )
+
+    override fun toEntity() = MovieDetailEntity(
+        id = id,
+        title = title,
+        image = getImageUrl(backdropPath),
+        Constants.MOVIE,
+        rate = roundedTo2Decimal(voteAverage),
+        releasedDate = showYear(releaseDate),
+        budget = budget,
+        description = overview,
+        genres = genresDto.map { it.toEntity() }
     )
 }

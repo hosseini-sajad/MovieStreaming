@@ -13,9 +13,9 @@ interface NetworkDataSource {
 
     suspend fun getPopularMovies(): List<TopRateMovie>?
 
-    suspend fun getMovieDetail(movieId: Int): MovieDetailDto
+    suspend fun getMovieDetail(movieId: Int): MovieDetailDto?
 
     suspend fun getMovieCredits(movieId: Int): CreditsDto
 
-    suspend fun getSimilarMovies(movieId: Int): SimilarMoviesDto
+    suspend fun getSimilarMovies(movieId: Int): SimilarMoviesDto?
 }

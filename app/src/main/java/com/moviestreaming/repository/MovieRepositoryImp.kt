@@ -1,13 +1,8 @@
 package com.moviestreaming.repository
 
-import com.moviestreaming.data.model.MovieDetailEntity
 import com.moviestreaming.data.source.NetworkDataSource
-import com.moviestreaming.utils.Constants
 import com.moviestreaming.utils.Result
-import com.moviestreaming.utils.getImageUrl
 import com.moviestreaming.utils.parsError
-import com.moviestreaming.utils.roundedTo2Decimal
-import com.moviestreaming.utils.showYear
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
@@ -45,18 +40,7 @@ class MovieRepositoryImp @Inject constructor(private val networkDataSource: Netw
 
             val movieDetail = networkDataSource.getMovieDetail(movieId)
 
-            val movieDetailEntity = MovieDetailEntity(
-                movieDetail.id,
-                movieDetail.title,
-                getImageUrl(movieDetail.backdropPath),
-                Constants.MOVIE,
-                roundedTo2Decimal(movieDetail.voteAverage),
-                showYear(movieDetail.releaseDate),
-                movieDetail.budget,
-                movieDetail.overview,
-                movieDetail.genresDto.map { it.toEntity() }
-            )
-            emit(Result.Success(movieDetailEntity))
+            emit(movieDetail?.let { Result.Success(it.toEntity()) })
         }catch (e: Exception) {
             val errorResponse = parsError(e)
             emit(Result.Error(errorResponse.statusMessage))
@@ -65,7 +49,10 @@ class MovieRepositoryImp @Inject constructor(private val networkDataSource: Netw
 
     override suspend fun getSimilarMovies(movieId: Int) = flow {
         try {
-            emit(Result.Success(networkDataSource.getSimilarMovies(movieId).similarMoviesDto.map { it.toEntity() }))
+            emit(networkDataSource.getSimilarMovies(movieId)?.similarMoviesDto?.let { similarMoviesDto ->
+                Result.Success(
+                    similarMoviesDto.map { it.toEntity() })
+            })
         } catch (e: Exception) {
             val errorResponse = parsError(e)
             emit(Result.Error(errorResponse.statusMessage))

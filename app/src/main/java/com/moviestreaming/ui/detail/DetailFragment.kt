@@ -122,9 +122,9 @@ class DetailFragment : Fragment() {
         }
     }
 
-    private fun appendGenres(genres: List<GenreEntity>): String? {
+    private fun appendGenres(genres: List<GenreEntity>?): String? {
         var genreFormat : String? = null
-        genres.forEach{
+        genres?.forEach{
             genreFormat = it.name
         }
         return genreFormat

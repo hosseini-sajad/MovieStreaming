@@ -28,6 +28,7 @@ class DetailViewModel @Inject constructor(private val movieRepository: MovieRepo
                 when (it) {
                     is Result.Success -> mutableStateMovieDetail.value = UiState.Success(it.data)
                     is Result.Error -> mutableStateMovieDetail.value = UiState.Error(it.message)
+                    else -> {}
                 }
             }
         }
@@ -39,6 +40,7 @@ class DetailViewModel @Inject constructor(private val movieRepository: MovieRepo
                 when (it) {
                     is Result.Success -> mutableStateSimilarMovies.value = UiState.Success(it.data.take(5))
                     is Result.Error -> mutableStateSimilarMovies.value = UiState.Error(it.message)
+                    else -> {}
                 }
             }
         }
