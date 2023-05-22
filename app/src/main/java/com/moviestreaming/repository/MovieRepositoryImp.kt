@@ -37,10 +37,7 @@ class MovieRepositoryImp @Inject constructor(private val networkDataSource: Netw
 
     override suspend fun getMovieDetails(movieId: Int) = flow {
         try {
-
-            val movieDetail = networkDataSource.getMovieDetail(movieId)
-
-            emit(movieDetail?.let { Result.Success(it.toEntity()) })
+            emit(networkDataSource.getMovieDetail(movieId)!!.let { Result.Success(it.toEntity()) })
         }catch (e: Exception) {
             val errorResponse = parsError(e)
             emit(Result.Error(errorResponse.statusMessage))
@@ -49,10 +46,7 @@ class MovieRepositoryImp @Inject constructor(private val networkDataSource: Netw
 
     override suspend fun getSimilarMovies(movieId: Int) = flow {
         try {
-            emit(networkDataSource.getSimilarMovies(movieId)?.similarMoviesDto?.let { similarMoviesDto ->
-                Result.Success(
-                    similarMoviesDto.map { it.toEntity() })
-            })
+            emit(Result.Success(networkDataSource.getSimilarMovies(movieId)!!.similarMoviesDto.map { it.toEntity() }))
         } catch (e: Exception) {
             val errorResponse = parsError(e)
             emit(Result.Error(errorResponse.statusMessage))
