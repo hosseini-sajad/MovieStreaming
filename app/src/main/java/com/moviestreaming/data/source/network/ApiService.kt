@@ -26,7 +26,4 @@ interface ApiService {
 
     @GET("movie/{movieId}/similar")
     suspend fun getSimilarMovies(@Path("movieId") movieId: Int): SimilarMoviesDto
-
-    @GET("movie/{movieId}/credits")
-    suspend fun getCreditsMovies(@Path("movieId") movieId: Int): CreditsDto
 }

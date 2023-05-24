@@ -14,55 +14,55 @@ import com.moviestreaming.utils.showYear
 @Keep
 data class MovieDetailDto(
     @SerializedName("adult")
-    val adult: Boolean,
+    val adult: Boolean?,
     @SerializedName("backdrop_path")
-    val backdropPath: String,
+    val backdropPath: String?,
     @SerializedName("belongs_to_collection")
-    val belongsToCollection: Any,
+    val belongsToCollection: Any?,
     @SerializedName("budget")
-    val budget: Int,
+    val budget: Int?,
     @SerializedName("genres")
-    val genresDto: List<GenreDto>,
+    val genresDto: List<GenreDto>?,
     @SerializedName("homepage")
-    val homepage: String,
+    val homepage: String?,
     @SerializedName("id")
     val id: Int,
     @SerializedName("imdb_id")
-    val imdbId: String,
+    val imdbId: String?,
     @SerializedName("original_language")
-    val originalLanguage: String,
+    val originalLanguage: String?,
     @SerializedName("original_title")
-    val originalTitle: String,
+    val originalTitle: String?,
     @SerializedName("overview")
-    val overview: String,
+    val overview: String?,
     @SerializedName("popularity")
-    val popularity: Double,
+    val popularity: Double?,
     @SerializedName("poster_path")
-    val posterPath: String,
+    val posterPath: String?,
     @SerializedName("production_companies")
-    val productionCompaniesDto: List<ProductionCompanyDto>,
+    val productionCompaniesDto: List<ProductionCompanyDto>?,
     @SerializedName("production_countries")
-    val productionCountriesDto: List<ProductionCountryDto>,
+    val productionCountriesDto: List<ProductionCountryDto>?,
     @SerializedName("release_date")
-    val releaseDate: String,
+    val releaseDate: String?,
     @SerializedName("revenue")
-    val revenue: Int,
+    val revenue: Int?,
     @SerializedName("runtime")
-    val runtime: Int,
+    val runtime: Int?,
     @SerializedName("spoken_languages")
-    val spokenLanguagesDto: List<SpokenLanguageDto>,
+    val spokenLanguagesDto: List<SpokenLanguageDto>?,
     @SerializedName("status")
-    val status: String,
+    val status: String?,
     @SerializedName("tagline")
-    val tagline: String,
+    val tagline: String?,
     @SerializedName("title")
-    val title: String,
+    val title: String?,
     @SerializedName("video")
-    val video: Boolean,
+    val video: Boolean?,
     @SerializedName("vote_average")
-    val voteAverage: Double,
+    val voteAverage: Double?,
     @SerializedName("vote_count")
-    val voteCount: Int,
+    val voteCount: Int?,
 ): DomainMapper<MovieDetailEntity?> {
     @Keep
     data class GenreDto(
@@ -77,13 +77,13 @@ data class MovieDetailDto(
     @Keep
     data class ProductionCompanyDto(
         @SerializedName("id")
-        val id: Int,
+        val id: Int?,
         @SerializedName("logo_path")
-        val logoPath: String,
+        val logoPath: String?,
         @SerializedName("name")
-        val name: String,
+        val name: String?,
         @SerializedName("origin_country")
-        val originCountry: String
+        val originCountry: String?
     )
 
     @Keep
@@ -91,28 +91,28 @@ data class MovieDetailDto(
         @SerializedName("iso_3166_1")
         val iso31661: String,
         @SerializedName("name")
-        val name: String
+        val name: String?
     )
 
     @Keep
     data class SpokenLanguageDto(
         @SerializedName("english_name")
-        val englishName: String,
+        val englishName: String?,
         @SerializedName("iso_639_1")
-        val iso6391: String,
+        val iso6391: String?,
         @SerializedName("name")
-        val name: String,
+        val name: String?,
     )
 
     override fun toEntity() = MovieDetailEntity(
         id = id,
         title = title,
-        image = getImageUrl(backdropPath),
+        image = backdropPath?.let { getImageUrl(it) } ?: posterPath?.let { getImageUrl(it) },
         Constants.MOVIE,
-        rate = roundedTo2Decimal(voteAverage),
-        releasedDate = showYear(releaseDate),
+        rate = voteAverage?.let { roundedTo2Decimal(it) },
+        releasedDate = releaseDate?.let { showYear(it) },
         budget = budget,
         description = overview,
-        genres = genresDto.map { it.toEntity() }
+        genres = genresDto?.map { it.toEntity() }
     )
 }

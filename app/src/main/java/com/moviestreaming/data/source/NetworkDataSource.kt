@@ -15,7 +15,7 @@ interface NetworkDataSource {
 
     suspend fun getMovieDetail(movieId: Int): MovieDetailDto?
 
-    suspend fun getMovieCredits(movieId: Int): CreditsDto
+    suspend fun getMovieCredits(movieId: Int): CreditsDto?
 
     suspend fun getSimilarMovies(movieId: Int): SimilarMoviesDto?
 }

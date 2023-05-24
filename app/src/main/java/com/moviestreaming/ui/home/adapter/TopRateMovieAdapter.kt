@@ -15,7 +15,7 @@ import com.moviestreaming.utils.getImageUrl
 import com.moviestreaming.utils.roundedTo2Decimal
 
 class TopRateMovieAdapter(
-    private val listOfTopRAteMovie: List<TopRateMovieEntity>,
+    private val listOfTopRateMovie: List<TopRateMovieEntity>,
     private val itemClickListener: ItemClickListener<BaseEntity>?,
 ) : RecyclerView.Adapter<TopRateMovieViewHolder>() {
 
@@ -23,10 +23,10 @@ class TopRateMovieAdapter(
         return TopRateMovieViewHolder.from(parent)
     }
 
-    override fun getItemCount() = listOfTopRAteMovie.size
+    override fun getItemCount() = listOfTopRateMovie.size
 
     override fun onBindViewHolder(holder: TopRateMovieViewHolder, position: Int) {
-        val item = listOfTopRAteMovie[position]
+        val item = listOfTopRateMovie[position]
         holder.bind(item, itemClickListener)
     }
 

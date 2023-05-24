@@ -37,7 +37,16 @@ class MovieRepositoryImp @Inject constructor(private val networkDataSource: Netw
 
     override suspend fun getMovieDetails(movieId: Int) = flow {
         try {
-            emit(networkDataSource.getMovieDetail(movieId)!!.let { Result.Success(it.toEntity()) })
+            emit(Result.Success(networkDataSource.getMovieDetail(movieId)!!.toEntity()))
+        }catch (e: Exception) {
+            val errorResponse = parsError(e)
+            emit(Result.Error(errorResponse.statusMessage))
+        }
+    }
+
+    override suspend fun getMovieCredits(movieId: Int) = flow {
+        try {
+            emit(Result.Success(networkDataSource.getMovieCredits(movieId)!!.toEntity()))
         }catch (e: Exception) {
             val errorResponse = parsError(e)
             emit(Result.Error(errorResponse.statusMessage))

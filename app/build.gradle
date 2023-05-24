@@ -81,4 +81,7 @@ dependencies {
     // Animation RecyclerView
     implementation "com.mlsdev.animatedrv:library:2.0.0"
 
+    // Circle image
+    implementation 'de.hdodenhof:circleimageview:3.1.0'
+
 }

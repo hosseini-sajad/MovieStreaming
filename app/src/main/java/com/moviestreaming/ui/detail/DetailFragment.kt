@@ -16,13 +16,15 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.moviestreaming.R
+import com.moviestreaming.data.model.CreditsEntity.CastEntity
+import com.moviestreaming.data.model.CreditsEntity.CrewEntity
 import com.moviestreaming.data.model.GenreEntity
 import com.moviestreaming.data.model.MovieDetailEntity
 import com.moviestreaming.data.model.TopRateMovieEntity
 import com.moviestreaming.data.model.base.BaseEntity
 import com.moviestreaming.databinding.FragmentDetailBinding
 import com.moviestreaming.ui.ItemClickListener
-import com.moviestreaming.ui.home.HomeFragmentDirections
+import com.moviestreaming.ui.detail.adapter.CastAdapter
 import com.moviestreaming.ui.home.adapter.TopRateMovieAdapter
 import com.moviestreaming.utils.UiState
 import dagger.hilt.android.AndroidEntryPoint
@@ -80,6 +82,42 @@ class DetailFragment : Fragment() {
             }
         }
 
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                detailViewModel.castMovie.collect { uiState ->
+                    when (uiState) {
+                        is UiState.Loading -> binding.castLoading.visibility = View.VISIBLE
+                        is UiState.Success -> {
+                            binding.castLoading.visibility = View.INVISIBLE
+                            setupCastRecyclerView(uiState.data, binding.castRecyclerview)
+                        }
+                        is UiState.Error -> {
+                            binding.castLoading.visibility = View.INVISIBLE
+                            Log.d("JJJJJJJJ", "onCreateView: ${uiState.message}")
+                        }
+                    }
+
+                }
+            }
+        }
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                detailViewModel.crewMovie.collect { uiState ->
+                    when (uiState) {
+                        is UiState.Loading -> {}
+                        is UiState.Success -> {
+                            binding.director.text = appendDirectorsName(uiState.data)
+                        }
+                        is UiState.Error -> {
+                            Log.d("JJJJJJJJ", "onCreateView: ${uiState.message}")
+                        }
+                    }
+
+                }
+            }
+        }
+
 
         return binding.root
     }
@@ -90,12 +128,13 @@ class DetailFragment : Fragment() {
         val movieId = args.movieId
         detailViewModel.getMovieDetail(movieId)
         detailViewModel.getSimilarMovies(movieId)
+        detailViewModel.getMovieCredits(movieId)
     }
 
     private fun showMovieDetail(movieDetailEntity: MovieDetailEntity) {
         Glide.with(requireContext())
             .load(movieDetailEntity.image)
-//            .error(R.drawable.ic_image_error)
+            .error(R.drawable.ic_image_error)
             .into(binding.movieImage)
 
         binding.name.text = movieDetailEntity.title
@@ -114,12 +153,36 @@ class DetailFragment : Fragment() {
             layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
             adapter = TopRateMovieAdapter(data, object : ItemClickListener<BaseEntity> {
                 override fun onItemClickListener(model: BaseEntity) {
-                    if (findNavController().currentDestination?.id == R.id.navigation_home) {
-                        findNavController().navigate(HomeFragmentDirections.actionNavigationHomeToDetailFragment(model.id))
+                    if (findNavController().currentDestination?.id == R.id.detailFragment) {
+                        findNavController().navigate(DetailFragmentDirections.actionDetailFragmentSelf(model.id))
                     }
                 }
             })
         }
+    }
+
+    private fun setupCastRecyclerView(
+        data: List<CastEntity>,
+        recyclerView: RecyclerView,
+    ) {
+        recyclerView.apply {
+            layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+            adapter = CastAdapter(data, object : ItemClickListener<CastEntity> {
+                override fun onItemClickListener(model: CastEntity) {
+//                    if (findNavController().currentDestination?.id == R.id.detailFragment) {
+//                        findNavController().navigate(HomeFragmentDirections.actionNavigationHomeToDetailFragment(model.id))
+//                    }
+                }
+            })
+        }
+    }
+
+    private fun appendDirectorsName(data: List<CrewEntity>): CharSequence? {
+        val separator = ", "
+        val directorsName = data.map {
+            it.originalName
+        }
+        return java.lang.String.join(separator, directorsName)
     }
 
     private fun appendGenres(genres: List<GenreEntity>?): String? {
