@@ -129,6 +129,10 @@ class DetailFragment : Fragment() {
         detailViewModel.getMovieDetail(movieId)
         detailViewModel.getSimilarMovies(movieId)
         detailViewModel.getMovieCredits(movieId)
+
+        binding.backButton.setOnClickListener {
+            findNavController().popBackStack()
+        }
     }
 
     private fun showMovieDetail(movieDetailEntity: MovieDetailEntity) {
