@@ -1,6 +1,7 @@
 package com.moviestreaming.ui.detail
 
 import com.moviestreaming.MainCoroutineRule
+import com.moviestreaming.data.model.CreditsEntity
 import com.moviestreaming.data.model.GenreEntity
 import com.moviestreaming.data.model.MovieDetailEntity
 import com.moviestreaming.data.model.TopRateMovieEntity
@@ -28,6 +29,7 @@ class DetailViewModelTest {
     private lateinit var detailViewModel: DetailViewModel
     private lateinit var movieDetail: MovieDetailEntity
     private lateinit var listOfSimilarMovies: List<TopRateMovieEntity>
+    private lateinit var creditsEntity: CreditsEntity
 
     @Before
     fun createViewModel() {
@@ -48,6 +50,8 @@ class DetailViewModelTest {
         )
 
         listOfSimilarMovies = listOf(topRateMovie1, topRateMovie2, topRateMovie3)
+
+//        creditsEntity = CreditsEntity(1,)
 
         movieRepository = FakeMovieRepository()
         detailViewModel = DetailViewModel(movieRepository)
