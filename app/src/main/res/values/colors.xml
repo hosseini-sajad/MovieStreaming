@@ -5,6 +5,9 @@
     <color name="colorPrimaryLight">#2E2E2E</color>
 
     <color name="gray_300">#7EAFAFAF</color>
+    <color name="gray_350">#802C2C2C</color>
+    <color name="gray_370">#4D2C2C2C</color>
+    <color name="gray_390">#0D2C2C2C</color>
     <color name="gray_400">#08202020</color>
     <color name="gray_500">#CC202020</color>
     <color name="gray_600">#99202020</color>
@@ -31,5 +34,8 @@
     <color name="topic_color">@color/colorAccent</color>
     <color name="text_color">#fff</color>
     <color name="light_gray_background">@color/gray_300</color>
+    <color name="toolbar_start_color">@color/gray_350</color>
+    <color name="toolbar_center_color">@color/gray_370</color>
+    <color name="toolbar_end_color">@color/gray_390</color>
 
 </resources>

@@ -6,7 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
@@ -30,7 +30,7 @@ class HomeFragment : Fragment() {
 
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
-    private val homeViewModel: HomeViewModel by viewModels()
+    private val homeViewModel: HomeViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -119,6 +119,18 @@ class HomeFragment : Fragment() {
         homeViewModel.getTrending()
         homeViewModel.getTopRateMovie()
         homeViewModel.getPopularMovies()
+
+        binding.topImdbMoreText.setOnClickListener {
+            if (findNavController().currentDestination?.id == R.id.navigation_home) {
+                findNavController().navigate(HomeFragmentDirections.actionNavigationHomeToCategoryFragment())
+            }
+        }
+
+        binding.newMoviesMoreText.setOnClickListener {
+            if (findNavController().currentDestination?.id == R.id.navigation_home) {
+                findNavController().navigate(HomeFragmentDirections.actionNavigationHomeToCategoryFragment())
+            }
+        }
     }
 
     private fun setupImdbRecyclerView(
