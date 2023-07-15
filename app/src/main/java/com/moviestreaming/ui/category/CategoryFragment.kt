@@ -22,8 +22,10 @@ import com.moviestreaming.ui.home.HomeFragmentDirections
 import com.moviestreaming.ui.home.HomeViewModel
 import com.moviestreaming.ui.home.adapter.TopRateMovieAdapter
 import com.moviestreaming.utils.UiState
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
+@AndroidEntryPoint
 class CategoryFragment : Fragment() {
 
     private var _binding: FragmentCategoryBinding? = null

@@ -1,5 +1,6 @@
 package com.moviestreaming.ui.home
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.moviestreaming.data.model.TopRateMovieEntity
@@ -8,9 +9,7 @@ import com.moviestreaming.repository.MovieRepository
 import com.moviestreaming.utils.Result
 import com.moviestreaming.utils.UiState
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -28,9 +27,6 @@ class HomeViewModel @Inject constructor(private val movieRepository: MovieReposi
     private val mutableStatePopularMovies = MutableStateFlow<UiState<List<TopRateMovieEntity>>>(UiState.Loading())
     val popularMovies: StateFlow<UiState<List<TopRateMovieEntity>>> = mutableStatePopularMovies
 
-    private val mutableSharedTopRateMovie = MutableSharedFlow<UiState<List<TopRateMovieEntity>>>()
-    val sharedTopRateMovie: SharedFlow<UiState<List<TopRateMovieEntity>>> = mutableStateTopRateMovie
-
     fun getTrending() {
         viewModelScope.launch {
             movieRepository.getTrending().collect {
@@ -45,11 +41,11 @@ class HomeViewModel @Inject constructor(private val movieRepository: MovieReposi
 
     fun getTopRateMovie() {
         viewModelScope.launch {
+            Log.d("UUUUUUUUU", "onCreateView: ${movieRepository.getTopRateMovie().toString()}")
             movieRepository.getTopRateMovie().collect {
                 when(it) {
                     is Result.Success -> {
                         mutableStateTopRateMovie.value = UiState.Success(it.data.take(5))
-                        mutableSharedTopRateMovie.emit(UiState.Success(it.data.take(5)))
                     }
                     is Result.Error -> mutableStateTopRateMovie.value = UiState.Error(it.message)
                 }
