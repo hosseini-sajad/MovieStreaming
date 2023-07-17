@@ -49,7 +49,7 @@ class HomeFragment : Fragment() {
                         is UiState.Success -> {
                             binding.animProgress.visibility = View.GONE
                             val viewPagerAdapter = TrendingAdapter(
-                                uiState.data,
+                                uiState.data.take(5),
                                 object : ItemClickListener<BaseEntity> {
                                     override fun onItemClickListener(model: BaseEntity) {
                                         findNavController().navigate(HomeFragmentDirections.actionNavigationHomeToDetailFragment(model.id))
@@ -81,7 +81,7 @@ class HomeFragment : Fragment() {
                     when (uiState) {
                         is UiState.Loading -> {}
                         is UiState.Success -> {
-                            setupImdbRecyclerView(uiState, binding.imdbRecyclerview)
+                            setupImdbRecyclerView(uiState.data.take(5), binding.imdbRecyclerview)
                         }
 
                         is UiState.Error -> {
@@ -99,7 +99,7 @@ class HomeFragment : Fragment() {
                     when (uiState) {
                         is UiState.Loading -> {}
                         is UiState.Success -> {
-                            setupImdbRecyclerView(uiState, binding.newMoviesRecyclerview)
+                            setupImdbRecyclerView(uiState.data.take(5), binding.newMoviesRecyclerview)
                         }
 
                         is UiState.Error -> {
@@ -134,12 +134,12 @@ class HomeFragment : Fragment() {
     }
 
     private fun setupImdbRecyclerView(
-        uiState: UiState.Success<List<TopRateMovieEntity>>,
+        list: List<TopRateMovieEntity>,
         recyclerView: RecyclerView,
     ) {
         recyclerView.apply {
             layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-            adapter = TopRateMovieAdapter(uiState.data, object : ItemClickListener<BaseEntity> {
+            adapter = TopRateMovieAdapter(list, object : ItemClickListener<BaseEntity> {
                 override fun onItemClickListener(model: BaseEntity) {
                     if (findNavController().currentDestination?.id == R.id.navigation_home) {
                         findNavController().navigate(HomeFragmentDirections.actionNavigationHomeToDetailFragment(model.id))
