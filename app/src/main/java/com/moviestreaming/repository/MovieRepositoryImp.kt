@@ -1,6 +1,7 @@
 package com.moviestreaming.repository
 
-import com.moviestreaming.data.source.NetworkDataSource
+import androidx.paging.map
+import com.moviestreaming.data.source.network.NetworkDataSource
 import com.moviestreaming.utils.Result
 import com.moviestreaming.utils.parsError
 import kotlinx.coroutines.flow.flow
@@ -19,12 +20,22 @@ class MovieRepositoryImp @Inject constructor(private val networkDataSource: Netw
 
     override suspend fun getTopRateMovie() = flow {
         try {
+            networkDataSource.getTopRateMovie().collect { pagingData ->
+                emit(Result.Success(pagingData.map { it.toEntity() }))
+            }
+        } catch (e: Exception) {
+            val errorResponse = parsError(e)
+            emit(Result.Error(errorResponse.statusMessage))
+        }
+
+    }/* = flow {
+        try {
             emit(Result.Success(networkDataSource.getTopRateMovie()!!.map { it.toEntity() }))
         } catch (e: Exception) {
             val errorResponse = parsError(e)
             emit(Result.Error(errorResponse.statusMessage))
         }
-    }
+    }*/
 
     override suspend fun getPopularMovies() = flow {
         try {

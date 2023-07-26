@@ -47,7 +47,7 @@ class CategoryFragment : Fragment() {
                         }
                         is UiState.Success -> {
                             binding.animProgress.visibility = View.GONE
-                            setupImdbRecyclerView(uiState, binding.categoryRecyclerView)
+                            //setupImdbRecyclerView(uiState, binding.categoryRecyclerView)
                         }
 
                         is UiState.Error -> {
