@@ -26,7 +26,7 @@ class MoviesPagingSource @Inject constructor(
 
             LoadResult.Page(
                 data = responseData,
-                prevKey = if (currentPage == 1) null else-1,
+                prevKey = if (currentPage == TMDB_STARTING_PAGE_INDEX) null else -1,
                 nextKey = currentPage.plus(1)
             )
         } catch (e: Exception) {

@@ -18,7 +18,6 @@ import com.moviestreaming.data.model.TopRateMovieEntity
 import com.moviestreaming.data.model.base.BaseEntity
 import com.moviestreaming.databinding.FragmentHomeBinding
 import com.moviestreaming.ui.ItemClickListener
-import com.moviestreaming.ui.home.adapter.MovieAdapter
 import com.moviestreaming.ui.home.adapter.TopRateMovieAdapter
 import com.moviestreaming.ui.home.adapter.TrendingAdapter
 import com.moviestreaming.utils.UiState
@@ -82,19 +81,11 @@ class HomeFragment : Fragment() {
                     when (uiState) {
                         is UiState.Loading -> {}
                         is UiState.Success -> {
-                            binding.imdbRecyclerview.apply {
-                                val imdbAdapter = MovieAdapter(object : ItemClickListener<BaseEntity> {
-                                    override fun onItemClickListener(model: BaseEntity) {
-                                        if (findNavController().currentDestination?.id == R.id.navigation_home) {
-                                            findNavController().navigate(HomeFragmentDirections.actionNavigationHomeToDetailFragment(model.id))
-                                        }
-                                    }
-                                })
-
-                                layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-                                adapter = imdbAdapter
-                            }
-//                            setupImdbRecyclerView(uiState.data, binding.imdbRecyclerview)
+//                            val list = mutableListOf<TopRateMovieEntity>()
+//                            uiState.data.map {
+//                                list.add(it)
+//                            }
+//                            setupImdbRecyclerView(list.take(5), binding.imdbRecyclerview)
                         }
 
                         is UiState.Error -> {
