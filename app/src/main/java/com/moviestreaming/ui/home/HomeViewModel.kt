@@ -2,7 +2,6 @@ package com.moviestreaming.ui.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.paging.PagingData
 import com.moviestreaming.data.model.TopRateMovieEntity
 import com.moviestreaming.data.model.TrendingEntity
 import com.moviestreaming.repository.MovieRepository
@@ -21,8 +20,8 @@ class HomeViewModel @Inject constructor(private val movieRepository: MovieReposi
     private val mutableStateTrending = MutableStateFlow<UiState<List<TrendingEntity>>>(UiState.Loading())
     val trending: StateFlow<UiState<List<TrendingEntity>>> = mutableStateTrending
 
-    private val mutableStateTopRateMovie = MutableStateFlow<UiState<PagingData<TopRateMovieEntity>>>(UiState.Loading())
-    val topRateMovie: StateFlow<UiState<PagingData<TopRateMovieEntity>>> = mutableStateTopRateMovie
+    private val mutableStateTopRateMovie = MutableStateFlow<UiState<List<TopRateMovieEntity>>>(UiState.Loading())
+    val topRateMovie: StateFlow<UiState<List<TopRateMovieEntity>>> = mutableStateTopRateMovie
 
     private val mutableStatePopularMovies = MutableStateFlow<UiState<List<TopRateMovieEntity>>>(UiState.Loading())
     val popularMovies: StateFlow<UiState<List<TopRateMovieEntity>>> = mutableStatePopularMovies

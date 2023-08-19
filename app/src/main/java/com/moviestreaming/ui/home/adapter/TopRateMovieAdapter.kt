@@ -23,9 +23,7 @@ class TopRateMovieAdapter(
         return TopRateMovieViewHolder.from(parent)
     }
 
-    override fun getItemCount(): Int {
-        return 5
-    }
+    override fun getItemCount() = listOfTopRateMovie.size
 
     override fun onBindViewHolder(holder: TopRateMovieViewHolder, position: Int) {
         val item = listOfTopRateMovie[position]

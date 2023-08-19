@@ -14,12 +14,13 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.moviestreaming.R
+import com.moviestreaming.data.model.TopRateMovieEntity
 import com.moviestreaming.data.model.base.BaseEntity
 import com.moviestreaming.databinding.FragmentCategoryBinding
 import com.moviestreaming.ui.ItemClickListener
 import com.moviestreaming.ui.home.HomeFragmentDirections
 import com.moviestreaming.ui.home.HomeViewModel
-import com.moviestreaming.ui.home.adapter.MovieAdapter
+import com.moviestreaming.ui.home.adapter.TopRateMovieAdapter
 import com.moviestreaming.utils.UiState
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -46,7 +47,7 @@ class CategoryFragment : Fragment() {
                         }
                         is UiState.Success -> {
                             binding.animProgress.visibility = View.GONE
-                            setupImdbRecyclerView(binding.categoryRecyclerView)
+                            setupImdbRecyclerView(uiState, binding.categoryRecyclerView)
                         }
 
                         is UiState.Error -> {
@@ -86,11 +87,12 @@ class CategoryFragment : Fragment() {
     }
 
     private fun setupImdbRecyclerView(
+        uiState: UiState.Success<List<TopRateMovieEntity>>,
         recyclerView: RecyclerView,
     ) {
         recyclerView.apply {
             layoutManager = StaggeredGridLayoutManager(3, StaggeredGridLayoutManager.VERTICAL)
-            adapter = MovieAdapter(object : ItemClickListener<BaseEntity> {
+            adapter = TopRateMovieAdapter(uiState.data, object : ItemClickListener<BaseEntity> {
                 override fun onItemClickListener(model: BaseEntity) {
                     if (findNavController().currentDestination?.id == R.id.navigation_home) {
                         findNavController().navigate(HomeFragmentDirections.actionNavigationHomeToDetailFragment(model.id))
