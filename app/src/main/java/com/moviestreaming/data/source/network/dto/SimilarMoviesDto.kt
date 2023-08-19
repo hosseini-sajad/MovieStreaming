@@ -47,11 +47,11 @@ data class SimilarMoviesDto(
         @SerializedName("vote_average")
         val voteAverage: Double,
         @SerializedName("vote_count")
-        val voteCount: Int,
+        val voteCount: Int
     ) : DomainMapper<TopRateMovieEntity> {
         override fun toEntity() = TopRateMovieEntity(
             id, title, posterPath, Constants.MOVIE,
-            genreIds[0], voteAverage
+            if(genreIds.isNotEmpty()) genreIds[0] else -1 , voteAverage
         )
     }
 }

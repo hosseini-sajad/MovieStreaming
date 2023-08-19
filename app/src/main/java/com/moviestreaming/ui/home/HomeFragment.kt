@@ -1,7 +1,6 @@
 package com.moviestreaming.ui.home
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -43,71 +42,59 @@ class HomeFragment : Fragment() {
 
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                homeViewModel.trending.collect { uiState ->
-                    when (uiState) {
-                        is UiState.Loading -> binding.animProgress.visibility = View.VISIBLE
-                        is UiState.Success -> {
-                            binding.animProgress.visibility = View.GONE
-                            val viewPagerAdapter = TrendingAdapter(
-                                uiState.data.take(5),
-                                object : ItemClickListener<BaseEntity> {
-                                    override fun onItemClickListener(model: BaseEntity) {
-                                        findNavController().navigate(HomeFragmentDirections.actionNavigationHomeToDetailFragment(model.id))
-                                    }
-                                })
-                            val viewPager = binding.viewpager
-                            viewPager.apply {
-                                SliderPageUtil.sliderAutoChange(
-                                    requireActivity(),
-                                    uiState.data.size,
-                                    this
-                                )
-                                adapter = viewPagerAdapter
+                launch {
+                    homeViewModel.trending.collect { uiState ->
+                        when (uiState) {
+                            is UiState.Loading -> binding.animProgress.visibility = View.VISIBLE
+                            is UiState.Success -> {
+                                binding.animProgress.visibility = View.GONE
+                                val viewPagerAdapter = TrendingAdapter(
+                                    uiState.data.take(5),
+                                    object : ItemClickListener<BaseEntity> {
+                                        override fun onItemClickListener(model: BaseEntity) {
+                                            findNavController().navigate(HomeFragmentDirections.actionNavigationHomeToDetailFragment(model.id))
+                                        }
+                                    })
+                                val viewPager = binding.viewpager
+                                viewPager.apply {
+                                    SliderPageUtil.sliderAutoChange(
+                                        requireActivity(),
+                                        uiState.data.size,
+                                        this
+                                    )
+                                    adapter = viewPagerAdapter
+                                }
                             }
-                        }
-
-                        is UiState.Error -> {
-                            binding.animProgress.visibility = View.GONE
-                            Log.d("JJJJJJJJ", "onCreateView: ${uiState.message}")
+                            is UiState.Error -> binding.animProgress.visibility = View.GONE
                         }
                     }
                 }
-            }
-        }
 
-        viewLifecycleOwner.lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
-                homeViewModel.topRateMovie.collect { uiState ->
-                    when (uiState) {
-                        is UiState.Loading -> {}
-                        is UiState.Success -> {
-                            setupImdbRecyclerView(uiState.data.take(5), binding.imdbRecyclerview)
-                        }
-
-                        is UiState.Error -> {
-                            binding.animProgress.visibility = View.GONE
-                            Log.d("JJJJJJJJ", "onCreateView: ${uiState.message}")
+                launch {
+                    homeViewModel.topRateMovie.collect { uiState ->
+                        when (uiState) {
+                            is UiState.Loading -> {}
+                            is UiState.Success -> {
+                                setupImdbRecyclerView(uiState.data.take(5), binding.imdbRecyclerview)
+                            }
+                            is UiState.Error -> binding.animProgress.visibility = View.GONE
                         }
                     }
                 }
-            }
-        }
 
-        viewLifecycleOwner.lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
-                homeViewModel.popularMovies.collect { uiState ->
-                    when (uiState) {
-                        is UiState.Loading -> {}
-                        is UiState.Success -> {
-                            setupImdbRecyclerView(uiState.data.take(5), binding.newMoviesRecyclerview)
-                        }
+                launch {
+                    homeViewModel.popularMovies.collect { uiState ->
+                        when (uiState) {
+                            is UiState.Loading -> {}
+                            is UiState.Success -> {
+                                setupImdbRecyclerView(uiState.data.take(5), binding.newMoviesRecyclerview)
+                            }
 
-                        is UiState.Error -> {
-                            binding.animProgress.visibility = View.GONE
-                            Log.d("JJJJJJJJ", "onCreateView: ${uiState.message}")
+                            is UiState.Error -> binding.animProgress.visibility = View.GONE
                         }
                     }
                 }
+
             }
         }
 

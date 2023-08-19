@@ -46,78 +46,74 @@ class DetailFragment : Fragment() {
 
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                detailViewModel.movieDetail.collect { uiState ->
-                    when (uiState) {
-                        is UiState.Loading -> binding.loading.visibility = View.VISIBLE
-                        is UiState.Success -> {
-                            binding.loading.visibility = View.INVISIBLE
-                            showMovieDetail(uiState.data)
+                launch {
+                    detailViewModel.movieDetail.collect { uiState ->
+                        when (uiState) {
+                            is UiState.Loading -> binding.loading.visibility = View.VISIBLE
+                            is UiState.Success -> {
+                                binding.loading.visibility = View.INVISIBLE
+                                showMovieDetail(uiState.data)
+                            }
+                            is UiState.Error -> {
+                                binding.loading.visibility = View.INVISIBLE
+                                Log.d("JJJJJJJJ", "onCreateView: ${uiState.message}")
+                            }
                         }
-                        is UiState.Error -> {
-                            binding.loading.visibility = View.INVISIBLE
-                            Log.d("JJJJJJJJ", "onCreateView: ${uiState.message}")
-                        }
-                    }
 
+                    }
                 }
+
+                launch {
+                    detailViewModel.similarMovies.collect { uiState ->
+                        when (uiState) {
+                            is UiState.Loading -> binding.similarLoading.visibility = View.VISIBLE
+                            is UiState.Success -> {
+                                binding.similarLoading.visibility = View.INVISIBLE
+                                setupSimilarMoviesRecyclerView(uiState.data, binding.similarMovieRecyclerview)
+                            }
+                            is UiState.Error -> {
+                                binding.similarLoading.visibility = View.INVISIBLE
+                                Log.d("JJJJJJJJ", "onCreateView: ${uiState.message}")
+                            }
+                        }
+
+                    }
+                }
+
+                launch {
+                    detailViewModel.castMovie.collect { uiState ->
+                        when (uiState) {
+                            is UiState.Loading -> binding.castLoading.visibility = View.VISIBLE
+                            is UiState.Success -> {
+                                binding.castLoading.visibility = View.INVISIBLE
+                                setupCastRecyclerView(uiState.data, binding.castRecyclerview)
+                            }
+                            is UiState.Error -> {
+                                binding.castLoading.visibility = View.INVISIBLE
+                                Log.d("JJJJJJJJ", "onCreateView: ${uiState.message}")
+                            }
+                        }
+
+                    }
+                }
+
+                launch {
+                    detailViewModel.crewMovie.collect { uiState ->
+                        when (uiState) {
+                            is UiState.Loading -> {}
+                            is UiState.Success -> {
+                                binding.director.text = appendDirectorsName(uiState.data)
+                            }
+                            is UiState.Error -> {
+                                Log.d("JJJJJJJJ", "onCreateView: ${uiState.message}")
+                            }
+                        }
+
+                    }
+                }
+
             }
         }
-
-        viewLifecycleOwner.lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
-                detailViewModel.similarMovies.collect { uiState ->
-                    when (uiState) {
-                        is UiState.Loading -> binding.similarLoading.visibility = View.VISIBLE
-                        is UiState.Success -> {
-                            binding.similarLoading.visibility = View.INVISIBLE
-                            setupSimilarMoviesRecyclerView(uiState.data, binding.similarMovieRecyclerview)
-                        }
-                        is UiState.Error -> {
-                            binding.similarLoading.visibility = View.INVISIBLE
-                            Log.d("JJJJJJJJ", "onCreateView: ${uiState.message}")
-                        }
-                    }
-
-                }
-            }
-        }
-
-        viewLifecycleOwner.lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
-                detailViewModel.castMovie.collect { uiState ->
-                    when (uiState) {
-                        is UiState.Loading -> binding.castLoading.visibility = View.VISIBLE
-                        is UiState.Success -> {
-                            binding.castLoading.visibility = View.INVISIBLE
-                            setupCastRecyclerView(uiState.data, binding.castRecyclerview)
-                        }
-                        is UiState.Error -> {
-                            binding.castLoading.visibility = View.INVISIBLE
-                            Log.d("JJJJJJJJ", "onCreateView: ${uiState.message}")
-                        }
-                    }
-
-                }
-            }
-        }
-
-        viewLifecycleOwner.lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
-                detailViewModel.crewMovie.collect { uiState ->
-                    when (uiState) {
-                        is UiState.Loading -> {}
-                        is UiState.Success -> {
-                            binding.director.text = appendDirectorsName(uiState.data)
-                        }
-                        is UiState.Error -> {
-                            Log.d("JJJJJJJJ", "onCreateView: ${uiState.message}")
-                        }
-                    }
-
-                }
-            }
-        }
-
 
         return binding.root
     }
