@@ -8,3 +8,10 @@ The app has a few screens located with multiple features:
 - Movie detail screen - display information about the selected movie
 - Movie list screen - displays a list of movie
 - Search screen - empty
+<br/><br/>
+
+<p>
+  <img src="https://github.com/hosseini-sajad/MovieStreaming/blob/master/screenshot/Screenshot%20(1).png" width="250" />
+  <img src="https://github.com/hosseini-sajad/MovieStreaming/blob/master/screenshot/Screenshot%20(2).png" width="250" />
+  <img src="https://github.com/hosseini-sajad/MovieStreaming/blob/master/screenshot/Screenshot%20(3).png" width="250" />
+</p>
