@@ -12,9 +12,10 @@ import com.moviestreaming.data.model.TopRateMovieEntity
 import com.moviestreaming.data.model.base.BaseEntity
 import com.moviestreaming.ui.ItemClickListener
 import com.moviestreaming.utils.getImageUrl
+import com.moviestreaming.utils.roundedTo2Decimal
 
 class TopRateMovieAdapter(
-    private val listOfTopRAteMovie: List<TopRateMovieEntity>,
+    private val listOfTopRateMovie: List<TopRateMovieEntity>,
     private val itemClickListener: ItemClickListener<BaseEntity>?,
 ) : RecyclerView.Adapter<TopRateMovieViewHolder>() {
 
@@ -22,10 +23,10 @@ class TopRateMovieAdapter(
         return TopRateMovieViewHolder.from(parent)
     }
 
-    override fun getItemCount() = listOfTopRAteMovie.size
+    override fun getItemCount() = listOfTopRateMovie.size
 
     override fun onBindViewHolder(holder: TopRateMovieViewHolder, position: Int) {
-        val item = listOfTopRAteMovie[position]
+        val item = listOfTopRateMovie[position]
         holder.bind(item, itemClickListener)
     }
 
@@ -41,16 +42,16 @@ class TopRateMovieViewHolder constructor(itemView: View) : RecyclerView.ViewHold
         item: TopRateMovieEntity,
         listener: ItemClickListener<BaseEntity>?,
     ) {
-        val url = getImageUrl(item.image)
+        val url = item.image?.let { getImageUrl(it) }
         Glide.with(imageSlider.context)
             .load(url)
             .override(130, 160)
-//            .error(R.drawable.ic_image_error)
+            .error(R.drawable.ic_image_error)
             .into(imageSlider)
 
         movieName.text = item.title
         movieGenre.text = item.genre.toString()
-        rate.text = item.rate.toString()
+        rate.text = roundedTo2Decimal(item.rate).toString()
 
         itemView.setOnClickListener {
             listener?.onItemClickListener(item)

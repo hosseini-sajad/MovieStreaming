@@ -1,6 +1,11 @@
 package com.moviestreaming.repository
 
 import com.moviestreaming.data.source.FakeNetworkDataSource
+import com.moviestreaming.data.source.network.dto.MovieDetailDto
+import com.moviestreaming.data.source.network.dto.MovieDetailDto.GenreDto
+import com.moviestreaming.data.source.network.dto.MovieDetailDto.ProductionCompanyDto
+import com.moviestreaming.data.source.network.dto.MovieDetailDto.ProductionCountryDto
+import com.moviestreaming.data.source.network.dto.SimilarMoviesDto
 import com.moviestreaming.data.source.network.dto.TopRateMovieResponse
 import com.moviestreaming.data.source.network.dto.TrendingResponse
 import com.moviestreaming.utils.Result
@@ -67,6 +72,31 @@ internal class MovieRepositoryImpTest() {
         false, 5.8, 7
     )
 
+    private val remoteMovieDetail = MovieDetailDto(
+        false,"/bOGkgRGdhrBYJSLpXaxhXVstddV.jpg", listOf(1,2), 1000,
+        genresDto = listOf(GenreDto(1, "action"), GenreDto(2, "action")),
+        "homepages", 1001, "25556", "en", "Brave", "This movie is about",
+        12.8, "/bOGkgRGdhrBYJSLpXaxhXVstddV.jpg", productionCompaniesDto = listOf(
+            ProductionCompanyDto(1, "/bOGkgRGdhrBYJSLpXaxhXVstddV.jpg", "Sam", "US"),
+            ProductionCompanyDto(1, "/bOGkgRGdhrBYJSLpXaxhXVstddV.jpg", "Sam", "US")
+        ), productionCountriesDto = listOf(ProductionCountryDto("dfsa12", "US"),
+            ProductionCountryDto("dfsa12", "US")),
+        "2019", 11, 56, listOf(),"true", "ssaa", "Brave", false, 8.5, 7
+    )
+
+    private val remoteSimilarMovies = SimilarMoviesDto(
+        1,
+        listOf(
+            SimilarMoviesDto.SimilarMovieDto(
+                false, "/bOGkgRGdhrBYJSLpXaxhXVstddV.jpg", listOf(1, 2, 3),
+                1003, "en", "Last Of Us", "This part is", 12.5,
+                "/bOGkgRGdhrBYJSLpXaxhXVstddV.jpg", "2022", "Last Of Us", false, 8.5, 6
+            )
+        ),
+        1,
+        1
+    )
+
     private val remoteTrending = listOf( movie1, movie2)
     private val remoteTopRateMovies = listOf(topRateMovie, topRateMovie2)
     private val remotePopularMovies = listOf(topRateMovie, topRateMovie2)
@@ -117,12 +147,76 @@ internal class MovieRepositoryImpTest() {
     }
 
     @Test
-    fun `null trending, return error`() {
+    fun getMovieDetail_From_Network_Datasource() {
+        networkDataSource = FakeNetworkDataSource()
+        networkDataSource.addMovieDetail(remoteMovieDetail)
+        movieRepositoryImp = MovieRepositoryImp(networkDataSource)
+        runBlocking {
+            val movieDetail = movieRepositoryImp.getMovieDetails(1001)
+
+            assertEquals(Result.Success(remoteMovieDetail.toEntity()), movieDetail.toList().first())
+        }
+    }
+
+    @Test
+    fun getSimilarMovies_From_Network_Datasource() {
+        networkDataSource = FakeNetworkDataSource()
+        networkDataSource.addSimilarMovie(remoteSimilarMovies)
+        movieRepositoryImp = MovieRepositoryImp(networkDataSource)
+        runBlocking {
+            val movieDetail = movieRepositoryImp.getSimilarMovies(1003)
+
+            assertEquals(Result.Success(remoteSimilarMovies.similarMoviesDto.map { it.toEntity() }), movieDetail.toList().first())
+        }
+    }
+
+    @Test
+    fun `null trending movie, return error`() {
         networkDataSource = FakeNetworkDataSource()
         movieRepositoryImp = MovieRepositoryImp(networkDataSource)
         runBlocking {
             val trending = movieRepositoryImp.getTrending().first()
             assertTrue(trending is Result.Error)
+        }
+    }
+
+    @Test
+    fun `null top rate movie, return error`() {
+        networkDataSource = FakeNetworkDataSource()
+        movieRepositoryImp = MovieRepositoryImp(networkDataSource)
+        runBlocking {
+            val topRateMovies = movieRepositoryImp.getTopRateMovie().first()
+            assertTrue(topRateMovies is Result.Error)
+        }
+    }
+
+    @Test
+    fun `null popular movie, return error`() {
+        networkDataSource = FakeNetworkDataSource()
+        movieRepositoryImp = MovieRepositoryImp(networkDataSource)
+        runBlocking {
+            val popularMovies = movieRepositoryImp.getPopularMovies().first()
+            assertTrue(popularMovies is Result.Error)
+        }
+    }
+
+    @Test
+    fun `null movie detail, return error`() {
+        networkDataSource = FakeNetworkDataSource()
+        movieRepositoryImp = MovieRepositoryImp(networkDataSource)
+        runBlocking {
+            val movieDetail = movieRepositoryImp.getMovieDetails(1001).first()
+            assertTrue(movieDetail is Result.Error)
+        }
+    }
+
+    @Test
+    fun `null similar movies, return error`() {
+        networkDataSource = FakeNetworkDataSource()
+        movieRepositoryImp = MovieRepositoryImp(networkDataSource)
+        runBlocking {
+            val movieDetail = movieRepositoryImp.getSimilarMovies(1003).first()
+            assertTrue(movieDetail is Result.Error)
         }
     }
 

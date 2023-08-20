@@ -1,5 +1,8 @@
 package com.moviestreaming.data.source.network
 
+import com.moviestreaming.data.source.network.dto.CreditsDto
+import com.moviestreaming.data.source.network.dto.MovieDetailDto
+import com.moviestreaming.data.source.network.dto.SimilarMoviesDto
 import com.moviestreaming.data.source.network.dto.TopRateMovieResponse
 import com.moviestreaming.data.source.network.dto.TrendingResponse
 import retrofit2.http.GET
@@ -16,5 +19,11 @@ interface ApiService {
     suspend fun getPopularMovies(): TopRateMovieResponse
 
     @GET("movie/{movieId}")
-    suspend fun getMovieDetail(@Path("movieId") movieId: Int): TopRateMovieResponse
+    suspend fun getMovieDetail(@Path("movieId") movieId: Int): MovieDetailDto
+
+    @GET("movie/{movieId}/credits")
+    suspend fun getMovieCredits(@Path("movieId") movieId: Int): CreditsDto
+
+    @GET("movie/{movieId}/similar")
+    suspend fun getSimilarMovies(@Path("movieId") movieId: Int): SimilarMoviesDto
 }

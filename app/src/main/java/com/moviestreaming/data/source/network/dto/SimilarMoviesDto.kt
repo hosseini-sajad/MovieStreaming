@@ -3,20 +3,23 @@ package com.moviestreaming.data.source.network.dto
 
 import androidx.annotation.Keep
 import com.google.gson.annotations.SerializedName
+import com.moviestreaming.data.model.TopRateMovieEntity
+import com.moviestreaming.utils.Constants
+import com.moviestreaming.utils.mapper.DomainMapper
 
 @Keep
-data class SimilarMovie(
+data class SimilarMoviesDto(
     @SerializedName("page")
     val page: Int,
     @SerializedName("results")
-    val results: List<Result>,
+    val similarMoviesDto: List<SimilarMovieDto>,
     @SerializedName("total_pages")
     val totalPages: Int,
     @SerializedName("total_results")
-    val totalResults: Int
+    val totalResults: Int,
 ) {
     @Keep
-    data class Result(
+    data class SimilarMovieDto(
         @SerializedName("adult")
         val adult: Boolean,
         @SerializedName("backdrop_path")
@@ -45,5 +48,10 @@ data class SimilarMovie(
         val voteAverage: Double,
         @SerializedName("vote_count")
         val voteCount: Int
-    )
+    ) : DomainMapper<TopRateMovieEntity> {
+        override fun toEntity() = TopRateMovieEntity(
+            id, title, posterPath, Constants.MOVIE,
+            if(genreIds.isNotEmpty()) genreIds[0] else -1 , voteAverage
+        )
+    }
 }

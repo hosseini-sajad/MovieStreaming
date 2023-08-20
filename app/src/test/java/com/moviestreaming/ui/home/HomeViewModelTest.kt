@@ -1,9 +1,12 @@
 package com.moviestreaming.ui.home
 
 import com.moviestreaming.MainCoroutineRule
+import com.moviestreaming.data.model.GenreEntity
+import com.moviestreaming.data.model.MovieDetailEntity
 import com.moviestreaming.data.model.TopRateMovieEntity
 import com.moviestreaming.data.model.TrendingEntity
 import com.moviestreaming.repository.FakeMovieRepository
+import com.moviestreaming.utils.Constants
 import com.moviestreaming.utils.UiState
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.collect
@@ -27,6 +30,8 @@ class HomeViewModelTest {
     private lateinit var listOfTrending: List<TrendingEntity>
     private lateinit var listOfTopRateMovies: List<TopRateMovieEntity>
     private lateinit var listOfPopularMovies: List<TopRateMovieEntity>
+    private lateinit var movieDetail: MovieDetailEntity
+    private lateinit var listOfSimilarMovies: List<TopRateMovieEntity>
 
     @Before
     fun createViewModel() {
@@ -37,13 +42,27 @@ class HomeViewModelTest {
 
         listOfTrending = listOf(trending1, trending2, trending3, trending4)
 
-        val topRateMovie1 = TopRateMovieEntity(1, "a", "b", 1, "movie", 8.5)
-        val topRateMovie2 = TopRateMovieEntity(2, "a2", "b2", 2, "movie", 8.8)
-        val topRateMovie3 = TopRateMovieEntity(3, "a3", "b3", 3, "movie", 8.9)
+        val topRateMovie1 = TopRateMovieEntity(1, "a", "b", Constants.MOVIE, 1, 8.5)
+        val topRateMovie2 = TopRateMovieEntity(2, "a2", "b2", Constants.MOVIE, 2, 8.8)
+        val topRateMovie3 = TopRateMovieEntity(3, "a3", "b3", Constants.MOVIE, 3, 8.9)
 
         listOfTopRateMovies = listOf(topRateMovie1, topRateMovie2, topRateMovie3)
 
         listOfPopularMovies = listOf(topRateMovie1, topRateMovie2, topRateMovie3)
+
+        movieDetail = MovieDetailEntity(
+            1,
+            "Last Of Us",
+            "a3",
+            Constants.MOVIE,
+            9.5,
+            "2022",
+            1000,
+            "This part is about",
+            listOf(GenreEntity(1, "Action"), GenreEntity(1, "Action"))
+        )
+
+        listOfSimilarMovies = listOf(topRateMovie1, topRateMovie2, topRateMovie3)
 
         movieRepository = FakeMovieRepository()
         homeViewModel = HomeViewModel(movieRepository)

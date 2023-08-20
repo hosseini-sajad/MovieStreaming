@@ -30,7 +30,7 @@ class HomeViewModel @Inject constructor(private val movieRepository: MovieReposi
         viewModelScope.launch {
             movieRepository.getTrending().collect {
                 when (it) {
-                    is Result.Success -> mutableStateTrending.value = UiState.Success(it.data.take(5))
+                    is Result.Success -> mutableStateTrending.value = UiState.Success(it.data)
                     is Result.Error -> mutableStateTrending.value = UiState.Error(it.message)
                 }
 
@@ -42,7 +42,9 @@ class HomeViewModel @Inject constructor(private val movieRepository: MovieReposi
         viewModelScope.launch {
             movieRepository.getTopRateMovie().collect {
                 when(it) {
-                    is Result.Success -> mutableStateTopRateMovie.value = UiState.Success(it.data.take(5))
+                    is Result.Success -> {
+                        mutableStateTopRateMovie.value = UiState.Success(it.data)
+                    }
                     is Result.Error -> mutableStateTopRateMovie.value = UiState.Error(it.message)
                 }
             }
@@ -53,7 +55,7 @@ class HomeViewModel @Inject constructor(private val movieRepository: MovieReposi
         viewModelScope.launch {
             movieRepository.getPopularMovies().collect {
                 when(it) {
-                    is Result.Success -> mutableStatePopularMovies.value = UiState.Success(it.data.take(5))
+                    is Result.Success -> mutableStatePopularMovies.value = UiState.Success(it.data)
                     is Result.Error -> mutableStatePopularMovies.value = UiState.Error(it.message)
                 }
             }
