@@ -18,7 +18,6 @@ import com.moviestreaming.data.model.TopRateMovieEntity
 import com.moviestreaming.data.model.base.BaseEntity
 import com.moviestreaming.databinding.FragmentCategoryBinding
 import com.moviestreaming.ui.ItemClickListener
-import com.moviestreaming.ui.home.HomeFragmentDirections
 import com.moviestreaming.ui.home.HomeViewModel
 import com.moviestreaming.ui.home.adapter.TopRateMovieAdapter
 import com.moviestreaming.utils.UiState
@@ -83,6 +82,9 @@ class CategoryFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        binding.toolbarLayout.backButton.setOnClickListener {
+            findNavController().popBackStack()
+        }
 
     }
 
@@ -94,8 +96,8 @@ class CategoryFragment : Fragment() {
             layoutManager = StaggeredGridLayoutManager(3, StaggeredGridLayoutManager.VERTICAL)
             adapter = TopRateMovieAdapter(uiState.data, object : ItemClickListener<BaseEntity> {
                 override fun onItemClickListener(model: BaseEntity) {
-                    if (findNavController().currentDestination?.id == R.id.navigation_home) {
-                        findNavController().navigate(HomeFragmentDirections.actionNavigationHomeToDetailFragment(model.id))
+                    if (findNavController().currentDestination?.id == R.id.categoryFragment) {
+                        findNavController().navigate(CategoryFragmentDirections.actionCategoryFragmentToDetailFragment(model.id))
                     }
                 }
             })

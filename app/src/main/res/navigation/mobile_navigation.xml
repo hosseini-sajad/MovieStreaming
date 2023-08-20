@@ -39,6 +39,10 @@
         android:id="@+id/categoryFragment"
         android:name="com.moviestreaming.ui.category.CategoryFragment"
         android:label="fragment_category"
-        tools:layout="@layout/fragment_category" />
+        tools:layout="@layout/fragment_category" >
+        <action
+            android:id="@+id/action_categoryFragment_to_detailFragment"
+            app:destination="@id/detailFragment" />
+    </fragment>
 
 </navigation>
