@@ -43,63 +43,74 @@ class HomeFragment : Fragment() {
 
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                launch {
-                    homeViewModel.trending.collect { uiState ->
-                        when (uiState) {
-                            is UiState.Loading -> binding.animProgress.visibility = View.VISIBLE
-                            is UiState.Success -> {
-                                binding.animProgress.visibility = View.GONE
-                                val viewPagerAdapter = TrendingAdapter(
-                                    uiState.data.take(5),
-                                    object : ItemClickListener<BaseEntity> {
-                                        override fun onItemClickListener(model: BaseEntity) {
-                                            findNavController().navigate(HomeFragmentDirections.actionNavigationHomeToDetailFragment(model.id))
-                                        }
-                                    })
-                                val viewPager = binding.viewpager
-                                viewPager.apply {
-                                    SliderPageUtil.sliderAutoChange(
-                                        requireActivity(),
-                                        uiState.data.size,
-                                        this
-                                    )
-                                    adapter = viewPagerAdapter
-                                }
-                            }
-                            is UiState.Error -> binding.animProgress.visibility = View.GONE
-                        }
-                    }
-                }
+                launch { observeTrending() }
 
-                launch {
-                    homeViewModel.topRateMovie.collect { uiState ->
-                        when (uiState) {
-                            is UiState.Loading -> {}
-                            is UiState.Success -> {
-                                setupImdbRecyclerView(uiState.data.take(5), binding.imdbRecyclerview)
-                            }
-                            is UiState.Error -> binding.animProgress.visibility = View.GONE
-                        }
-                    }
-                }
+                launch { observeTopRateMovie() }
 
-                launch {
-                    homeViewModel.popularMovies.collect { uiState ->
-                        when (uiState) {
-                            is UiState.Loading -> {}
-                            is UiState.Success -> {
-                                setupImdbRecyclerView(uiState.data.take(5), binding.newMoviesRecyclerview)
-                            }
-
-                            is UiState.Error -> binding.animProgress.visibility = View.GONE
-                        }
-                    }
-                }
-
+                launch { observeNewMovie() }
             }
         }
 
         return root
+    }
+
+    private suspend fun observeNewMovie() {
+        homeViewModel.popularMovies.collect { uiState ->
+            when (uiState) {
+                is UiState.Loading -> {}
+                is UiState.Success -> {
+                    setupImdbRecyclerView(uiState.data.take(5), binding.newMoviesRecyclerview)
+                }
+
+                is UiState.Error -> binding.animProgress.visibility = View.GONE
+            }
+        }
+    }
+
+    private suspend fun observeTopRateMovie() {
+        homeViewModel.topRateMovie.collect { uiState ->
+            when (uiState) {
+                is UiState.Loading -> {}
+                is UiState.Success -> {
+                    setupImdbRecyclerView(uiState.data.take(5), binding.imdbRecyclerview)
+                }
+
+                is UiState.Error -> binding.animProgress.visibility = View.GONE
+            }
+        }
+    }
+
+    private suspend fun observeTrending() {
+        homeViewModel.trending.collect { uiState ->
+            when (uiState) {
+                is UiState.Loading -> binding.animProgress.visibility = View.VISIBLE
+                is UiState.Success -> {
+                    binding.animProgress.visibility = View.GONE
+                    val viewPagerAdapter = TrendingAdapter(
+                        uiState.data.take(5),
+                        object : ItemClickListener<BaseEntity> {
+                            override fun onItemClickListener(model: BaseEntity) {
+                                findNavController().navigate(
+                                    HomeFragmentDirections.actionNavigationHomeToDetailFragment(
+                                        model.id
+                                    )
+                                )
+                            }
+                        })
+                    val viewPager = binding.viewpager
+                    viewPager.apply {
+                        SliderPageUtil.sliderAutoChange(
+                            requireActivity(),
+                            uiState.data.size,
+                            this
+                        )
+                        adapter = viewPagerAdapter
+                    }
+                }
+
+                is UiState.Error -> binding.animProgress.visibility = View.GONE
+            }
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

@@ -89,7 +89,7 @@
         android:layout_margin="8dp" />
 
         <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/newMoviesText"
+            android:id="@+id/popularMoviesText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="12dp"
@@ -97,7 +97,7 @@
             android:background="@drawable/rounded_text_background"
             android:fontFamily="@font/nexa_bold"
             android:padding="5dp"
-            android:text="@string/new_movies"
+            android:text="@string/popular_movies"
             android:textSize="12sp"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
@@ -112,7 +112,7 @@
             android:textColor="@color/topic_color"
             android:padding="5dp"
             android:text="@string/more"
-            app:layout_constraintBaseline_toBaselineOf="@+id/newMoviesText"
+            app:layout_constraintBaseline_toBaselineOf="@+id/popularMoviesText"
             app:layout_constraintEnd_toEndOf="parent" />
 
         <com.mlsdev.animatedrv.AnimatedRecyclerView
@@ -127,7 +127,7 @@
             app:layoutManagerReverse="true"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/newMoviesText"
+            app:layout_constraintTop_toBottomOf="@id/popularMoviesText"
             android:layout_margin="8dp" />
 
 
