@@ -1,7 +1,6 @@
 package com.moviestreaming.ui.category
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,6 +10,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.moviestreaming.R
@@ -20,6 +20,7 @@ import com.moviestreaming.databinding.FragmentCategoryBinding
 import com.moviestreaming.ui.ItemClickListener
 import com.moviestreaming.ui.home.HomeViewModel
 import com.moviestreaming.ui.home.adapter.TopRateMovieAdapter
+import com.moviestreaming.utils.CategoryType
 import com.moviestreaming.utils.UiState
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -30,6 +31,7 @@ class CategoryFragment : Fragment() {
     private var _binding: FragmentCategoryBinding? = null
     private val binding get() = _binding!!
     private val homeViewModel: HomeViewModel by activityViewModels()
+    private val args: CategoryFragmentArgs by navArgs()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -39,42 +41,36 @@ class CategoryFragment : Fragment() {
 
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                homeViewModel.topRateMovie.collect { uiState ->
-                    when (uiState) {
-                        is UiState.Loading -> {
-                            binding.animProgress.visibility = View.VISIBLE
+                when(args.categoryType) {
+                    CategoryType.TOP_RATE -> {
+                        homeViewModel.topRateMovie.collect { uiState ->
+                            when (uiState) {
+                                is UiState.Loading -> {
+                                    binding.animProgress.visibility = View.VISIBLE
+                                }
+                                is UiState.Success -> {
+                                    binding.animProgress.visibility = View.GONE
+                                    setupImdbRecyclerView(uiState, binding.categoryRecyclerView)
+                                }
+                                is UiState.Error -> binding.animProgress.visibility = View.GONE
+                            }
                         }
-                        is UiState.Success -> {
-                            binding.animProgress.visibility = View.GONE
-                            setupImdbRecyclerView(uiState, binding.categoryRecyclerView)
-                        }
-
-                        is UiState.Error -> {
-                            binding.animProgress.visibility = View.GONE
-                            Log.d("JJJJJJJJ", "onCreateView: ${uiState.message}")
+                    }
+                    CategoryType.NEW_MOVIE -> {
+                        homeViewModel.popularMovies.collect { uiState ->
+                            when (uiState) {
+                                is UiState.Loading -> {}
+                                is UiState.Success -> {
+                                    setupImdbRecyclerView(uiState, binding.categoryRecyclerView)
+                                }
+                                is UiState.Error -> binding.animProgress.visibility = View.GONE
+                            }
                         }
                     }
                 }
+
             }
         }
-
-//        viewLifecycleOwner.lifecycleScope.launch {
-//            repeatOnLifecycle(Lifecycle.State.STARTED) {
-//                homeViewModel.popularMovies.collect { uiState ->
-//                    when (uiState) {
-//                        is UiState.Loading -> {}
-//                        is UiState.Success -> {
-//                            setupImdbRecyclerView(uiState, binding.categoryRecyclerView)
-//                        }
-//
-//                        is UiState.Error -> {
-//                            binding.animProgress.visibility = View.GONE
-//                            Log.d("JJJJJJJJ", "onCreateView: ${uiState.message}")
-//                        }
-//                    }
-//                }
-//            }
-//        }
 
         return binding.root
     }

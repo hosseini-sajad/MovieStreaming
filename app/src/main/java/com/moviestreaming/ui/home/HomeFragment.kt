@@ -19,6 +19,7 @@ import com.moviestreaming.databinding.FragmentHomeBinding
 import com.moviestreaming.ui.ItemClickListener
 import com.moviestreaming.ui.home.adapter.TopRateMovieAdapter
 import com.moviestreaming.ui.home.adapter.TrendingAdapter
+import com.moviestreaming.utils.CategoryType
 import com.moviestreaming.utils.UiState
 import com.moviestreaming.utils.mapper.SliderPageUtil
 import dagger.hilt.android.AndroidEntryPoint
@@ -109,13 +110,13 @@ class HomeFragment : Fragment() {
 
         binding.topImdbMoreText.setOnClickListener {
             if (findNavController().currentDestination?.id == R.id.navigation_home) {
-                findNavController().navigate(HomeFragmentDirections.actionNavigationHomeToCategoryFragment())
+                findNavController().navigate(HomeFragmentDirections.actionNavigationHomeToCategoryFragment(CategoryType.TOP_RATE))
             }
         }
 
         binding.newMoviesMoreText.setOnClickListener {
             if (findNavController().currentDestination?.id == R.id.navigation_home) {
-                findNavController().navigate(HomeFragmentDirections.actionNavigationHomeToCategoryFragment())
+                findNavController().navigate(HomeFragmentDirections.actionNavigationHomeToCategoryFragment(CategoryType.NEW_MOVIE))
             }
         }
     }
