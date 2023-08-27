@@ -6,10 +6,12 @@ import com.moviestreaming.data.model.CreditsEntity.CastEntity
 import com.moviestreaming.data.model.CreditsEntity.CrewEntity
 import com.moviestreaming.data.model.MovieDetailEntity
 import com.moviestreaming.data.model.TopRateMovieEntity
+import com.moviestreaming.data.model.TrailerEntity
 import com.moviestreaming.repository.MovieRepository
 import com.moviestreaming.utils.Result
 import com.moviestreaming.utils.UiState
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -29,6 +31,9 @@ class DetailViewModel @Inject constructor(private val movieRepository: MovieRepo
 
     private val mutableStateCrewMovie = MutableStateFlow<UiState<List<CrewEntity>>>(UiState.Loading())
     val crewMovie: StateFlow<UiState<List<CrewEntity>>> = mutableStateCrewMovie
+
+    private val mutableStateTrailer = MutableStateFlow<UiState<List<TrailerEntity>>>(UiState.Loading())
+    val trailer: StateFlow<UiState<List<TrailerEntity>>> = mutableStateTrailer
 
     fun getMovieDetail(movieId: Int) {
         viewModelScope.launch {
@@ -65,6 +70,16 @@ class DetailViewModel @Inject constructor(private val movieRepository: MovieRepo
                     is Result.Error -> mutableStateCastMovie.value = UiState.Error(it.message)
                     else -> {}
                 }
+            }
+        }
+    }
+
+    fun getMovieTrailer(movieId: Int) {
+        viewModelScope.launch(IO) {
+            when (val trailer = movieRepository.getMovieTrailer(movieId)) {
+                is Result.Success -> mutableStateTrailer.value = UiState.Success(trailer.data)
+                is Result.Error -> mutableStateTrailer.value = UiState.Error(trailer.message)
+                else -> {}
             }
         }
     }

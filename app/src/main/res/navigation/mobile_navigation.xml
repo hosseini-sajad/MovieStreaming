@@ -34,6 +34,9 @@
         <action
             android:id="@+id/action_detailFragment_self"
             app:destination="@id/detailFragment" />
+        <action
+            android:id="@+id/action_detailFragment_to_trailerFragment"
+            app:destination="@id/trailerFragment" />
     </fragment>
     <fragment
         android:id="@+id/categoryFragment"
@@ -46,6 +49,16 @@
         <argument
             android:name="categoryType"
             app:argType="com.moviestreaming.utils.CategoryType" />
+    </fragment>
+    <fragment
+        android:id="@+id/trailerFragment"
+        android:name="com.moviestreaming.ui.trailer.TrailerFragment"
+        android:label="TrailerFragment"
+        tools:layout="@layout/fragment_trailer" >
+        <argument
+            android:name="movieKey"
+            app:argType="string"
+            app:nullable="true" />
     </fragment>
 
 </navigation>

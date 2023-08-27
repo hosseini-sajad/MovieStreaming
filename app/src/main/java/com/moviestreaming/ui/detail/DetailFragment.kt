@@ -112,6 +112,38 @@ class DetailFragment : Fragment() {
                     }
                 }
 
+                launch {
+                    detailViewModel.trailer.collect { uiState ->
+                        when (uiState) {
+                            is UiState.Loading -> {}
+                            is UiState.Success -> {
+                                val trailer = uiState.data.first {
+                                    it.official
+                                }
+                                if (!trailer.key.isNullOrEmpty()) {
+                                    if (findNavController().currentDestination?.id == R.id.detailFragment) {
+                                        findNavController().navigate(
+                                            DetailFragmentDirections.actionDetailFragmentToTrailerFragment(
+                                                trailer.key
+                                            )
+                                        )
+                                    }
+                                } else {
+                                    if (findNavController().currentDestination?.id == R.id.detailFragment) {
+                                        findNavController().navigate(
+                                            DetailFragmentDirections.actionDetailFragmentToTrailerFragment(
+                                                uiState.data[0].key
+                                            )
+                                        )
+                                    }
+                                }
+                            }
+
+                            is UiState.Error -> {}
+                        }
+                    }
+                }
+
             }
         }
 
@@ -128,6 +160,10 @@ class DetailFragment : Fragment() {
 
         binding.backButton.setOnClickListener {
             findNavController().popBackStack()
+        }
+
+        binding.playButton.setOnClickListener {
+            detailViewModel.getMovieTrailer(args.movieId)
         }
     }
 

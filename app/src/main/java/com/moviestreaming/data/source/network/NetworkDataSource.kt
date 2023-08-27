@@ -4,7 +4,9 @@ import com.moviestreaming.data.source.network.dto.CreditsDto
 import com.moviestreaming.data.source.network.dto.MovieDetailDto
 import com.moviestreaming.data.source.network.dto.SimilarMoviesDto
 import com.moviestreaming.data.source.network.dto.TopRateMovieResponse.TopRateMovie
+import com.moviestreaming.data.source.network.dto.TrailerResponseDto
 import com.moviestreaming.data.source.network.dto.TrendingResponse.Trending
+import retrofit2.Response
 
 interface NetworkDataSource {
     suspend fun getTrending(): List<Trending>?
@@ -18,4 +20,5 @@ interface NetworkDataSource {
     suspend fun getMovieCredits(movieId: Int): CreditsDto?
 
     suspend fun getSimilarMovies(movieId: Int): SimilarMoviesDto?
+    suspend fun getMovieTrailer(movieId: Int): Response<TrailerResponseDto>
 }
