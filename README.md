@@ -1,6 +1,6 @@
 ## Application Scope
 
-The MovieStreaming is a simple application that presents information about various movies. This data is dynamically sourced from the ([tmdb](https://www.themoviedb.org)) movie platform API.
+The MovieStreaming is a simple application that presents information about various movies. This data is dynamically sourced from the ([TMDB](https://www.themoviedb.org)) movie platform API.
 
 The app has a few screens located with multiple features:
 
