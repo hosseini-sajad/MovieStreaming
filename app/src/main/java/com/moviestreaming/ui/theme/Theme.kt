@@ -1,4 +1,4 @@
-package com.gss.tiger.ui.theme
+package com.moviestreaming.ui.theme
 
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -9,65 +9,19 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.unit.LayoutDirection
-import com.moviestreaming.ui.theme.TigerColors
-import com.moviestreaming.ui.theme.accent
-import com.moviestreaming.ui.theme.accentDark
-import com.moviestreaming.ui.theme.blue
-import com.moviestreaming.ui.theme.blue_100
-import com.moviestreaming.ui.theme.blue_200
-import com.moviestreaming.ui.theme.blue_50
-import com.moviestreaming.ui.theme.cardBackground2
-import com.moviestreaming.ui.theme.gradiant1
-import com.moviestreaming.ui.theme.gray1
-import com.moviestreaming.ui.theme.gray_100
-import com.moviestreaming.ui.theme.gray_200
-import com.moviestreaming.ui.theme.gray_50
-import com.moviestreaming.ui.theme.gray_75
-import com.moviestreaming.ui.theme.green
-import com.moviestreaming.ui.theme.green_100
-import com.moviestreaming.ui.theme.orange_100
-import com.moviestreaming.ui.theme.primary
-import com.moviestreaming.ui.theme.primaryDark
-import com.moviestreaming.ui.theme.rapunzelSilver
-import com.moviestreaming.ui.theme.red_100
-import com.moviestreaming.ui.theme.secondaryDark
-import com.moviestreaming.ui.theme.titaniumWhite
-import com.moviestreaming.ui.theme.white
+import com.gss.tiger.ui.theme.MovieStreamingPadding
+import com.gss.tiger.ui.theme.p12
+import com.gss.tiger.ui.theme.p16
+import com.gss.tiger.ui.theme.p20
+import com.gss.tiger.ui.theme.p4
+import com.gss.tiger.ui.theme.p8
 
-private val DefaultColorPalette = TigerColors(
-    brand = accent,
-    cardTitleGradiant = gradiant1,
-    brandSecondary = blue,
-    uiBackground = white,
-    dialogBackground = gray1,
-    cardBackground = gray1,
-    itemBackground = primary,
-    itemBackgroundDark = secondaryDark,
-    uiBorder = titaniumWhite,
-    textPrimary = white,
-    iconSecondary = rapunzelSilver,
-    textSecondary = rapunzelSilver,
-    iconPrimary = white,
-    like = green,
+private val DefaultColorPalette = MovieStreamingColors(
     primary = primary,
-    secondary = secondaryDark,
-    interactiveAccent = listOf(accent, accentDark),
-    cardSecondaryBackground = cardBackground2,
-    toobarBackground = primaryDark,
-    policyTextColor = blue_100,
-    buttonTextColor = blue_200,
-    uncheckBoxColor = blue_100,
-    outlinedColor = gray_200,
-    onFocusOutlinedColor = blue_100,
-    circleShapeBackgroundColor = gray_50,
-    dividerColor = gray_75,
-    borderColor = blue_50,
-    progressTrackColor = gray_100,
-    progressRejectedColor = red_100,
-    progressWaitingColor = orange_100,
-    progressSignedColor = green_100
+    secondary = secondary,
+    uiBackground = white
 )
-private val defaultPadding = TigerPadding(
+private val defaultPadding = MovieStreamingPadding(
     p4 = p4,
     p8 = p8,
     p12 = p12,
@@ -82,10 +36,10 @@ fun TigerTheme(
     // returns
     val colors = DefaultColorPalette
 
-        ProvideTigerColors(colors) {
-            ProvideTigerPadding(defaultPadding) {
+        ProvideMovieStreamingColors(colors) {
+            ProvideMovieStreamingPadding(defaultPadding) {
                 MaterialTheme(
-                    typography = TigerTypography,
+                    typography = Typography,
                     content = {
 //                        ProvideTextStyle(TextStyle(color = TigerTheme.colors.textPrimary)) {
                         CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Rtl) {
@@ -94,9 +48,9 @@ fun TigerTheme(
 //                        }
                     },
                     colorScheme = lightColorScheme(
-                        primary = TigerTheme.colors.primary,
-                        secondary = TigerTheme.colors.secondary,
-                        background = TigerTheme.colors.uiBackground,
+                        primary = MovieStreamingTheme.colors.primary,
+                        secondary = MovieStreamingTheme.colors.secondary,
+                        background = MovieStreamingTheme.colors.uiBackground,
                     )
                 )
             }
@@ -104,18 +58,18 @@ fun TigerTheme(
 
 }
 
-object TigerTheme {
-    val colors: TigerColors
+object MovieStreamingTheme {
+    val colors: MovieStreamingColors
         @Composable
-        get() = LocalTigerColors.current
-    val padding: TigerPadding
+        get() = LocalMovieStreamingColors.current
+    val padding: MovieStreamingPadding
         @Composable
-        get() = LocalTigerPadding.current
+        get() = LocalMovieStreamingPadding.current
 }
 
 @Composable
-fun ProvideTigerColors(
-    colors: TigerColors,
+fun ProvideMovieStreamingColors(
+    colors: MovieStreamingColors,
     content: @Composable () -> Unit
 ) {
     val colorPalette = remember {
@@ -124,12 +78,12 @@ fun ProvideTigerColors(
         colors.copy()
     }
     colorPalette.update(colors)
-    CompositionLocalProvider(LocalTigerColors provides colorPalette, content = content)
+    CompositionLocalProvider(LocalMovieStreamingColors provides colorPalette, content = content)
 }
 
 @Composable
-fun ProvideTigerPadding(
-    paddings: TigerPadding,
+fun ProvideMovieStreamingPadding(
+    paddings: MovieStreamingPadding,
     content: @Composable () -> Unit
 ) {
     val padding = remember {
@@ -138,13 +92,13 @@ fun ProvideTigerPadding(
         paddings.copy()
     }
     padding.update(paddings)
-    CompositionLocalProvider(LocalTigerPadding provides padding, content = content)
+    CompositionLocalProvider(LocalMovieStreamingPadding provides padding, content = content)
 }
 
-private val LocalTigerColors = staticCompositionLocalOf<TigerColors> {
+private val LocalMovieStreamingColors = staticCompositionLocalOf<MovieStreamingColors> {
     error("No TigerColorPalette provided")
 }
 
-private val LocalTigerPadding = staticCompositionLocalOf<TigerPadding> {
+private val LocalMovieStreamingPadding = staticCompositionLocalOf<MovieStreamingPadding> {
     error("No TigerPadding provided")
 }
