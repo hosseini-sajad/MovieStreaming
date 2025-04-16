@@ -4,40 +4,34 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
-import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import com.moviestreaming.R
-import com.moviestreaming.data.model.TopRateMovieEntity
-import com.moviestreaming.data.model.base.BaseEntity
-import com.moviestreaming.databinding.FragmentHomeBinding
-import com.moviestreaming.ui.ItemClickListener
-import com.moviestreaming.ui.home.adapter.TopRateMovieAdapter
-import com.moviestreaming.ui.home.adapter.TrendingAdapter
-import com.moviestreaming.utils.UiState
-import com.moviestreaming.utils.mapper.SliderPageUtil
+import com.moviestreaming.ui.theme.MovieStreamingTheme
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class HomeFragment : Fragment() {
 
-    private var _binding: FragmentHomeBinding? = null
+    /*private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
-    private val homeViewModel: HomeViewModel by activityViewModels()
+    private val homeViewModel: HomeViewModel by activityViewModels()*/
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View {
+        return ComposeView(requireContext()).apply {
+            setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
+            setContent {
+                MovieStreamingTheme {
+                    HomeScreenRoute()
+                }
+            }
+        }
 
-        _binding = FragmentHomeBinding.inflate(inflater, container, false)
+        /*_binding = FragmentHomeBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
         viewLifecycleOwner.lifecycleScope.launch {
@@ -98,10 +92,10 @@ class HomeFragment : Fragment() {
             }
         }
 
-        return root
+        return root*/
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    /*override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         homeViewModel.getTrending()
         homeViewModel.getTopRateMovie()
@@ -118,9 +112,9 @@ class HomeFragment : Fragment() {
                 findNavController().navigate(HomeFragmentDirections.actionNavigationHomeToCategoryFragment())
             }
         }
-    }
+    }*/
 
-    private fun setupImdbRecyclerView(
+    /*private fun setupImdbRecyclerView(
         list: List<TopRateMovieEntity>,
         recyclerView: RecyclerView,
     ) {
@@ -139,5 +133,5 @@ class HomeFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
-    }
+    }*/
 }

@@ -1,14 +1,16 @@
 package com.moviestreaming.ui.theme
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.staticCompositionLocalOf
-import androidx.compose.ui.platform.LocalLayoutDirection
-import androidx.compose.ui.unit.LayoutDirection
+import androidx.compose.ui.Modifier
 import com.gss.tiger.ui.theme.MovieStreamingPadding
 import com.gss.tiger.ui.theme.p12
 import com.gss.tiger.ui.theme.p16
@@ -19,7 +21,13 @@ import com.gss.tiger.ui.theme.p8
 private val DefaultColorPalette = MovieStreamingColors(
     primary = primary,
     secondary = secondary,
-    uiBackground = white
+    uiBackground = primary,
+    startSliderColor = gray_600,
+    centerSliderColor = gray_700,
+    endSliderColor = gray_500,
+    selectIndicatorColor = yellow_100,
+    unselectIndicatorColor = gray_150,
+    titleColor = white
 )
 private val defaultPadding = MovieStreamingPadding(
     p4 = p4,
@@ -30,7 +38,7 @@ private val defaultPadding = MovieStreamingPadding(
 )
 
 @Composable
-fun TigerTheme(
+fun MovieStreamingTheme(
     content: @Composable () -> Unit
 ) {
     // returns
@@ -41,10 +49,15 @@ fun TigerTheme(
                 MaterialTheme(
                     typography = Typography,
                     content = {
-//                        ProvideTextStyle(TextStyle(color = TigerTheme.colors.textPrimary)) {
-                        CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Rtl) {
-                            Surface { content() }
+                        Box(
+                            modifier = Modifier.fillMaxSize()
+                                .background(
+                                    MovieStreamingTheme.colors.uiBackground
+                                )
+                        ) {
+                            content()
                         }
+//                        ProvideTextStyle(TextStyle(color = TigerTheme.colors.textPrimary)) {
 //                        }
                     },
                     colorScheme = lightColorScheme(
