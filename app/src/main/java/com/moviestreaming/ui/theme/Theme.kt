@@ -21,7 +21,7 @@ import com.gss.tiger.ui.theme.p8
 private val DefaultColorPalette = MovieStreamingColors(
     primary = primary,
     secondary = secondary,
-    uiBackground = primary,
+    uiBackground = primaryDark,
     startSliderColor = gray_600,
     centerSliderColor = gray_700,
     endSliderColor = gray_500,

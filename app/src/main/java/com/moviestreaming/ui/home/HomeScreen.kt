@@ -1,5 +1,6 @@
 package com.moviestreaming.ui.home
 
+import androidx.annotation.IntegerRes
 import androidx.annotation.StringRes
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.tween
@@ -11,9 +12,13 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -33,6 +38,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.moviestreaming.R
+import com.moviestreaming.core.component.MovieCard
 import com.moviestreaming.core.component.MovieSliderItem
 import com.moviestreaming.data.model.TrendingEntity
 import com.moviestreaming.ui.theme.MovieStreamingTheme
@@ -77,11 +83,23 @@ fun HomeScreen() {
             mediaType = "movie"
         )
     )
+    val scrollState = rememberScrollState()
     Column(
-        Modifier.fillMaxSize()
+        Modifier
+            .fillMaxSize()
+            .verticalScroll(scrollState)
     ) {
         MovieSlider(trendingSamples)
-        TopIMDBSection()
+        TopicSection(
+            title = R.string.top_imdb,
+            movies = trendingSamples,
+            onclick = {}
+        )
+        TopicSection(
+            title = R.string.new_movies,
+            movies = trendingSamples,
+            onclick = {}
+        )
     }
 }
 
@@ -125,14 +143,31 @@ fun MovieSlider(movies: List<TrendingEntity>) {
 }
 
 @Composable
-fun TopIMDBSection() {
+fun TopicSection(
+    @StringRes title: Int,
+    movies: List<TrendingEntity>,
+    onclick: () -> Unit
+) {
     Column {
         Row {
             TitleSection(
-                title = R.string.top_imdb
+                title = title
             )
             Spacer(modifier = Modifier.weight(1f))
-            MoreText {  }
+            MoreText {
+                onclick()
+            }
+        }
+        LazyRow(
+            modifier = Modifier
+                .padding(8.dp),
+        ) {
+            items(movies) { movie ->
+                MovieCard(
+                    modifier = Modifier.padding(end = 5.dp),
+                    movie = movie
+                )
+            }
         }
     }
 }
