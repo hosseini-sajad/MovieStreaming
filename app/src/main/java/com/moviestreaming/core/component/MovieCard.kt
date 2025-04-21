@@ -15,6 +15,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
@@ -26,11 +27,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
 import com.moviestreaming.R
+import com.moviestreaming.data.model.TopRateMovieEntity
 import com.moviestreaming.data.model.TrendingEntity
 import com.moviestreaming.ui.theme.MovieStreamingTheme
+import com.moviestreaming.utils.getImageUrl
 
 @Composable
-fun MovieCard(modifier: Modifier = Modifier, movie: TrendingEntity) {
+fun MovieCard(modifier: Modifier = Modifier, movie: TopRateMovieEntity) {
     Box(
         modifier = modifier
             .background(
@@ -40,15 +43,26 @@ fun MovieCard(modifier: Modifier = Modifier, movie: TrendingEntity) {
             .width(130.dp)
             .wrapContentSize()
     ) {
+        val isInPreview = LocalInspectionMode.current
 
         Column {
-            AsyncImage(
-                model = movie.image,
-                contentDescription = movie.title,
-                contentScale = ContentScale.Crop,
-                modifier = Modifier
-                    .size(width = 130.dp, height = 160.dp),
-            )
+            if (isInPreview) {
+                Image(
+                    painter = painterResource(R.drawable.tenet),
+                    contentDescription = null,
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier
+                        .size(width = 130.dp, height = 160.dp)
+                )
+            } else {
+                AsyncImage(
+                    model = movie.image?.let { getImageUrl(it) },
+                    contentDescription = movie.title,
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier
+                        .size(width = 130.dp, height = 160.dp),
+                )
+            }
             movie.title?.let {
                 Text(
                     text = it,
@@ -102,11 +116,13 @@ fun MovieCard(modifier: Modifier = Modifier, movie: TrendingEntity) {
 @Composable
 private fun MovieCardPreview() {
     MovieStreamingTheme {
-        val movie = TrendingEntity(
+        val movie = TopRateMovieEntity(
             id = 1,
             title = "Tent",
-            image = "https://image.tmdb.org/t/p/w500/8b8R8l88Qje9dn9OE8PY05Nxl1X.jpg",
-            mediaType = "movie"
+            image = "",
+            mediaType = "movie",
+            genre = 1,
+            rate = 8.0
         )
         MovieCard(movie = movie)
     }
