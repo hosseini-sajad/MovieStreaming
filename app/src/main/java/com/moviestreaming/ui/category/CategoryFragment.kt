@@ -39,22 +39,22 @@ class CategoryFragment : Fragment() {
 
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                homeViewModel.topRateMovie.collect { uiState ->
-                    when (uiState) {
-                        is UiState.Loading -> {
-                            binding.animProgress.visibility = View.VISIBLE
-                        }
-                        is UiState.Success -> {
-                            binding.animProgress.visibility = View.GONE
-                            setupImdbRecyclerView(uiState, binding.categoryRecyclerView)
-                        }
-
-                        is UiState.Error -> {
-                            binding.animProgress.visibility = View.GONE
-                            Log.d("JJJJJJJJ", "onCreateView: ${uiState.message}")
-                        }
-                    }
-                }
+//                homeViewModel.topRateMovie.collect { uiState ->
+//                    when (uiState) {
+//                        is UiState.Loading -> {
+//                            binding.animProgress.visibility = View.VISIBLE
+//                        }
+//                        is UiState.Success -> {
+//                            binding.animProgress.visibility = View.GONE
+//                            setupImdbRecyclerView(uiState, binding.categoryRecyclerView)
+//                        }
+//
+//                        is UiState.Error -> {
+//                            binding.animProgress.visibility = View.GONE
+//                            Log.d("JJJJJJJJ", "onCreateView: ${uiState.message}")
+//                        }
+//                    }
+//                }
             }
         }
 

@@ -15,33 +15,33 @@ class FakeMovieRepository() : MovieRepository {
     private lateinit var movieDetail: MovieDetailEntity
     private lateinit var similarMovies: MutableList<TopRateMovieEntity>
     private lateinit var creditsEntity: CreditsEntity
-    override suspend fun getTrending(): Flow<Result<List<TrendingEntity>>> {
+    override suspend fun getTrending(): Flow<List<TrendingEntity>> {
         return flow {
             if (::trending.isInitialized) {
-                emit(Result.Success(trending))
+                emit(trending)
                 return@flow
             }
-            emit(Result.Error("Server problem, please try later!"))
+            throw Exception()
         }
     }
 
-    override suspend fun getTopRateMovie(): Flow<Result<List<TopRateMovieEntity>>> {
+    override suspend fun getTopRateMovie(): Flow<List<TopRateMovieEntity>> {
         return flow {
             if (::topRateMovies.isInitialized) {
-                emit(Result.Success(topRateMovies))
+                emit(topRateMovies)
                 return@flow
             }
-            emit(Result.Error("Server problem, please try later!"))
+            throw Exception()
         }
     }
 
-    override suspend fun getPopularMovies(): Flow<Result<List<TopRateMovieEntity>>> {
+    override suspend fun getPopularMovies(): Flow<List<TopRateMovieEntity>> {
         return flow {
             if (::popularMovies.isInitialized) {
-                emit(Result.Success(popularMovies))
+                emit(popularMovies)
                 return@flow
             }
-            emit(Result.Error("Server problem, please try later!"))
+            throw Exception()
         }
     }
 
