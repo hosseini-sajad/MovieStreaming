@@ -1,6 +1,5 @@
 package com.moviestreaming.ui.home
 
-import androidx.annotation.IntegerRes
 import androidx.annotation.StringRes
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.tween
@@ -23,6 +22,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.remember
@@ -37,69 +37,47 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.moviestreaming.R
 import com.moviestreaming.core.component.MovieCard
 import com.moviestreaming.core.component.MovieSliderItem
+import com.moviestreaming.data.model.TopRateMovieEntity
 import com.moviestreaming.data.model.TrendingEntity
 import com.moviestreaming.ui.theme.MovieStreamingTheme
 import kotlinx.coroutines.delay
 
 @Composable
 fun HomeScreenRoute() {
-    HomeScreen()
+    val homeViewModel = hiltViewModel<HomeViewModel>()
+    val uiState by homeViewModel.uiState.collectAsState()
+    HomeScreen(uiState = uiState)
 }
 
 @Composable
-fun HomeScreen() {
-    val trendingSamples = listOf(
-        TrendingEntity(
-            id = 1,
-            title = "Dune: Part Two",
-            image = "https://image.tmdb.org/t/p/w500/8b8R8l88Qje9dn9OE8PY05Nxl1X.jpg",
-            mediaType = "movie"
-        ),
-        TrendingEntity(
-            id = 2,
-            title = "Avatar: The Way of Water",
-            image = "https://image.tmdb.org/t/p/w500/t6HIqrRAclMCA60NsSmeqe9RmNV.jpg",
-            mediaType = "movie"
-        ),
-        TrendingEntity(
-            id = 3,
-            title = "Stranger Things",
-            image = "https://image.tmdb.org/t/p/w500/x2LSRK2Cm7MZhjluni1msVJ3wDF.jpg",
-            mediaType = "tv"
-        ),
-        TrendingEntity(
-            id = 4,
-            title = "Breaking Bad",
-            image = "https://image.tmdb.org/t/p/w500/ggFHVNu6YYI5L9pCfOacjizRGt.jpg",
-            mediaType = "tv"
-        ),
-        TrendingEntity(
-            id = 5,
-            title = "The Batman",
-            image = "https://image.tmdb.org/t/p/w500/74xTEgt7R36Fpooo50r9T25onhq.jpg",
-            mediaType = "movie"
-        )
-    )
+fun HomeScreen(
+    uiState: HomeUiState
+) {
+
     val scrollState = rememberScrollState()
-    Column(
-        Modifier
-            .fillMaxSize()
-            .verticalScroll(scrollState)
-    ) {
-        MovieSlider(trendingSamples)
-        TopicSection(
-            title = R.string.top_imdb,
-            movies = trendingSamples,
-            onclick = {}
-        )
-        TopicSection(
-            title = R.string.new_movies,
-            movies = trendingSamples,
-            onclick = {}
-        )
+
+    if (uiState.trendingMovies.isNotEmpty() || uiState.topIMDbMovies.isNotEmpty() || uiState.popularMovies.isNotEmpty()) {
+        Column(
+            Modifier
+                .fillMaxSize()
+                .verticalScroll(scrollState)
+        ) {
+            MovieSlider(uiState.trendingMovies)
+            TopicSection(
+                title = R.string.top_imdb,
+                movies = uiState.topIMDbMovies,
+                onclick = {}
+            )
+            TopicSection(
+                title = R.string.popular_movies,
+                movies = uiState.popularMovies,
+                onclick = {}
+            )
+        }
     }
 }
 
@@ -145,7 +123,7 @@ fun MovieSlider(movies: List<TrendingEntity>) {
 @Composable
 fun TopicSection(
     @StringRes title: Int,
-    movies: List<TrendingEntity>,
+    movies: List<TopRateMovieEntity>,
     onclick: () -> Unit
 ) {
     Column {
@@ -214,6 +192,57 @@ fun MoreText(onclick: () -> Unit) {
 @Composable
 fun HomeScreenPreview() {
     MovieStreamingTheme {
-        HomeScreen()
+        val trendingSamples = listOf(
+            TrendingEntity(
+                id = 1,
+                title = "Dune: Part Two",
+                image = "https://image.tmdb.org/t/p/w500/8b8R8l88Qje9dn9OE8PY05Nxl1X.jpg",
+                mediaType = "movie"
+            ),
+            TrendingEntity(
+                id = 2,
+                title = "Avatar: The Way of Water",
+                image = "https://image.tmdb.org/t/p/w500/t6HIqrRAclMCA60NsSmeqe9RmNV.jpg",
+                mediaType = "movie"
+            ),
+            TrendingEntity(
+                id = 3,
+                title = "Stranger Things",
+                image = "https://image.tmdb.org/t/p/w500/x2LSRK2Cm7MZhjluni1msVJ3wDF.jpg",
+                mediaType = "tv"
+            ),
+            TrendingEntity(
+                id = 4,
+                title = "Breaking Bad",
+                image = "https://image.tmdb.org/t/p/w500/ggFHVNu6YYI5L9pCfOacjizRGt.jpg",
+                mediaType = "tv"
+            ),
+            TrendingEntity(
+                id = 5,
+                title = "The Batman",
+                image = "https://image.tmdb.org/t/p/w500/74xTEgt7R36Fpooo50r9T25onhq.jpg",
+                mediaType = "movie"
+            )
+        )
+        HomeScreen(
+            uiState = HomeUiState(
+                trendingMovies = trendingSamples,
+                topIMDbMovies = getDummyMovies(5),
+                popularMovies = getDummyMovies(5),
+                )
+        )
+    }
+}
+
+fun getDummyMovies(count: Int = 5): List<TopRateMovieEntity> {
+    return List(count) { index ->
+        TopRateMovieEntity(
+            id = index,
+            title = "Movie $index",
+            image = null, // or a fake URL if needed
+            mediaType = "movie",
+            genre = 28,
+            rate = (5..10).random().toDouble()
+        )
     }
 }

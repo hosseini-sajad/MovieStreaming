@@ -8,11 +8,11 @@ import com.moviestreaming.utils.Result
 import kotlinx.coroutines.flow.Flow
 
 interface MovieRepository {
-    suspend fun getTrending(): Flow<Result<List<TrendingEntity>>>
+    suspend fun getTrending(): Flow<List<TrendingEntity>>
 
-    suspend fun getTopRateMovie(): Flow<Result<List<TopRateMovieEntity>>>
+    suspend fun getTopRateMovie(): Flow<List<TopRateMovieEntity>>
 
-    suspend fun getPopularMovies(): Flow<Result<List<TopRateMovieEntity>>>
+    suspend fun getPopularMovies(): Flow<List<TopRateMovieEntity>>
 
     suspend fun getMovieDetails(movieId: Int): Flow<Result<MovieDetailEntity>?>
 
