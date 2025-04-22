@@ -137,10 +137,9 @@ fun TopicSection(
             }
         }
         LazyRow(
-            modifier = Modifier
-                .padding(8.dp),
+            modifier = Modifier.padding(8.dp),
         ) {
-            items(movies) { movie ->
+            items(movies.take(5)) { movie ->
                 MovieCard(
                     modifier = Modifier.padding(end = 5.dp),
                     movie = movie

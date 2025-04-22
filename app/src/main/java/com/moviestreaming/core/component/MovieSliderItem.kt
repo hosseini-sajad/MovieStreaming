@@ -119,7 +119,10 @@ fun MovieSliderItem(
 @Composable
 private fun MovieSliderItemPreview() {
     MovieStreamingTheme {
-        val pagerState = rememberPagerState(initialPage = 0, pageCount = { 7 })
+        val pagerState = rememberPagerState(
+            initialPage = 0,
+            pageCount = { 7 }
+        )
         MovieSliderItem(
             movie = TrendingEntity(
                 id = 1,
