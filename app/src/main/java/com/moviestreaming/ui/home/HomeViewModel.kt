@@ -67,7 +67,8 @@ class HomeViewModel @Inject constructor(
                     trendingMovies = trending.await(),
                     topIMDbMovies = topIMDb.await(),
                     popularMovies = popular.await(),
-                    isLoading = false
+                    isLoading = false,
+                    errorMessage = null
                 )
             } catch (e: Exception) {
                 _uiState.value = _uiState.value.copy(

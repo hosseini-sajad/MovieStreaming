@@ -11,6 +11,8 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.pager.HorizontalPager
@@ -18,6 +20,7 @@ import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -38,6 +41,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.airbnb.lottie.compose.LottieAnimation
+import com.airbnb.lottie.compose.LottieCompositionSpec
+import com.airbnb.lottie.compose.LottieConstants
+import com.airbnb.lottie.compose.animateLottieCompositionAsState
+import com.airbnb.lottie.compose.rememberLottieComposition
 import com.moviestreaming.R
 import com.moviestreaming.core.component.MovieCard
 import com.moviestreaming.core.component.MovieSliderItem
@@ -60,25 +68,65 @@ fun HomeScreen(
 
     val scrollState = rememberScrollState()
 
-    if (uiState.trendingMovies.isNotEmpty() || uiState.topIMDbMovies.isNotEmpty() || uiState.popularMovies.isNotEmpty()) {
-        Column(
-            Modifier
+    Scaffold() {
+        Box(
+            modifier = Modifier
                 .fillMaxSize()
-                .verticalScroll(scrollState)
+                .padding(it),
+            contentAlignment = Alignment.Center
         ) {
-            MovieSlider(uiState.trendingMovies)
-            TopicSection(
-                title = R.string.top_imdb,
-                movies = uiState.topIMDbMovies,
-                onclick = {}
-            )
-            TopicSection(
-                title = R.string.popular_movies,
-                movies = uiState.popularMovies,
-                onclick = {}
-            )
+            when {
+                uiState.isLoading -> {
+                    LoadingAnimation()
+                }
+
+                uiState.errorMessage != null && uiState.trendingMovies.isEmpty() &&
+                        uiState.topIMDbMovies.isEmpty() && uiState.popularMovies.isEmpty() -> {
+                    Text(
+                        text = uiState.errorMessage,
+                        color = MovieStreamingTheme.colors.selectIndicatorColor
+                    )
+                }
+
+                else -> {
+                    Column(
+                        Modifier
+                            .fillMaxSize()
+                            .verticalScroll(scrollState)
+                    ) {
+                        if (uiState.errorMessage != null) {
+                            Text(
+                                text = uiState.errorMessage,
+                                color = MovieStreamingTheme.colors.selectIndicatorColor
+                            )
+//                            ErrorBanner(message = uiState.errorMessage, onRetry = onRetry)
+                        }
+
+                        if (uiState.trendingMovies.isNotEmpty()) {
+                            MovieSlider(uiState.trendingMovies)
+                        }
+
+                        if (uiState.topIMDbMovies.isNotEmpty()) {
+                            TopicSection(
+                                title = R.string.top_imdb,
+                                movies = uiState.topIMDbMovies,
+                                onclick = {}
+                            )
+                        }
+
+                        if (uiState.popularMovies.isNotEmpty()) {
+                            TopicSection(
+                                title = R.string.popular_movies,
+                                movies = uiState.popularMovies,
+                                onclick = {}
+                            )
+                        }
+                    }
+                }
+            }
         }
     }
+
 }
 
 @Composable
@@ -187,6 +235,28 @@ fun MoreText(onclick: () -> Unit) {
     }
 }
 
+@Composable
+fun LoadingAnimation() {
+    val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.loading3))
+    val progress by animateLottieCompositionAsState(
+        composition = composition,
+        iterations = LottieConstants.IterateForever
+    )
+    Box(
+        modifier = Modifier
+            .size(60.dp)
+            .padding(top = 16.dp)
+            .wrapContentSize(),
+        contentAlignment = Alignment.Center
+    ) {
+        LottieAnimation(
+            composition = composition,
+            progress = { progress },
+            modifier = Modifier.size(200.dp)
+        )
+    }
+}
+
 @Preview
 @Composable
 fun HomeScreenPreview() {
@@ -228,7 +298,24 @@ fun HomeScreenPreview() {
                 trendingMovies = trendingSamples,
                 topIMDbMovies = getDummyMovies(5),
                 popularMovies = getDummyMovies(5),
-                )
+                isLoading = false
+            )
+        )
+    }
+}
+
+@Preview
+@Composable
+fun HomeScreenErrorPreview() {
+    MovieStreamingTheme {
+        HomeScreen(
+            uiState = HomeUiState(
+                isLoading = false,
+                errorMessage = "Failed to connect to server",
+                trendingMovies = emptyList(),
+                topIMDbMovies = emptyList(),
+                popularMovies = emptyList()
+            )
         )
     }
 }
