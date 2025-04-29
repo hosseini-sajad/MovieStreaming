@@ -65,7 +65,7 @@ class FakeMovieRepository() : MovieRepository {
         }
     }
 
-    override suspend fun getSimilarMovies(movieId: Int): Flow<Result<List<TopRateMovieEntity>>?> {
+    override suspend fun getSimilarMovies(movieId: Int): Flow<List<TopRateMovieEntity>?> {
         return flow {
             if (::similarMovies.isInitialized) {
                 emit(Result.Success(similarMovies))

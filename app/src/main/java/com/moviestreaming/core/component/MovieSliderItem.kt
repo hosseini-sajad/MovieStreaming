@@ -59,6 +59,7 @@ fun MovieSliderItem(
                 model = getImageUrl(movie.image),
                 contentDescription = movie.title,
                 contentScale = ContentScale.Crop,
+                error = painterResource(R.drawable.ic_image_error),
                 modifier = modifier.fillMaxSize()
             )
         }

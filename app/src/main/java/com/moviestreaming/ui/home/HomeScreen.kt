@@ -4,6 +4,7 @@ import androidx.annotation.StringRes
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -55,15 +56,21 @@ import com.moviestreaming.ui.theme.MovieStreamingTheme
 import kotlinx.coroutines.delay
 
 @Composable
-fun HomeScreenRoute() {
+fun HomeScreenRoute(
+    onClick: (movieId: Int) -> Unit
+) {
     val homeViewModel = hiltViewModel<HomeViewModel>()
     val uiState by homeViewModel.uiState.collectAsState()
-    HomeScreen(uiState = uiState)
+    HomeScreen(
+        uiState = uiState,
+        onClick = onClick
+    )
 }
 
 @Composable
 fun HomeScreen(
-    uiState: HomeUiState
+    uiState: HomeUiState,
+    onClick: (movieId: Int) -> Unit
 ) {
 
     val scrollState = rememberScrollState()
@@ -110,7 +117,8 @@ fun HomeScreen(
                             TopicSection(
                                 title = R.string.top_imdb,
                                 movies = uiState.topIMDbMovies,
-                                onclick = {}
+                                onMoreClick = {},
+                                onClick = onClick
                             )
                         }
 
@@ -118,7 +126,8 @@ fun HomeScreen(
                             TopicSection(
                                 title = R.string.popular_movies,
                                 movies = uiState.popularMovies,
-                                onclick = {}
+                                onMoreClick = {},
+                                onClick = onClick
                             )
                         }
                     }
@@ -172,7 +181,8 @@ fun MovieSlider(movies: List<TrendingEntity>) {
 fun TopicSection(
     @StringRes title: Int,
     movies: List<TopRateMovieEntity>,
-    onclick: () -> Unit
+    onMoreClick: () -> Unit,
+    onClick: (movieId: Int) -> Unit
 ) {
     Column {
         Row {
@@ -181,15 +191,16 @@ fun TopicSection(
             )
             Spacer(modifier = Modifier.weight(1f))
             MoreText {
-                onclick()
+                onMoreClick()
             }
         }
         LazyRow(
             modifier = Modifier.padding(8.dp),
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
         ) {
             items(movies.take(5)) { movie ->
                 MovieCard(
-                    modifier = Modifier.padding(end = 5.dp),
+                    onClick = onClick,
                     movie = movie
                 )
             }
@@ -236,14 +247,14 @@ fun MoreText(onclick: () -> Unit) {
 }
 
 @Composable
-fun LoadingAnimation() {
+fun LoadingAnimation(modifier: Modifier = Modifier) {
     val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.loading3))
     val progress by animateLottieCompositionAsState(
         composition = composition,
         iterations = LottieConstants.IterateForever
     )
     Box(
-        modifier = Modifier
+        modifier = modifier
             .size(60.dp)
             .padding(top = 16.dp)
             .wrapContentSize(),
@@ -299,7 +310,8 @@ fun HomeScreenPreview() {
                 topIMDbMovies = getDummyMovies(5),
                 popularMovies = getDummyMovies(5),
                 isLoading = false
-            )
+            ),
+            onClick = {}
         )
     }
 }
@@ -315,7 +327,8 @@ fun HomeScreenErrorPreview() {
                 trendingMovies = emptyList(),
                 topIMDbMovies = emptyList(),
                 popularMovies = emptyList()
-            )
+            ),
+            onClick = {}
         )
     }
 }

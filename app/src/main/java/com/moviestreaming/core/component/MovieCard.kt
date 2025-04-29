@@ -2,6 +2,7 @@ package com.moviestreaming.core.component
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -33,9 +34,18 @@ import com.moviestreaming.ui.theme.MovieStreamingTheme
 import com.moviestreaming.utils.getImageUrl
 
 @Composable
-fun MovieCard(modifier: Modifier = Modifier, movie: TopRateMovieEntity) {
+fun MovieCard(
+    modifier: Modifier = Modifier,
+    onClick: (movieId: Int) -> Unit,
+    movie: TopRateMovieEntity
+) {
     Box(
         modifier = modifier
+            .clickable(
+                onClick = {
+                    onClick(movie.id)
+                }
+            )
             .background(
                 color = MovieStreamingTheme.colors.primary,
                 shape = RoundedCornerShape(4.dp)
@@ -59,6 +69,7 @@ fun MovieCard(modifier: Modifier = Modifier, movie: TopRateMovieEntity) {
                     model = movie.image?.let { getImageUrl(it) },
                     contentDescription = movie.title,
                     contentScale = ContentScale.Crop,
+                    error = painterResource(R.drawable.ic_image_error),
                     modifier = Modifier
                         .size(width = 130.dp, height = 160.dp),
                 )
@@ -124,6 +135,9 @@ private fun MovieCardPreview() {
             genre = 1,
             rate = 8.0
         )
-        MovieCard(movie = movie)
+        MovieCard(
+            onClick = {},
+            movie = movie
+        )
     }
 }

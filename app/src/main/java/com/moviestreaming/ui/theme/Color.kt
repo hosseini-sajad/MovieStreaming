@@ -44,6 +44,7 @@ class MovieStreamingColors(
     selectIndicatorColor: Color,
     unselectIndicatorColor: Color,
     titleColor: Color,
+    genreBackgroundColor: Color
 ) {
 
     var primary by mutableStateOf(primary)
@@ -64,6 +65,8 @@ class MovieStreamingColors(
         private set
     var titleColor by mutableStateOf(titleColor)
         private set
+    var genreBackgroundColor by mutableStateOf(genreBackgroundColor)
+        private set
 
     fun update(other: MovieStreamingColors) {
         primary = other.primary
@@ -75,6 +78,7 @@ class MovieStreamingColors(
         selectIndicatorColor = other.selectIndicatorColor
         unselectIndicatorColor = other.unselectIndicatorColor
         titleColor = other.titleColor
+        genreBackgroundColor = other.genreBackgroundColor
     }
 
     fun copy(): MovieStreamingColors = MovieStreamingColors(
@@ -87,5 +91,6 @@ class MovieStreamingColors(
         selectIndicatorColor = selectIndicatorColor,
         unselectIndicatorColor = unselectIndicatorColor,
         titleColor = titleColor,
+        genreBackgroundColor = genreBackgroundColor
     )
 }

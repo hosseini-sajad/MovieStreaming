@@ -7,6 +7,8 @@ import android.view.ViewGroup
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.fragment.app.Fragment
+import androidx.navigation.findNavController
+import com.moviestreaming.R
 import com.moviestreaming.ui.theme.MovieStreamingTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -26,7 +28,17 @@ class HomeFragment : Fragment() {
             setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
             setContent {
                 MovieStreamingTheme {
-                    HomeScreenRoute()
+                    HomeScreenRoute(
+                        onClick = { movieId ->
+                            if (findNavController().currentDestination?.id == R.id.navigation_home) {
+                                findNavController().navigate(
+                                    HomeFragmentDirections.actionNavigationHomeToDetailFragment(
+                                        movieId = movieId
+                                    )
+                                )
+                            }
+                        }
+                    )
                 }
             }
         }

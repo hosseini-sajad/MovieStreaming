@@ -3,10 +3,10 @@ package com.moviestreaming.repository
 import com.moviestreaming.data.model.TopRateMovieEntity
 import com.moviestreaming.data.model.TrendingEntity
 import com.moviestreaming.data.source.network.NetworkDataSource
-import com.moviestreaming.utils.Result
 import com.moviestreaming.utils.parsError
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import javax.inject.Inject
@@ -14,66 +14,67 @@ import javax.inject.Inject
 class MovieRepositoryImp @Inject constructor(
     private val networkDataSource: NetworkDataSource
 ) : MovieRepository {
-    override suspend fun getTrending(): Flow<List<TrendingEntity>> = flow {
+    override fun getTrending(): Flow<List<TrendingEntity>> = flow {
         val response = networkDataSource.getTrending()
         if (!response.isNullOrEmpty()) {
             emit(response.map { it.toEntity() })
         } else {
-            emit(emptyList())
+            throw Exception("No trending movies found.")
         }
     }.flowOn(Dispatchers.IO)
 
-    override suspend fun getTopRateMovie(): Flow<List<TopRateMovieEntity>> = flow {
+    override fun getTopRateMovie(): Flow<List<TopRateMovieEntity>> = flow {
         val response = networkDataSource.getTopRateMovie()
         if (!response.isNullOrEmpty()) {
             emit(response.map { it.toEntity() })
         } else {
-            emit(emptyList())
+            throw Exception("No top rate movies found.")
         }
     }.flowOn(Dispatchers.IO)
 
-    override suspend fun getPopularMovies(): Flow<List<TopRateMovieEntity>> = flow {
+    override fun getPopularMovies(): Flow<List<TopRateMovieEntity>> = flow {
         val response = networkDataSource.getPopularMovies()
         if (!response.isNullOrEmpty()) {
             emit(response.map { it.toEntity() })
         } else {
-            emit(emptyList())
+            throw Exception("No popular movies found.")
         }
     }.flowOn(Dispatchers.IO)
 
-    override suspend fun getMovieDetails(movieId: Int) = flow {
-        try {
-            emit(Result.Success(networkDataSource.getMovieDetail(movieId)!!.toEntity()))
-        } catch (e: Exception) {
-            val errorResponse = parsError(e)
-            emit(Result.Error(errorResponse.statusMessage))
+    override fun getMovieDetails(movieId: Int) = flow {
+        val movieDetail = networkDataSource.getMovieDetail(movieId)
+        if (movieDetail != null) {
+            emit(movieDetail.toEntity())
+        } else {
+            throw Exception("No movie details found.")
         }
-    }
+    }.catch { e ->
+        val errorResponse = parsError(e)
+        throw Exception(errorResponse.statusMessage)
+    }.flowOn(Dispatchers.IO)
 
-    override suspend fun getMovieCredits(movieId: Int) = flow {
-        try {
-            emit(Result.Success(networkDataSource.getMovieCredits(movieId)!!.toEntity()))
-        } catch (e: Exception) {
-            val errorResponse = parsError(e)
-            emit(Result.Error(errorResponse.statusMessage))
+    override fun getMovieCredits(movieId: Int) = flow {
+        val movieCredits = networkDataSource.getMovieCredits(movieId)
+        if (movieCredits != null) {
+            emit(movieCredits.toEntity())
+        } else {
+            throw Exception("No movie credits found.")
         }
-    }
+    }.catch { e ->
+        val errorResponse = parsError(e)
+        throw Exception(errorResponse.statusMessage)
+    }.flowOn(Dispatchers.IO)
 
-    override suspend fun getSimilarMovies(movieId: Int) = flow {
-        try {
-
-            val apiResponse = networkDataSource.getSimilarMovies(movieId)
-            val similarData = apiResponse!!.similarMoviesDto
-            val mappedData = similarData.map {
-                it.toEntity()
-            }
-            emit(Result.Success(mappedData))
-        } catch (e: Exception) {
-            e.printStackTrace()
-            val errorResponse = parsError(e)
-            emit(Result.Error(errorResponse.statusMessage))
+    override fun getSimilarMovies(movieId: Int): Flow<List<TopRateMovieEntity>?> = flow {
+        val similarMovies = networkDataSource.getSimilarMovies(movieId)
+        if (!similarMovies?.similarMoviesDto.isNullOrEmpty()) {
+            emit(similarMovies?.similarMoviesDto?.map { it.toEntity() })
+        } else {
+            throw Exception("No similar movies found.")
         }
-    }
-
+    }.catch { e ->
+        val errorResponse = parsError(e)
+        throw Exception(errorResponse.statusMessage)
+    }.flowOn(Dispatchers.IO)
 
 }

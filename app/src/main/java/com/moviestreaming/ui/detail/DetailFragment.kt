@@ -5,6 +5,8 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
@@ -26,6 +28,7 @@ import com.moviestreaming.databinding.FragmentDetailBinding
 import com.moviestreaming.ui.ItemClickListener
 import com.moviestreaming.ui.detail.adapter.CastAdapter
 import com.moviestreaming.ui.home.adapter.TopRateMovieAdapter
+import com.moviestreaming.ui.theme.MovieStreamingTheme
 import com.moviestreaming.utils.UiState
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -33,16 +36,26 @@ import kotlinx.coroutines.launch
 @AndroidEntryPoint
 class DetailFragment : Fragment() {
 
-    private var _binding: FragmentDetailBinding? = null
-    private val binding get() = _binding!!
-    private val detailViewModel: DetailViewModel by viewModels()
-    private val args: DetailFragmentArgs by navArgs()
+//    private var _binding: FragmentDetailBinding? = null
+//    private val binding get() = _binding!!
+//    private val detailViewModel: DetailViewModel by viewModels()
+//    private val args: DetailFragmentArgs by navArgs()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View {
-        _binding = FragmentDetailBinding.inflate(inflater, container, false)
+
+        return ComposeView(requireContext()).apply {
+            setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
+            setContent {
+                MovieStreamingTheme {
+                    DetailScreenRoute()
+                }
+            }
+        }
+
+        /*_binding = FragmentDetailBinding.inflate(inflater, container, false)
 
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
@@ -115,10 +128,10 @@ class DetailFragment : Fragment() {
             }
         }
 
-        return binding.root
+        return binding.root*/
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    /*override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         val movieId = args.movieId
@@ -129,23 +142,23 @@ class DetailFragment : Fragment() {
         binding.backButton.setOnClickListener {
             findNavController().popBackStack()
         }
-    }
+    }*/
 
-    private fun showMovieDetail(movieDetailEntity: MovieDetailEntity) {
-        Glide.with(requireContext())
-            .load(movieDetailEntity.image)
-            .error(R.drawable.ic_image_error)
-            .into(binding.movieImage)
+//    private fun showMovieDetail(movieDetailEntity: MovieDetailEntity) {
+//        Glide.with(requireContext())
+//            .load(movieDetailEntity.image)
+//            .error(R.drawable.ic_image_error)
+//            .into(binding.movieImage)
+//
+//        binding.name.text = movieDetailEntity.title
+//        binding.genres.text = appendGenres(movieDetailEntity.genres) ?: "Nothing"
+//        binding.rate.text = movieDetailEntity.rate.toString()
+//        binding.releasedDate.text = movieDetailEntity.releasedDate
+//        binding.budget.text = movieDetailEntity.budget.toString()
+//        binding.description.text = movieDetailEntity.description
+//    }
 
-        binding.name.text = movieDetailEntity.title
-        binding.genres.text = appendGenres(movieDetailEntity.genres) ?: "Nothing"
-        binding.rate.text = movieDetailEntity.rate.toString()
-        binding.releasedDate.text = movieDetailEntity.releasedDate
-        binding.budget.text = movieDetailEntity.budget.toString()
-        binding.description.text = movieDetailEntity.description
-    }
-
-    private fun setupSimilarMoviesRecyclerView(
+    /*private fun setupSimilarMoviesRecyclerView(
         data: List<TopRateMovieEntity>,
         recyclerView: RecyclerView,
     ) {
@@ -159,9 +172,9 @@ class DetailFragment : Fragment() {
                 }
             })
         }
-    }
+    }*/
 
-    private fun setupCastRecyclerView(
+    /*private fun setupCastRecyclerView(
         data: List<CastEntity>,
         recyclerView: RecyclerView,
     ) {
@@ -175,9 +188,9 @@ class DetailFragment : Fragment() {
                 }
             })
         }
-    }
+    }*/
 
-    private fun appendDirectorsName(data: List<CrewEntity>): CharSequence? {
+    /*private fun appendDirectorsName(data: List<CrewEntity>): CharSequence? {
         val separator = ", "
         val directorsName = data.map {
             it.originalName
@@ -196,6 +209,6 @@ class DetailFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
-    }
+    }*/
 
 }
