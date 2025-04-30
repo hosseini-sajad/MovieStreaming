@@ -50,7 +50,17 @@ class DetailFragment : Fragment() {
             setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
             setContent {
                 MovieStreamingTheme {
-                    DetailScreenRoute()
+                    DetailScreenRoute(
+                        similarOnClick = { movieId ->
+                            if (findNavController().currentDestination?.id == R.id.detailFragment) {
+                                findNavController().navigate(
+                                    DetailFragmentDirections.actionDetailFragmentSelf(
+                                        movieId
+                                    )
+                                )
+                            }
+                        }
+                    )
                 }
             }
         }

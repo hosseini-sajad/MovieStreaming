@@ -1,8 +1,5 @@
 package com.moviestreaming.ui.detail
 
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.background
@@ -64,6 +61,7 @@ import com.moviestreaming.utils.getImageUrl
 @Composable
 fun DetailScreenRoute(
     viewModel: DetailViewModel = hiltViewModel(),
+    similarOnClick: (Int) -> Unit
 ) {
     val uiState by viewModel.detailUiState.collectAsState()
 
@@ -71,7 +69,8 @@ fun DetailScreenRoute(
         uiState = uiState,
         onBackClick = {},
         onBookmarkClick = {},
-        onTrialClick = {}
+        onTrialClick = {},
+        similarOnClick = similarOnClick
     )
 }
 
@@ -80,7 +79,8 @@ fun DetailScreen(
     uiState: DetailUiState,
     onBackClick: () -> Unit,
     onBookmarkClick: () -> Unit,
-    onTrialClick: () -> Unit
+    onTrialClick: () -> Unit,
+    similarOnClick: (Int) -> Unit
 ) {
     val scrollState = rememberScrollState()
     val toolbarHeight = 250.dp
@@ -110,7 +110,8 @@ fun DetailScreen(
                 minToolbarHeight = minToolbarHeight,
                 onBackClick = onBackClick,
                 onBookmarkClick = onBookmarkClick,
-                onTrialClick = onTrialClick
+                onTrialClick = onTrialClick,
+                similarOnClick = similarOnClick
             )
         }
     }
@@ -137,7 +138,8 @@ private fun DetailContent(
     minToolbarHeight: Dp,
     onBackClick: () -> Unit,
     onBookmarkClick: () -> Unit,
-    onTrialClick: () -> Unit
+    onTrialClick: () -> Unit,
+    similarOnClick: (Int) -> Unit
 ) {
     Box(modifier = Modifier.fillMaxSize()) {
         Column(
@@ -153,10 +155,11 @@ private fun DetailContent(
                 movieBudget = uiState.movieDetail?.budget ?: 1,
                 movieDescription = uiState.movieDetail?.description ?: "",
                 casts = uiState.castMovie ?: emptyList(),
-                similarMovies = uiState.similarMovies ?: emptyList()
+                similarMovies = uiState.similarMovies ?: emptyList(),
+                similarOnClick = similarOnClick
             )
         }
-        
+
         Box(modifier = Modifier.fillMaxSize()) {
             HeaderDetail(
                 toolbarOffset = toolbarOffset,
@@ -165,7 +168,7 @@ private fun DetailContent(
                 onBackClick = onBackClick,
                 onBookmarkClick = onBookmarkClick
             )
-            
+
             if (scrollState.value == 0) {
                 val fabSize = 56.dp
                 PlayButton(
@@ -355,6 +358,7 @@ fun ContentSection(
     movieDescription: String,
     casts: List<CreditsEntity.CastEntity>,
     similarMovies: List<TopRateMovieEntity>,
+    similarOnClick: (Int) -> Unit
 ) {
     Column(modifier = Modifier.padding(10.dp)) {
         RateSection(movieRate, releasedMovieDate)
@@ -364,7 +368,10 @@ fun ContentSection(
         )
         DescriptionSection(description = movieDescription)
         CastSection(casts = casts)
-        SimilarMoviesSection(similarMovies = similarMovies)
+        SimilarMoviesSection(
+            similarMovies = similarMovies,
+            similarOnClick = similarOnClick
+        )
     }
 }
 
@@ -454,7 +461,10 @@ private fun CastSection(casts: List<CreditsEntity.CastEntity>) {
 }
 
 @Composable
-private fun SimilarMoviesSection(similarMovies: List<TopRateMovieEntity>) {
+private fun SimilarMoviesSection(
+    similarMovies: List<TopRateMovieEntity>,
+    similarOnClick: (Int) -> Unit
+) {
     Column {
         SectionTitle(text = stringResource(R.string.similar_movies))
         LazyRow(
@@ -465,7 +475,7 @@ private fun SimilarMoviesSection(similarMovies: List<TopRateMovieEntity>) {
         ) {
             items(similarMovies) { movie ->
                 MovieCard(
-                    onClick = {},
+                    onClick = similarOnClick,
                     movie = movie
                 )
             }
@@ -539,7 +549,7 @@ private fun DetailScreenFullContentPreview() {
                     image = "https://example.com/image.jpg",
                     mediaType = "movie",
                     rate = 9.0,
-                    releasedDate = "2008-07-18",
+                    releasedDate = "2008",
                     budget = 185000000,
                     description = "When the menace known as the Joker wreaks havoc and chaos on the people of Gotham, Batman must accept one of the greatest psychological and physical tests of his ability to fight injustice.",
                     genres = listOf(
@@ -592,7 +602,8 @@ private fun DetailScreenFullContentPreview() {
             ),
             onBackClick = {},
             onBookmarkClick = {},
-            onTrialClick = {}
+            onTrialClick = {},
+            similarOnClick = {}
         )
     }
 }
@@ -611,7 +622,8 @@ private fun DetailScreenEmptyPreview() {
             ),
             onBackClick = {},
             onBookmarkClick = {},
-            onTrialClick = {}
+            onTrialClick = {},
+            similarOnClick = {}
         )
     }
 }
@@ -629,7 +641,7 @@ private fun DetailScreenPartialContentPreview() {
                     image = "https://example.com/image.jpg",
                     mediaType = "movie",
                     rate = 9.0,
-                    releasedDate = "2008-07-18",
+                    releasedDate = "2008",
                     budget = 185000000,
                     description = "When the menace known as the Joker wreaks havoc and chaos on the people of Gotham, Batman must accept one of the greatest psychological and physical tests of his ability to fight injustice.",
                     genres = listOf(
@@ -644,7 +656,8 @@ private fun DetailScreenPartialContentPreview() {
             ),
             onBackClick = {},
             onBookmarkClick = {},
-            onTrialClick = {}
+            onTrialClick = {},
+            similarOnClick = {}
         )
     }
 }
@@ -657,7 +670,8 @@ private fun DetailScreenDefaultPreview() {
             uiState = DetailUiState(),
             onBackClick = {},
             onBookmarkClick = {},
-            onTrialClick = {}
+            onTrialClick = {},
+            similarOnClick = {}
         )
     }
 }
@@ -670,7 +684,8 @@ private fun DetailScreenLoadingPreview() {
             uiState = DetailUiState(isLoading = true),
             onBackClick = {},
             onBookmarkClick = {},
-            onTrialClick = {}
+            onTrialClick = {},
+            similarOnClick = {}
         )
     }
 }
@@ -686,7 +701,8 @@ private fun DetailScreenErrorPreview() {
             ),
             onBackClick = {},
             onBookmarkClick = {},
-            onTrialClick = {}
+            onTrialClick = {},
+            similarOnClick = {}
         )
     }
 }
