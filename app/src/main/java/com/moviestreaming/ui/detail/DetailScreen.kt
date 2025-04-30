@@ -61,13 +61,14 @@ import com.moviestreaming.utils.getImageUrl
 @Composable
 fun DetailScreenRoute(
     viewModel: DetailViewModel = hiltViewModel(),
+    onBackClick: () -> Unit,
     similarOnClick: (Int) -> Unit
 ) {
     val uiState by viewModel.detailUiState.collectAsState()
 
     DetailScreen(
         uiState = uiState,
-        onBackClick = {},
+        onBackClick = onBackClick,
         onBookmarkClick = {},
         onTrialClick = {},
         similarOnClick = similarOnClick
@@ -447,7 +448,7 @@ private fun CastSection(casts: List<CreditsEntity.CastEntity>) {
         LazyRow(
             horizontalArrangement = Arrangement.spacedBy(5.dp),
             modifier = Modifier
-                .padding(top = 12.dp)
+                .padding(top = 16.dp)
                 .defaultMinSize(minHeight = 150.dp)
         ) {
             items(casts) { cast ->
@@ -470,7 +471,7 @@ private fun SimilarMoviesSection(
         LazyRow(
             horizontalArrangement = Arrangement.spacedBy(8.dp),
             modifier = Modifier
-                .padding(top = 12.dp)
+                .padding(top = 16.dp)
                 .defaultMinSize(minHeight = 150.dp)
         ) {
             items(similarMovies) { movie ->

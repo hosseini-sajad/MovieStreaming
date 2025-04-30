@@ -51,6 +51,9 @@ class DetailFragment : Fragment() {
             setContent {
                 MovieStreamingTheme {
                     DetailScreenRoute(
+                        onBackClick = {
+                            findNavController().popBackStack()
+                        },
                         similarOnClick = { movieId ->
                             if (findNavController().currentDestination?.id == R.id.detailFragment) {
                                 findNavController().navigate(
