@@ -16,31 +16,47 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.moviestreaming.R
 import com.moviestreaming.core.component.MovieCard
 import com.moviestreaming.data.model.MovieCategory
 import com.moviestreaming.data.model.TopRateMovieEntity
+import com.moviestreaming.ui.home.LoadingAnimation
 import com.moviestreaming.ui.home.getDummyMovies
 import com.moviestreaming.ui.theme.MovieStreamingTheme
 
 @Composable
 fun CategoryScreenRoute(
     onBackClick: () -> Unit,
-    category: MovieCategory
+    category: MovieCategory,
+    viewModel: CategoryViewModel = hiltViewModel()
 ) {
+    val uiState by when (category) {
+        MovieCategory.TOP_RATED -> viewModel.topRatedUiState.collectAsState()
+        MovieCategory.POPULAR -> viewModel.popularUiState.collectAsState()
+    }
+
+    val title = when (category) {
+        MovieCategory.TOP_RATED -> stringResource(R.string.top_imdb)
+        MovieCategory.POPULAR -> stringResource(R.string.popular_movies)
+    }
+
     CategoryScreen(
         onBackClick = onBackClick,
-        categoryName = "",
-        movies = getDummyMovies()
+        categoryName = title,
+        uiState = uiState
     )
 }
 
@@ -48,7 +64,9 @@ fun CategoryScreenRoute(
 fun CategoryScreen(
     onBackClick: () -> Unit,
     categoryName: String,
-    movies: List<TopRateMovieEntity>
+    uiState: CategoryUiState,
+    onMovieClick: (TopRateMovieEntity) -> Unit = {},
+    gridColumns: Int = 3
 ) {
     Scaffold {
         Box(
@@ -58,22 +76,63 @@ fun CategoryScreen(
                 .padding(it)
         ) {
             Column(
-                modifier = Modifier.fillMaxHeight()
+                modifier = Modifier.fillMaxHeight(),
             ) {
                 HeaderCategory(
                     onBackClick = onBackClick,
                     categoryName = categoryName
                 )
-                LazyVerticalGrid(
-                    columns = GridCells.Fixed(3),
-                    modifier = Modifier.padding(8.dp),
-                    horizontalArrangement = Arrangement.spacedBy(8.dp)
-                ) {
-                    items(movies) { movie ->
-                        MovieCard(
-                            onClick = {},
-                            movie = movie
-                        )
+                when (uiState) {
+                    is CategoryUiState.Loading -> {
+                        Box(
+                            modifier = Modifier.fillMaxSize(),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            LoadingAnimation()
+                        }
+                    }
+
+                    is CategoryUiState.Error -> {
+                        Box(
+                            modifier = Modifier.fillMaxSize(),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Column(
+                                horizontalAlignment = Alignment.CenterHorizontally,
+                                verticalArrangement = Arrangement.Center
+                            ) {
+                                Text(
+                                    text = uiState.message,
+                                    color = MovieStreamingTheme.colors.selectIndicatorColor,
+                                    modifier = Modifier.padding(16.dp)
+                                )
+                                IconButton(
+                                    onClick = { }
+                                ) {
+                                    Icon(
+                                        painter = painterResource(R.drawable.ic_star),
+                                        contentDescription = stringResource(R.string.retry),
+                                        tint = MovieStreamingTheme.colors.selectIndicatorColor
+                                    )
+                                }
+                            }
+                        }
+                    }
+
+                    is CategoryUiState.Success -> {
+                        LazyVerticalGrid(
+                            columns = GridCells.Fixed(gridColumns),
+                            modifier = Modifier.padding(8.dp),
+                            horizontalArrangement = Arrangement.spacedBy(8.dp),
+                            verticalArrangement = Arrangement.spacedBy(8.dp)
+                        ) {
+                            items(uiState.movies) { movie ->
+                                MovieCard(
+                                    onClick = { onMovieClick(movie) },
+                                    movie = movie
+                                )
+                            }
+                        }
                     }
                 }
             }
@@ -98,7 +157,6 @@ fun HeaderCategory(
                     )
                 )
             )
-            .background(MovieStreamingTheme.colors.uiBackground)
     ) {
         Text(
             text = categoryName,
@@ -121,14 +179,52 @@ fun HeaderCategory(
     }
 }
 
-@Preview
+@Preview(name = "Success State", showBackground = true)
 @Composable
-fun CategoryScreenPreview() {
+fun CategoryScreenSuccessTwoColumnsPreview() {
     MovieStreamingTheme {
         CategoryScreen(
             onBackClick = {},
-            categoryName = "More",
-            movies = getDummyMovies()
+            categoryName = "Popular",
+            uiState = CategoryUiState.Success(
+                getDummyMovies(100)
+            )
+        )
+    }
+}
+
+@Preview(name = "Loading State", showBackground = true)
+@Composable
+fun CategoryScreenLoadingPreview() {
+    MovieStreamingTheme {
+        CategoryScreen(
+            onBackClick = {},
+            categoryName = "Top Rated",
+            uiState = CategoryUiState.Loading
+        )
+    }
+}
+
+@Preview(name = "Error State", showBackground = true)
+@Composable
+fun CategoryScreenErrorPreview() {
+    MovieStreamingTheme {
+        CategoryScreen(
+            onBackClick = {},
+            categoryName = "Popular",
+            uiState = CategoryUiState.Error("Failed to load movies. Please try again.")
+        )
+    }
+}
+
+@Preview(name = "Success State - Empty List", showBackground = true)
+@Composable
+fun CategoryScreenSuccessEmptyPreview() {
+    MovieStreamingTheme {
+        CategoryScreen(
+            onBackClick = {},
+            categoryName = "Popular",
+            uiState = CategoryUiState.Success(emptyList())
         )
     }
 }
