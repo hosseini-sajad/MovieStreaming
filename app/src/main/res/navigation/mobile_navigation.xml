@@ -43,6 +43,9 @@
         <action
             android:id="@+id/action_categoryFragment_to_detailFragment"
             app:destination="@id/detailFragment" />
+        <argument
+            android:name="category"
+            app:argType="com.moviestreaming.data.model.MovieCategory" />
     </fragment>
 
 </navigation>

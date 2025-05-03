@@ -53,6 +53,7 @@ import com.airbnb.lottie.compose.rememberLottieComposition
 import com.moviestreaming.R
 import com.moviestreaming.core.component.MovieCard
 import com.moviestreaming.core.component.MovieSliderItem
+import com.moviestreaming.data.model.MovieCategory
 import com.moviestreaming.data.model.TopRateMovieEntity
 import com.moviestreaming.data.model.TrendingEntity
 import com.moviestreaming.ui.theme.MovieStreamingTheme
@@ -60,7 +61,8 @@ import kotlinx.coroutines.delay
 
 @Composable
 fun HomeScreenRoute(
-    onClick: (movieId: Int) -> Unit
+    onClick: (movieId: Int) -> Unit,
+    onMoreClick: (category: MovieCategory) -> Unit
 ) {
     val homeViewModel = hiltViewModel<HomeViewModel>()
     val uiState by homeViewModel.uiState.collectAsState()
@@ -76,7 +78,8 @@ fun HomeScreenRoute(
         uiState = uiState,
         onClick = onClick,
         onRetry = { homeViewModel.retry() },
-        snackBarHostState = snackBarHostState
+        snackBarHostState = snackBarHostState,
+        onMoreClick = onMoreClick
     )
 }
 
@@ -85,7 +88,8 @@ fun HomeScreen(
     uiState: HomeUiState,
     onClick: (movieId: Int) -> Unit,
     onRetry: () -> Unit,
-    snackBarHostState: SnackbarHostState
+    snackBarHostState: SnackbarHostState,
+    onMoreClick: (category: MovieCategory) -> Unit
 ) {
     val scrollState = rememberScrollState()
 
@@ -128,7 +132,7 @@ fun HomeScreen(
                             TopicSection(
                                 title = R.string.top_imdb,
                                 movies = uiState.topIMDbMovies,
-                                onMoreClick = {},
+                                onMoreClick = onMoreClick,
                                 onClick = onClick
                             )
                         }
@@ -137,7 +141,7 @@ fun HomeScreen(
                             TopicSection(
                                 title = R.string.popular_movies,
                                 movies = uiState.popularMovies,
-                                onMoreClick = {},
+                                onMoreClick = onMoreClick,
                                 onClick = onClick
                             )
                         }
@@ -222,7 +226,7 @@ fun MovieSlider(
 fun TopicSection(
     @StringRes title: Int,
     movies: List<TopRateMovieEntity>,
-    onMoreClick: () -> Unit,
+    onMoreClick: (category: MovieCategory) -> Unit,
     onClick: (movieId: Int) -> Unit
 ) {
     Column {
@@ -232,7 +236,12 @@ fun TopicSection(
             )
             Spacer(modifier = Modifier.weight(1f))
             MoreText {
-                onMoreClick()
+                val category = when (title) {
+                    R.string.top_imdb -> MovieCategory.TOP_RATED
+                    R.string.popular_movies -> MovieCategory.POPULAR
+                    else -> MovieCategory.TOP_RATED
+                }
+                onMoreClick(category)
             }
         }
         LazyRow(
@@ -336,7 +345,8 @@ fun HomeScreenContentPreview() {
             ),
             onClick = {},
             onRetry = {},
-            snackBarHostState = remember { SnackbarHostState() }
+            snackBarHostState = remember { SnackbarHostState() },
+            onMoreClick = {}
         )
     }
 }

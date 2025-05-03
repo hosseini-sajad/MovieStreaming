@@ -37,6 +37,13 @@ class HomeFragment : Fragment() {
                                     )
                                 )
                             }
+                        },
+                        onMoreClick = { category ->
+                            findNavController().navigate(
+                                HomeFragmentDirections.actionNavigationHomeToCategoryFragment(
+                                    category = category
+                                )
+                            )
                         }
                     )
                 }

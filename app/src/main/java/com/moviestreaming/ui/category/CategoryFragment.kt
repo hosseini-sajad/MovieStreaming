@@ -13,6 +13,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.moviestreaming.R
@@ -34,6 +35,7 @@ class CategoryFragment : Fragment() {
 //    private var _binding: FragmentCategoryBinding? = null
 //    private val binding get() = _binding!!
 //    private val homeViewModel: HomeViewModel by activityViewModels()
+    private val args: CategoryFragmentArgs by navArgs()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -46,7 +48,8 @@ class CategoryFragment : Fragment() {
                     CategoryScreenRoute(
                         onBackClick = {
                             findNavController().popBackStack()
-                        }
+                        },
+                        category = args.category
                     )
                 }
             }

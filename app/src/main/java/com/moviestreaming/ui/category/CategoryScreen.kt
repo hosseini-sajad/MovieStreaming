@@ -27,13 +27,15 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.moviestreaming.R
 import com.moviestreaming.core.component.MovieCard
+import com.moviestreaming.data.model.MovieCategory
 import com.moviestreaming.data.model.TopRateMovieEntity
 import com.moviestreaming.ui.home.getDummyMovies
 import com.moviestreaming.ui.theme.MovieStreamingTheme
 
 @Composable
 fun CategoryScreenRoute(
-    onBackClick: () -> Unit
+    onBackClick: () -> Unit,
+    category: MovieCategory
 ) {
     CategoryScreen(
         onBackClick = onBackClick,
