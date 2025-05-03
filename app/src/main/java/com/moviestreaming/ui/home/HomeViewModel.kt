@@ -28,6 +28,11 @@ class HomeViewModel @Inject constructor(
         fetchMovies()
     }
 
+    fun retry() {
+        _uiState.value = _uiState.value.copy(isLoading = true, errorMessage = null)
+        fetchMovies()
+    }
+
     private fun fetchMovies() {
         viewModelScope.launch {
             try {

@@ -21,7 +21,10 @@ import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -42,6 +45,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.airbnb.lottie.compose.LottieAnimation
 import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.LottieConstants
@@ -61,54 +65,57 @@ fun HomeScreenRoute(
 ) {
     val homeViewModel = hiltViewModel<HomeViewModel>()
     val uiState by homeViewModel.uiState.collectAsState()
+    val snackBarHostState = remember { SnackbarHostState() }
+
+    LaunchedEffect(uiState.errorMessage) {
+        uiState.errorMessage?.let { message ->
+            snackBarHostState.showSnackbar(message)
+        }
+    }
+
     HomeScreen(
         uiState = uiState,
-        onClick = onClick
+        onClick = onClick,
+        onRetry = { homeViewModel.retry() },
+        snackBarHostState = snackBarHostState
     )
 }
 
 @Composable
 fun HomeScreen(
     uiState: HomeUiState,
-    onClick: (movieId: Int) -> Unit
+    onClick: (movieId: Int) -> Unit,
+    onRetry: () -> Unit,
+    snackBarHostState: SnackbarHostState
 ) {
-
     val scrollState = rememberScrollState()
 
-    Scaffold() {
+    Scaffold(
+        snackbarHost = { SnackbarHost(snackBarHostState) }
+    ) { paddingValues ->
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(it),
+                .padding(paddingValues),
             contentAlignment = Alignment.Center
         ) {
             when {
                 uiState.isLoading -> {
                     LoadingAnimation()
                 }
-
                 uiState.errorMessage != null && uiState.trendingMovies.isEmpty() &&
                         uiState.topIMDbMovies.isEmpty() && uiState.popularMovies.isEmpty() -> {
-                    Text(
-                        text = uiState.errorMessage,
-                        color = MovieStreamingTheme.colors.selectIndicatorColor
+                    ErrorBanner(
+                        message = uiState.errorMessage,
+                        onRetry = onRetry
                     )
                 }
-
                 else -> {
                     Column(
                         Modifier
                             .fillMaxSize()
                             .verticalScroll(scrollState)
                     ) {
-                        if (uiState.errorMessage != null) {
-                            Text(
-                                text = uiState.errorMessage,
-                                color = MovieStreamingTheme.colors.selectIndicatorColor
-                            )
-//                            ErrorBanner(message = uiState.errorMessage, onRetry = onRetry)
-                        }
-
                         if (uiState.trendingMovies.isNotEmpty()) {
                             MovieSlider(uiState.trendingMovies)
                         }
@@ -135,7 +142,33 @@ fun HomeScreen(
             }
         }
     }
+}
 
+@Composable
+fun ErrorBanner(
+    message: String,
+    onRetry: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Column(
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(16.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Text(
+            text = message,
+            color = MaterialTheme.colorScheme.error,
+            style = MaterialTheme.typography.bodyLarge
+        )
+        Spacer(modifier = Modifier.size(8.dp))
+        TextButton(onClick = onRetry) {
+            Text(
+                text = stringResource(R.string.retry),
+                color = MaterialTheme.colorScheme.primary
+            )
+        }
+    }
 }
 
 @Composable
@@ -268,9 +301,9 @@ fun LoadingAnimation(modifier: Modifier = Modifier) {
     }
 }
 
-@Preview
+@Preview(name = "Content", showBackground = true)
 @Composable
-fun HomeScreenPreview() {
+fun HomeScreenContentPreview() {
     MovieStreamingTheme {
         val trendingSamples = listOf(
             TrendingEntity(
@@ -284,24 +317,6 @@ fun HomeScreenPreview() {
                 title = "Avatar: The Way of Water",
                 image = "https://image.tmdb.org/t/p/w500/t6HIqrRAclMCA60NsSmeqe9RmNV.jpg",
                 mediaType = "movie"
-            ),
-            TrendingEntity(
-                id = 3,
-                title = "Stranger Things",
-                image = "https://image.tmdb.org/t/p/w500/x2LSRK2Cm7MZhjluni1msVJ3wDF.jpg",
-                mediaType = "tv"
-            ),
-            TrendingEntity(
-                id = 4,
-                title = "Breaking Bad",
-                image = "https://image.tmdb.org/t/p/w500/ggFHVNu6YYI5L9pCfOacjizRGt.jpg",
-                mediaType = "tv"
-            ),
-            TrendingEntity(
-                id = 5,
-                title = "The Batman",
-                image = "https://image.tmdb.org/t/p/w500/74xTEgt7R36Fpooo50r9T25onhq.jpg",
-                mediaType = "movie"
             )
         )
         HomeScreen(
@@ -311,24 +326,9 @@ fun HomeScreenPreview() {
                 popularMovies = getDummyMovies(5),
                 isLoading = false
             ),
-            onClick = {}
-        )
-    }
-}
-
-@Preview
-@Composable
-fun HomeScreenErrorPreview() {
-    MovieStreamingTheme {
-        HomeScreen(
-            uiState = HomeUiState(
-                isLoading = false,
-                errorMessage = "Failed to connect to server",
-                trendingMovies = emptyList(),
-                topIMDbMovies = emptyList(),
-                popularMovies = emptyList()
-            ),
-            onClick = {}
+            onClick = {},
+            onRetry = {},
+            snackBarHostState = remember { SnackbarHostState() }
         )
     }
 }

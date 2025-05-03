@@ -10,6 +10,7 @@
     <string name="budget">Budget</string>
     <string name="description">Description</string>
     <string name="cast">Cast</string>
+    <string name="retry">Retry</string>
     <string name="similar_movies">Similar Movies</string>
     <string name="there_is_no_movie">There is no movie</string>
     <!-- TODO: Remove or change this placeholder text -->
