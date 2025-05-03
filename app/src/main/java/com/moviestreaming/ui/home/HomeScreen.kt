@@ -45,7 +45,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.airbnb.lottie.compose.LottieAnimation
 import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.LottieConstants
@@ -103,6 +102,7 @@ fun HomeScreen(
                 uiState.isLoading -> {
                     LoadingAnimation()
                 }
+
                 uiState.errorMessage != null && uiState.trendingMovies.isEmpty() &&
                         uiState.topIMDbMovies.isEmpty() && uiState.popularMovies.isEmpty() -> {
                     ErrorBanner(
@@ -110,6 +110,7 @@ fun HomeScreen(
                         onRetry = onRetry
                     )
                 }
+
                 else -> {
                     Column(
                         Modifier
@@ -117,7 +118,10 @@ fun HomeScreen(
                             .verticalScroll(scrollState)
                     ) {
                         if (uiState.trendingMovies.isNotEmpty()) {
-                            MovieSlider(uiState.trendingMovies)
+                            MovieSlider(
+                                movies = uiState.trendingMovies,
+                                onClick = onClick
+                            )
                         }
 
                         if (uiState.topIMDbMovies.isNotEmpty()) {
@@ -172,7 +176,10 @@ fun ErrorBanner(
 }
 
 @Composable
-fun MovieSlider(movies: List<TrendingEntity>) {
+fun MovieSlider(
+    movies: List<TrendingEntity>,
+    onClick: (movieId: Int) -> Unit
+) {
     val sliderItems = movies.take(7)
     val pageCount = sliderItems.size
     val pagerState = rememberPagerState(initialPage = 0, pageCount = { pageCount })
@@ -206,6 +213,7 @@ fun MovieSlider(movies: List<TrendingEntity>) {
                 .fillMaxWidth()
                 .animateContentSize(animationSpec = tween(500)),
             pagerState = pagerState,
+            onClick = onClick
         )
     }
 }

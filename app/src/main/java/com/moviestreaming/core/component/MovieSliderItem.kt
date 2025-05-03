@@ -2,6 +2,7 @@ package com.moviestreaming.core.component
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -27,7 +28,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import coil3.Image
 import coil3.compose.AsyncImage
 import com.moviestreaming.R
 import com.moviestreaming.data.model.TrendingEntity
@@ -39,11 +39,13 @@ import com.moviestreaming.utils.getImageUrl
 fun MovieSliderItem(
     modifier: Modifier = Modifier,
     movie: TrendingEntity,
-    pagerState: PagerState
+    pagerState: PagerState,
+    onClick: (Int) -> Unit
 ) {
     val isInPreview = LocalInspectionMode.current
     Box(
         modifier = modifier
+            .clickable { onClick(movie.id) }
             .fillMaxWidth()
             .height(250.dp)
     ) {
@@ -129,9 +131,10 @@ private fun MovieSliderItemPreview() {
                 id = 1,
                 title = "Dune: Part Two",
                 image = "",
-                mediaType = "movie"
+                mediaType = "movie",
             ),
-            pagerState = pagerState
+            pagerState = pagerState,
+            onClick = {}
         )
     }
 }
