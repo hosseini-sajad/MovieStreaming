@@ -32,7 +32,7 @@ import kotlinx.coroutines.launch
 @AndroidEntryPoint
 class CategoryFragment : Fragment() {
 
-//    private var _binding: FragmentCategoryBinding? = null
+    //    private var _binding: FragmentCategoryBinding? = null
 //    private val binding get() = _binding!!
 //    private val homeViewModel: HomeViewModel by activityViewModels()
     private val args: CategoryFragmentArgs by navArgs()
@@ -48,6 +48,13 @@ class CategoryFragment : Fragment() {
                     CategoryScreenRoute(
                         onBackClick = {
                             findNavController().popBackStack()
+                        },
+                        onMovieClick = { movieId ->
+                            findNavController().navigate(
+                                CategoryFragmentDirections.actionCategoryFragmentToDetailFragment(
+                                    movieId = movieId
+                                )
+                            )
                         },
                         category = args.category
                     )

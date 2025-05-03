@@ -32,7 +32,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.moviestreaming.R
 import com.moviestreaming.core.component.MovieCard
 import com.moviestreaming.data.model.MovieCategory
-import com.moviestreaming.data.model.TopRateMovieEntity
 import com.moviestreaming.ui.home.LoadingAnimation
 import com.moviestreaming.ui.home.getDummyMovies
 import com.moviestreaming.ui.theme.MovieStreamingTheme
@@ -41,6 +40,7 @@ import com.moviestreaming.ui.theme.MovieStreamingTheme
 fun CategoryScreenRoute(
     onBackClick: () -> Unit,
     category: MovieCategory,
+    onMovieClick: (Int) -> Unit,
     viewModel: CategoryViewModel = hiltViewModel()
 ) {
     val uiState by when (category) {
@@ -56,6 +56,7 @@ fun CategoryScreenRoute(
     CategoryScreen(
         onBackClick = onBackClick,
         categoryName = title,
+        onMovieClick = onMovieClick,
         uiState = uiState
     )
 }
@@ -65,7 +66,7 @@ fun CategoryScreen(
     onBackClick: () -> Unit,
     categoryName: String,
     uiState: CategoryUiState,
-    onMovieClick: (TopRateMovieEntity) -> Unit = {},
+    onMovieClick: (Int) -> Unit,
     gridColumns: Int = 3
 ) {
     Scaffold {
@@ -128,7 +129,7 @@ fun CategoryScreen(
                         ) {
                             items(uiState.movies) { movie ->
                                 MovieCard(
-                                    onClick = { onMovieClick(movie) },
+                                    onClick = onMovieClick,
                                     movie = movie
                                 )
                             }
@@ -186,6 +187,7 @@ fun CategoryScreenSuccessTwoColumnsPreview() {
         CategoryScreen(
             onBackClick = {},
             categoryName = "Popular",
+            onMovieClick = {},
             uiState = CategoryUiState.Success(
                 getDummyMovies(100)
             )
@@ -200,6 +202,7 @@ fun CategoryScreenLoadingPreview() {
         CategoryScreen(
             onBackClick = {},
             categoryName = "Top Rated",
+            onMovieClick = {},
             uiState = CategoryUiState.Loading
         )
     }
@@ -212,6 +215,7 @@ fun CategoryScreenErrorPreview() {
         CategoryScreen(
             onBackClick = {},
             categoryName = "Popular",
+            onMovieClick = {},
             uiState = CategoryUiState.Error("Failed to load movies. Please try again.")
         )
     }
@@ -224,6 +228,7 @@ fun CategoryScreenSuccessEmptyPreview() {
         CategoryScreen(
             onBackClick = {},
             categoryName = "Popular",
+            onMovieClick = {},
             uiState = CategoryUiState.Success(emptyList())
         )
     }
