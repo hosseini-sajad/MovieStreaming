@@ -28,7 +28,10 @@ private val DefaultColorPalette = MovieStreamingColors(
     selectIndicatorColor = yellow_100,
     unselectIndicatorColor = gray_150,
     titleColor = white,
-    genreBackgroundColor = gray_100
+    genreBackgroundColor = gray_100,
+    toolbarStartColor = gray_200,
+    toolbarCenterColor = gray_300,
+    toolbarEndColor = gray_400
 )
 private val defaultPadding = MovieStreamingPadding(
     p4 = p4,

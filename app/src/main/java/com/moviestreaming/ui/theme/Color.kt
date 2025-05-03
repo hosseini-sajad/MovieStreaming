@@ -44,7 +44,10 @@ class MovieStreamingColors(
     selectIndicatorColor: Color,
     unselectIndicatorColor: Color,
     titleColor: Color,
-    genreBackgroundColor: Color
+    genreBackgroundColor: Color,
+    toolbarStartColor: Color,
+    toolbarCenterColor: Color,
+    toolbarEndColor: Color,
 ) {
 
     var primary by mutableStateOf(primary)
@@ -67,6 +70,12 @@ class MovieStreamingColors(
         private set
     var genreBackgroundColor by mutableStateOf(genreBackgroundColor)
         private set
+    var toolbarStartColor by mutableStateOf(toolbarStartColor)
+        private set
+    var toolbarCenterColor by mutableStateOf(toolbarCenterColor)
+        private set
+    var toolbarEndColor by mutableStateOf(toolbarEndColor)
+        private set
 
     fun update(other: MovieStreamingColors) {
         primary = other.primary
@@ -79,6 +88,9 @@ class MovieStreamingColors(
         unselectIndicatorColor = other.unselectIndicatorColor
         titleColor = other.titleColor
         genreBackgroundColor = other.genreBackgroundColor
+        toolbarStartColor = other.toolbarStartColor
+        toolbarCenterColor = other.toolbarCenterColor
+        toolbarEndColor = other.toolbarEndColor
     }
 
     fun copy(): MovieStreamingColors = MovieStreamingColors(
@@ -91,6 +103,9 @@ class MovieStreamingColors(
         selectIndicatorColor = selectIndicatorColor,
         unselectIndicatorColor = unselectIndicatorColor,
         titleColor = titleColor,
-        genreBackgroundColor = genreBackgroundColor
+        genreBackgroundColor = genreBackgroundColor,
+        toolbarStartColor = toolbarStartColor,
+        toolbarCenterColor = toolbarCenterColor,
+        toolbarEndColor = toolbarEndColor
     )
 }
