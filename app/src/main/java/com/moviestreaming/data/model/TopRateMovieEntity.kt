@@ -8,6 +8,6 @@ data class TopRateMovieEntity(
     override val title: String?,
     override val image: String?,
     override val mediaType: String = Constants.MOVIE,
-    val genre: Int,
+    val genre: Int?,
     val rate: Double
 ): BaseEntity(id, title, image, mediaType)

@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
@@ -29,12 +28,18 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.paging.PagingData
+import androidx.paging.compose.LazyPagingItems
+import androidx.paging.compose.collectAsLazyPagingItems
 import com.moviestreaming.R
 import com.moviestreaming.core.component.MovieCard
 import com.moviestreaming.data.model.MovieCategory
+import com.moviestreaming.data.model.TopRateMovieEntity
 import com.moviestreaming.ui.home.LoadingAnimation
 import com.moviestreaming.ui.home.getDummyMovies
 import com.moviestreaming.ui.theme.MovieStreamingTheme
+import kotlinx.coroutines.flow.emptyFlow
+import kotlinx.coroutines.flow.flowOf
 
 @Composable
 fun CategoryScreenRoute(
@@ -121,17 +126,21 @@ fun CategoryScreen(
                     }
 
                     is CategoryUiState.Success -> {
+                        val movies: LazyPagingItems<TopRateMovieEntity> =
+                            uiState.movies.collectAsLazyPagingItems()
                         LazyVerticalGrid(
                             columns = GridCells.Fixed(gridColumns),
                             modifier = Modifier.padding(8.dp),
                             horizontalArrangement = Arrangement.spacedBy(8.dp),
                             verticalArrangement = Arrangement.spacedBy(8.dp)
                         ) {
-                            items(uiState.movies) { movie ->
-                                MovieCard(
-                                    onClick = onMovieClick,
-                                    movie = movie
-                                )
+                            items(movies.itemCount) { index ->
+                                movies[index]?.let { movie ->
+                                    MovieCard(
+                                        onClick = { onMovieClick(movie.id) },
+                                        movie = movie
+                                    )
+                                }
                             }
                         }
                     }
@@ -182,14 +191,14 @@ fun HeaderCategory(
 
 @Preview(name = "Success State", showBackground = true)
 @Composable
-fun CategoryScreenSuccessTwoColumnsPreview() {
+fun CategoryScreenSuccessPreview() {
     MovieStreamingTheme {
         CategoryScreen(
             onBackClick = {},
             categoryName = "Popular",
             onMovieClick = {},
             uiState = CategoryUiState.Success(
-                getDummyMovies(100)
+                flowOf(PagingData.from(getDummyMovies(100)))
             )
         )
     }
@@ -229,7 +238,7 @@ fun CategoryScreenSuccessEmptyPreview() {
             onBackClick = {},
             categoryName = "Popular",
             onMovieClick = {},
-            uiState = CategoryUiState.Success(emptyList())
+            uiState = CategoryUiState.Success(emptyFlow())
         )
     }
 }

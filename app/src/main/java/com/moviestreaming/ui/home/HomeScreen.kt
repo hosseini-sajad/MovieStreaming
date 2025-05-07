@@ -45,6 +45,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.paging.PagingData
+import androidx.paging.compose.collectAsLazyPagingItems
 import com.airbnb.lottie.compose.LottieAnimation
 import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.LottieConstants
@@ -58,6 +60,7 @@ import com.moviestreaming.data.model.TopRateMovieEntity
 import com.moviestreaming.data.model.TrendingEntity
 import com.moviestreaming.ui.theme.MovieStreamingTheme
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.flowOf
 
 @Composable
 fun HomeScreenRoute(
@@ -92,6 +95,14 @@ fun HomeScreen(
     onMoreClick: (category: MovieCategory) -> Unit
 ) {
     val scrollState = rememberScrollState()
+    val topIMDbPagingData = uiState.topIMDbMovies.collectAsLazyPagingItems()
+    val topIMDbMovies = (0 until minOf(5, topIMDbPagingData.itemCount)).mapNotNull{ index ->
+        topIMDbPagingData[index]
+    }
+    val popularMoviesPagingData = uiState.popularMovies.collectAsLazyPagingItems()
+    val popularMovies = (0 until minOf(5, popularMoviesPagingData.itemCount)).mapNotNull { index ->
+        popularMoviesPagingData[index]
+    }
 
     Scaffold(
         snackbarHost = { SnackbarHost(snackBarHostState) }
@@ -108,7 +119,7 @@ fun HomeScreen(
                 }
 
                 uiState.errorMessage != null && uiState.trendingMovies.isEmpty() &&
-                        uiState.topIMDbMovies.isEmpty() && uiState.popularMovies.isEmpty() -> {
+                        topIMDbMovies.isEmpty() && popularMovies.isEmpty() -> {
                     ErrorBanner(
                         message = uiState.errorMessage,
                         onRetry = onRetry
@@ -128,19 +139,19 @@ fun HomeScreen(
                             )
                         }
 
-                        if (uiState.topIMDbMovies.isNotEmpty()) {
+                        if (topIMDbMovies.isNotEmpty()) {
                             TopicSection(
                                 title = R.string.top_imdb,
-                                movies = uiState.topIMDbMovies,
+                                movies = topIMDbMovies,
                                 onMoreClick = onMoreClick,
                                 onClick = onClick
                             )
                         }
 
-                        if (uiState.popularMovies.isNotEmpty()) {
+                        if (popularMovies.isNotEmpty()) {
                             TopicSection(
                                 title = R.string.popular_movies,
-                                movies = uiState.popularMovies,
+                                movies = popularMovies,
                                 onMoreClick = onMoreClick,
                                 onClick = onClick
                             )
@@ -339,8 +350,12 @@ fun HomeScreenContentPreview() {
         HomeScreen(
             uiState = HomeUiState(
                 trendingMovies = trendingSamples,
-                topIMDbMovies = getDummyMovies(5),
-                popularMovies = getDummyMovies(5),
+                topIMDbMovies = flowOf(
+                    PagingData.from(getDummyMovies())
+                ),
+                popularMovies = flowOf(
+                    PagingData.from(getDummyMovies())
+                ),
                 isLoading = false
             ),
             onClick = {},

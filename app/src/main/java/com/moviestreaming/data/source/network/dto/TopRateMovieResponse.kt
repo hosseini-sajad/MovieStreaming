@@ -52,7 +52,7 @@ data class TopRateMovieResponse(
             id = id,
             title = title,
             image = posterPath,
-            genre = genreIds.first(),
+            genre = genreIds.firstOrNull(),
             rate = voteAverage
         )
     }

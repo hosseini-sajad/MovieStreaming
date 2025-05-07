@@ -2,6 +2,9 @@ package com.moviestreaming.ui.category
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.paging.PagingData
+import com.moviestreaming.core.usecase.GetPopularMoviesUseCase
+import com.moviestreaming.core.usecase.GetTopRatedMoviesUseCase
 import com.moviestreaming.data.model.TopRateMovieEntity
 import com.moviestreaming.repository.MovieRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -16,21 +19,23 @@ import javax.inject.Inject
 
 @HiltViewModel
 class CategoryViewModel @Inject constructor(
-    private val movieRepository: MovieRepository
+    private val movieRepository: MovieRepository,
+    private val getTopRatedMoviesUseCase: GetTopRatedMoviesUseCase,
+    private val getPopularMoviesUseCase: GetPopularMoviesUseCase
 ) : ViewModel() {
 
     val topRatedUiState: StateFlow<CategoryUiState> = createMovieStateFlow(
-        flow = movieRepository.getTopRateMovie()
+        flow = getTopRatedMoviesUseCase.invoke()
     )
 
     val popularUiState: StateFlow<CategoryUiState> = createMovieStateFlow(
-        flow = movieRepository.getPopularMovies()
+        flow = getPopularMoviesUseCase.invoke()
     )
 
     private fun createMovieStateFlow(
-        flow: Flow<List<TopRateMovieEntity>>
+        flow: Flow<PagingData<TopRateMovieEntity>>
     ): StateFlow<CategoryUiState> = flow
-        .map { movies -> CategoryUiState.Success(movies) }
+        .map { CategoryUiState.Success(flow) }
         .onStart { CategoryUiState.Loading }
         .catch { e -> CategoryUiState.Error(e.message ?: "Failed to load movies") }
         .stateIn(
@@ -42,6 +47,6 @@ class CategoryViewModel @Inject constructor(
 
 sealed class CategoryUiState {
     object Loading : CategoryUiState()
-    data class Success(val movies: List<TopRateMovieEntity>) : CategoryUiState()
+    data class Success(val movies: Flow<PagingData<TopRateMovieEntity>>) : CategoryUiState()
     data class Error(val message: String) : CategoryUiState()
 }

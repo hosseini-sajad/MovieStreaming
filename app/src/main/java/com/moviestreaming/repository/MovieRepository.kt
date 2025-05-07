@@ -1,5 +1,6 @@
 package com.moviestreaming.repository
 
+import androidx.paging.PagingData
 import com.moviestreaming.data.model.CreditsEntity
 import com.moviestreaming.data.model.MovieDetailEntity
 import com.moviestreaming.data.model.TopRateMovieEntity
@@ -9,9 +10,9 @@ import kotlinx.coroutines.flow.Flow
 interface MovieRepository {
     fun getTrending(): Flow<List<TrendingEntity>>
 
-    fun getTopRateMovie(): Flow<List<TopRateMovieEntity>>
+    fun getTopRateMovie(): Flow<PagingData<TopRateMovieEntity>>
 
-    fun getPopularMovies(): Flow<List<TopRateMovieEntity>>
+    fun getPopularMovies(): Flow<PagingData<TopRateMovieEntity>>
 
     fun getMovieDetails(movieId: Int): Flow<MovieDetailEntity>
 
