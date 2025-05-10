@@ -1,6 +1,5 @@
 package com.moviestreaming.ui.category
 
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -12,7 +11,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -89,7 +87,7 @@ fun CategoryScreen(
             Column(
                 modifier = Modifier.fillMaxHeight(),
             ) {
-                HeaderCategory(
+                CategoryHeader(
                     onBackClick = onBackClick,
                     categoryName = categoryName
                 )
@@ -183,7 +181,7 @@ fun CategoryScreen(
 }
 
 @Composable
-fun HeaderCategory(
+fun CategoryHeader(
     onBackClick: () -> Unit,
     categoryName: String
 ) {
