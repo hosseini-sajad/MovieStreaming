@@ -7,7 +7,7 @@ import com.moviestreaming.data.model.CreditsEntity.CastEntity
 import com.moviestreaming.data.model.CreditsEntity.CrewEntity
 import com.moviestreaming.data.model.MovieDetailEntity
 import com.moviestreaming.data.model.TopRateMovieEntity
-import com.moviestreaming.repository.MovieRepository
+import com.moviestreaming.domain.repository.MovieRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow

@@ -3,10 +3,10 @@ package com.moviestreaming.ui.category
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
-import com.moviestreaming.core.usecase.GetPopularMoviesUseCase
-import com.moviestreaming.core.usecase.GetTopRatedMoviesUseCase
+import com.moviestreaming.domain.usecase.GetPopularMoviesUseCase
+import com.moviestreaming.domain.usecase.GetTopRatedMoviesUseCase
 import com.moviestreaming.data.model.TopRateMovieEntity
-import com.moviestreaming.repository.MovieRepository
+import com.moviestreaming.domain.repository.MovieRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted

@@ -1,4 +1,4 @@
-package com.moviestreaming.repository
+package com.moviestreaming.domain.repository
 
 import androidx.paging.PagingData
 import com.moviestreaming.data.model.CreditsEntity

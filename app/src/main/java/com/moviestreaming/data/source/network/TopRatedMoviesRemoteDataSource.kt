@@ -23,9 +23,9 @@ class TopRatedMoviesRemoteDataSource(
             val response = apiService.getTopRateMovie(page)
 
             LoadResult.Page(
-                data = response.topRateMovies.map { it.toEntity() },
+                data = response.movies.map { it.toEntity() },
                 prevKey = if (page == 1) null else page.minus(1),
-                nextKey = if (response.topRateMovies.isEmpty()) null else page.plus(1)
+                nextKey = if (response.movies.isEmpty()) null else page.plus(1)
             )
         } catch (exception: IOException) {
             LoadResult.Error(exception)

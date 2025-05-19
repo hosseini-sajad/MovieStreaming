@@ -7,11 +7,11 @@ import com.moviestreaming.data.model.TopRateMovieEntity
 import com.moviestreaming.utils.mapper.DomainMapper
 
 @Keep
-data class TopRateMovieResponse(
+data class TopRateMovieDto(
     @SerializedName("page")
     val page: Int,
     @SerializedName("results")
-    val topRateMovies: List<TopRateMovie>,
+    val movies: List<TopRateMovie>,
     @SerializedName("total_pages")
     val totalPages: Int,
     @SerializedName("total_results")

@@ -1,6 +1,5 @@
-package com.moviestreaming.repository
+package com.moviestreaming.data.repository
 
-import android.util.Printer
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
@@ -9,6 +8,7 @@ import com.moviestreaming.data.model.TrendingEntity
 import com.moviestreaming.data.source.network.NetworkDataSource
 import com.moviestreaming.data.source.network.PopularMoviesRemoteDataSource
 import com.moviestreaming.data.source.network.TopRatedMoviesRemoteDataSource
+import com.moviestreaming.domain.repository.MovieRepository
 import com.moviestreaming.utils.parsError
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow

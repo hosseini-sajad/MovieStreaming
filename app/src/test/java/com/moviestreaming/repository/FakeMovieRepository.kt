@@ -4,6 +4,7 @@ import com.moviestreaming.data.model.CreditsEntity
 import com.moviestreaming.data.model.MovieDetailEntity
 import com.moviestreaming.data.model.TopRateMovieEntity
 import com.moviestreaming.data.model.TrendingEntity
+import com.moviestreaming.domain.repository.MovieRepository
 import com.moviestreaming.utils.Result
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow

@@ -3,15 +3,15 @@ package com.moviestreaming.data.source
 import com.moviestreaming.data.source.network.dto.CreditsDto
 import com.moviestreaming.data.source.network.dto.MovieDetailDto
 import com.moviestreaming.data.source.network.dto.SimilarMoviesDto
-import com.moviestreaming.data.source.network.dto.TopRateMovieResponse
+import com.moviestreaming.data.source.network.dto.TopRateMovieDto
 import com.moviestreaming.data.source.network.dto.TrendingResponse
 
 internal class FakeNetworkDataSource():
     NetworkDataSource {
 
     private lateinit var trendingMovies: MutableList<TrendingResponse.Trending>
-    private lateinit var topRateMovies: MutableList<TopRateMovieResponse.TopRateMovie>
-    private lateinit var popularMovies: MutableList<TopRateMovieResponse.TopRateMovie>
+    private lateinit var topRateMovies: MutableList<TopRateMovieDto.TopRateMovie>
+    private lateinit var popularMovies: MutableList<TopRateMovieDto.TopRateMovie>
     private lateinit var movieDetail: MovieDetailDto
     private lateinit var similarMovies: SimilarMoviesDto
 
@@ -24,7 +24,7 @@ internal class FakeNetworkDataSource():
         return null
     }
 
-    override suspend fun getTopRateMovie(): List<TopRateMovieResponse.TopRateMovie>? {
+    override suspend fun getTopRateMovie(): List<TopRateMovieDto.TopRateMovie>? {
         if (::topRateMovies.isInitialized) {
             topRateMovies.let {
                 return it
@@ -33,7 +33,7 @@ internal class FakeNetworkDataSource():
         return null
     }
 
-    override suspend fun getPopularMovies(): List<TopRateMovieResponse.TopRateMovie>? {
+    override suspend fun getPopularMovies(): List<TopRateMovieDto.TopRateMovie>? {
         if (::popularMovies.isInitialized) {
             popularMovies.let {
                 return it
@@ -70,12 +70,12 @@ internal class FakeNetworkDataSource():
         trendingMovies.addAll(trending)
     }
 
-    fun addTopReteMovies(topRate: List<TopRateMovieResponse.TopRateMovie>) {
+    fun addTopReteMovies(topRate: List<TopRateMovieDto.TopRateMovie>) {
         topRateMovies = mutableListOf()
         topRateMovies.addAll(topRate)
     }
 
-    fun addPopularMovies(popularMoviesList: List<TopRateMovieResponse.TopRateMovie>) {
+    fun addPopularMovies(popularMoviesList: List<TopRateMovieDto.TopRateMovie>) {
         popularMovies = mutableListOf()
         popularMovies.addAll(popularMoviesList)
     }

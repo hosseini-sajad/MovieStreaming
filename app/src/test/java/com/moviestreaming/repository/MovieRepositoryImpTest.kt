@@ -1,12 +1,13 @@
 package com.moviestreaming.repository
 
+import com.moviestreaming.data.repository.MovieRepositoryImp
 import com.moviestreaming.data.source.FakeNetworkDataSource
 import com.moviestreaming.data.source.network.dto.MovieDetailDto
 import com.moviestreaming.data.source.network.dto.MovieDetailDto.GenreDto
 import com.moviestreaming.data.source.network.dto.MovieDetailDto.ProductionCompanyDto
 import com.moviestreaming.data.source.network.dto.MovieDetailDto.ProductionCountryDto
 import com.moviestreaming.data.source.network.dto.SimilarMoviesDto
-import com.moviestreaming.data.source.network.dto.TopRateMovieResponse
+import com.moviestreaming.data.source.network.dto.TopRateMovieDto
 import com.moviestreaming.data.source.network.dto.TrendingResponse
 import com.moviestreaming.utils.Result
 import kotlinx.coroutines.flow.first
@@ -58,14 +59,14 @@ internal class MovieRepositoryImpTest() {
         10
     )
 
-    private val topRateMovie = TopRateMovieResponse.TopRateMovie(
+    private val topRateMovie = TopRateMovieDto.TopRateMovie(
         false,"/bOGkgRGdhrBYJSLpXaxhXVstddV.jpg", listOf(1, 2),
         1, "en", "Wally", "ww", 11.8,
         "/bOGkgRGdhrBYJSLpXaxhXVstddV.jpg", "2000", "Wally",
         false, 8.8, 8
     )
 
-    private val topRateMovie2 = TopRateMovieResponse.TopRateMovie(
+    private val topRateMovie2 = TopRateMovieDto.TopRateMovie(
         false,"/bOGkgRGdhrBYJSLpXaxhXVstddV.jpg", listOf(2, 3),
         1, "en", "Wally2", "ww2", 10.5,
         "/bOGkgRGdhrBYJSLpXaxhXVstddV.jpg", "2001", "Wall2y",

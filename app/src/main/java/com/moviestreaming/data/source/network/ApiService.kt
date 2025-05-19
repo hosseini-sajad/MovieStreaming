@@ -3,7 +3,7 @@ package com.moviestreaming.data.source.network
 import com.moviestreaming.data.source.network.dto.CreditsDto
 import com.moviestreaming.data.source.network.dto.MovieDetailDto
 import com.moviestreaming.data.source.network.dto.SimilarMoviesDto
-import com.moviestreaming.data.source.network.dto.TopRateMovieResponse
+import com.moviestreaming.data.source.network.dto.TopRateMovieDto
 import com.moviestreaming.data.source.network.dto.TrendingResponse
 import retrofit2.http.GET
 import retrofit2.http.Path
@@ -16,12 +16,12 @@ interface ApiService {
     @GET("movie/top_rated")
     suspend fun getTopRateMovie(
         @Query("page") page: Int
-    ): TopRateMovieResponse
+    ): TopRateMovieDto
 
     @GET("movie/popular")
     suspend fun getPopularMovies(
         @Query("page") page: Int
-    ): TopRateMovieResponse
+    ): TopRateMovieDto
 
     @GET("movie/{movieId}")
     suspend fun getMovieDetail(@Path("movieId") movieId: Int): MovieDetailDto
@@ -31,4 +31,10 @@ interface ApiService {
 
     @GET("movie/{movieId}/similar")
     suspend fun getSimilarMovies(@Path("movieId") movieId: Int): SimilarMoviesDto
+
+    @GET("search/movie")
+    suspend fun searchMovieByName(
+        @Query("query") query: String,
+        @Query("page") page: Int
+    ): TopRateMovieDto
 }

@@ -6,8 +6,9 @@ import com.moviestreaming.data.model.TopRateMovieEntity
 import retrofit2.HttpException
 import java.io.IOException
 
-class PopularMoviesRemoteDataSource(
-    private val apiService: ApiService
+class SearchMoviesRemoteDataSource(
+    private val apiService: ApiService,
+    private val query: String
 ) : PagingSource<Int, TopRateMovieEntity>() {
 
     override fun getRefreshKey(state: PagingState<Int, TopRateMovieEntity>): Int? {
@@ -20,7 +21,7 @@ class PopularMoviesRemoteDataSource(
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, TopRateMovieEntity> {
         return try {
             val page = params.key ?: 1
-            val response = apiService.getPopularMovies(page)
+            val response = apiService.searchMovieByName(query = query, page = page)
 
             LoadResult.Page(
                 data = response.movies.map { it.toEntity() },
