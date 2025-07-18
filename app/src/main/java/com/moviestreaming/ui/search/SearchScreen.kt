@@ -18,6 +18,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.FilterChip
+import androidx.compose.material3.FilterChipDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -31,6 +32,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -61,7 +63,7 @@ fun SearchScreenRoute(
 fun SearchScreen(
     uiState: SearchUiState,
     onQueryChange: (String) -> Unit,
-    onFilterSelected: (String) -> Unit,
+    onFilterSelected: (SearchFilter) -> Unit,
     onMovieClick: (Int) -> Unit,
     gridColumns: Int = 3
 ) {
@@ -81,7 +83,7 @@ fun SearchScreen(
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 FilterChips(
-                    selectedFilter = uiState.selectedFilter.name,
+                    selectedFilter = uiState.selectedFilter.ordinal,
                     onFilterSelected = onFilterSelected
                 )
                 
@@ -193,38 +195,41 @@ fun SearchBox(
         },
         modifier = modifier
             .fillMaxWidth()
-            .height(45.dp)
+            .height(55.dp)
             .padding(start = 4.dp, end = 16.dp)
             .clip(RoundedCornerShape(12.dp)),
         colors = OutlinedTextFieldDefaults.colors(
-            unfocusedContainerColor = MovieStreamingTheme.colors.selectIndicatorColor
+            unfocusedContainerColor = MovieStreamingTheme.colors.selectIndicatorColor,
+            focusedContainerColor = MovieStreamingTheme.colors.selectIndicatorColor,
+            focusedTextColor = MovieStreamingTheme.colors.startSliderColor
         )
     )
 }
 
 @Composable
 fun FilterChips(
-    selectedFilter: String,
-    onFilterSelected: (String) -> Unit,
+    selectedFilter: Int,
+    onFilterSelected: (SearchFilter) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val filters = listOf(
-        "BY NAME", "BY DIRECTOR", "BY GENRE", "BY YEAR"
-    )
 
     LazyRow(
         modifier = modifier
             .fillMaxWidth()
             .padding(horizontal = 16.dp)
     ) {
-        items(filters) { filter ->
+        items(SearchFilter.entries.toTypedArray()) { filter ->
             FilterChip(
-                selected = filter == selectedFilter,
+                selected = filter.ordinal == selectedFilter,
                 onClick = { onFilterSelected(filter) },
-                label = { Text(filter) },
+                label = { Text(SearchFilter.fromString(filter)) },
                 modifier = Modifier
                     .padding(end = 8.dp),
-                shape = CircleShape
+                shape = CircleShape,
+                colors = FilterChipDefaults.filterChipColors(
+                    selectedContainerColor = MovieStreamingTheme.colors.selectIndicatorColor,
+                    labelColor = Color.Gray,
+                )
             )
         }
     }

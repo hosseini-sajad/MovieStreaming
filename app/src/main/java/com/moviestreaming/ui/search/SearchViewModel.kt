@@ -88,13 +88,9 @@ class SearchViewModel @Inject constructor(
         submitQuery(query)
     }
 
-    /**
-     * Handle filter selection from the UI
-     * @param filter The selected filter string (e.g., "BY NAME")
-     */
-    fun onFilterSelected(filter: String) {
-        val searchFilter = SearchFilter.fromString(filter)
-        _uiState.update { it.copy(selectedFilter = searchFilter) }
+
+    fun onFilterSelected(filter: SearchFilter) {
+        _uiState.update { it.copy(selectedFilter = filter) }
         
         // If there's already a query, perform a search with the new filter
         if (_uiState.value.query.isNotBlank()) {

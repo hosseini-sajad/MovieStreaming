@@ -33,13 +33,12 @@ enum class SearchFilter {
     BY_NAME, BY_DIRECTOR, BY_GENRE, BY_YEAR;
 
     companion object {
-        fun fromString(value: String): SearchFilter {
+        fun fromString(value: SearchFilter): String {
             return when (value) {
-                "BY NAME" -> BY_NAME
-                "BY DIRECTOR" -> BY_DIRECTOR
-                "BY GENRE" -> BY_GENRE
-                "BY YEAR" -> BY_YEAR
-                else -> BY_NAME
+                BY_NAME -> "BY NAME"
+                BY_DIRECTOR -> "BY DIRECTOR"
+                BY_GENRE -> "BY GENRE"
+                BY_YEAR -> "BY YEAR"
             }
         }
     }
