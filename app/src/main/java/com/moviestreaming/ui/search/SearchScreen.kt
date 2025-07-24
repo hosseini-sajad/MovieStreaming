@@ -16,7 +16,6 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.FilterChipDefaults
 import androidx.compose.material3.Icon
@@ -38,9 +37,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.paging.LoadState
+import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.moviestreaming.R
 import com.moviestreaming.core.component.MovieCard
+import com.moviestreaming.data.model.TopRateMovieEntity
 import com.moviestreaming.domain.usecase.SearchFilter
 import com.moviestreaming.ui.home.LoadingAnimation
 import com.moviestreaming.ui.theme.MovieStreamingTheme
@@ -67,8 +68,10 @@ fun SearchScreen(
     onMovieClick: (Int) -> Unit,
     gridColumns: Int = 3
 ) {
-    val movies = uiState.searchResults.collectAsLazyPagingItems()
-    
+    val movies = if (uiState.query.isNotBlank()) {
+        uiState.searchResults.collectAsLazyPagingItems()
+    } else null
+
     Scaffold {
         Box(
             modifier = Modifier
@@ -86,17 +89,7 @@ fun SearchScreen(
                     selectedFilter = uiState.selectedFilter.ordinal,
                     onFilterSelected = onFilterSelected
                 )
-                
-                // Show loading indicator
-                if (uiState.isLoading) {
-                    CircularProgressIndicator(
-                        modifier = Modifier
-                            .padding(16.dp)
-                            .align(Alignment.CenterHorizontally)
-                    )
-                }
-                
-                // Show error if any
+
                 uiState.error?.let { error ->
                     Text(
                         text = error,
@@ -106,49 +99,99 @@ fun SearchScreen(
                     )
                 }
 
-                LazyVerticalGrid(
-                    columns = GridCells.Fixed(gridColumns),
-                    modifier = Modifier.padding(8.dp),
-                    horizontalArrangement = Arrangement.spacedBy(8.dp),
-                    verticalArrangement = Arrangement.spacedBy(8.dp)
-                ) {
-                    items(movies.itemCount) { index ->
-                        movies[index]?.let { movie ->
-                            MovieCard(
-                                onClick = { onMovieClick(movie.id) },
-                                movie = movie
-                            )
-                        }
+                if (movies == null) {
+                    Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                        Text(
+                            "Search movies by ${SearchFilter.fromString(uiState.selectedFilter)}",
+                            color = Color.Gray
+                        )
                     }
-
-                    if (movies.loadState.append is LoadState.Loading) {
-                        item(span = { GridItemSpan(maxLineSpan) }) {
-                            Box(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(16.dp),
-                                contentAlignment = Alignment.Center
-                            ) {
-                                LoadingAnimation()
-                            }
-                        }
-                    }
-
-                    movies.loadState.append.let { loadState ->
-                        if (loadState is LoadState.Error) {
-                            item(span = { GridItemSpan(maxLineSpan) }) {
-                                Text(
-                                    text = "Error loading more movies: ${loadState.error.localizedMessage}",
-                                    color = MaterialTheme.colorScheme.error,
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .padding(16.dp)
-                                )
-                            }
-                        }
-                    }
+                } else {
+                    NotFoundMovies(movies)
+                    PagingLoading(movies)
+                    MoviesList(gridColumns, movies, onMovieClick)
                 }
             }
+        }
+    }
+}
+
+@Composable
+private fun MoviesList(
+    gridColumns: Int,
+    movies: LazyPagingItems<TopRateMovieEntity>,
+    onMovieClick: (Int) -> Unit
+) {
+    LazyVerticalGrid(
+        columns = GridCells.Fixed(gridColumns),
+        modifier = Modifier.padding(8.dp),
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
+        verticalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
+        items(movies.itemCount) { index ->
+            movies[index]?.let { movie ->
+                MovieCard(
+                    onClick = { onMovieClick(movie.id) },
+                    movie = movie
+                )
+            }
+        }
+
+        if (movies.loadState.append is LoadState.Loading) {
+            item(span = { GridItemSpan(maxLineSpan) }) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp),
+                    contentAlignment = Alignment.Center
+                ) {
+                    LoadingAnimation()
+                }
+            }
+        }
+
+        movies.loadState.append.let { loadState ->
+            if (loadState is LoadState.Error) {
+                item(span = { GridItemSpan(maxLineSpan) }) {
+                    Text(
+                        text = "Error loading more movies: ${loadState.error.localizedMessage}",
+                        color = MaterialTheme.colorScheme.error,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(16.dp)
+                    )
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun PagingLoading(movies: LazyPagingItems<TopRateMovieEntity>) {
+    if (movies.loadState.refresh is LoadState.Loading) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize(),
+            contentAlignment = Alignment.Center
+        ) {
+            LoadingAnimation()
+        }
+    }
+}
+
+@Composable
+private fun NotFoundMovies(movies: LazyPagingItems<TopRateMovieEntity>) {
+    if (movies.itemCount == 0 && movies.loadState.refresh !is LoadState.Loading) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(16.dp),
+            contentAlignment = Alignment.Center
+        ) {
+            Text(
+                text = "Not found",
+                color = Color.White
+            )
         }
     }
 }
@@ -193,6 +236,7 @@ fun SearchBox(
                 contentDescription = null
             )
         },
+        placeholder = { Text("Search") },
         modifier = modifier
             .fillMaxWidth()
             .height(55.dp)
@@ -241,10 +285,9 @@ fun SearchScreenPreview() {
     MovieStreamingTheme {
         SearchScreen(
             uiState = SearchUiState(
-                query = "Avengers",
+                query = "",
                 selectedFilter = SearchFilter.BY_NAME,
-                searchResults = emptyFlow(),
-                isLoading = false
+                searchResults = emptyFlow()
             ),
             onQueryChange = {},
             onFilterSelected = {},
