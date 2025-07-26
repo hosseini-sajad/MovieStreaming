@@ -1,5 +1,6 @@
 package com.moviestreaming.ui.search
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
@@ -62,7 +63,7 @@ class SearchViewModel @Inject constructor(
     private fun setupSearchDebounce() {
         searchQueryFlow
             .debounce(debounceTime)
-            .flowOn(Dispatchers.Default) // Move debounce work off the main thread
+            .flowOn(Dispatchers.Default)
             .onEach { query -> 
                 if (query.isNotBlank()) {
                     executeSearch(query)
@@ -73,7 +74,7 @@ class SearchViewModel @Inject constructor(
             .catch { error -> 
                 // Only catch non-cancellation exceptions
                 if (error !is CancellationException) {
-                    _uiState.update { it.copy(error = error.message ?: "Unknown error", isLoading = false) }
+                    _uiState.update { it.copy(error = error.message ?: "Unknown error") }
                 }
             }
             .launchIn(viewModelScope)
@@ -126,7 +127,7 @@ class SearchViewModel @Inject constructor(
             try {
                 // Update UI state on main thread
                 withContext(Dispatchers.Main) {
-                    _uiState.update { it.copy(isLoading = true, error = null) }
+                    _uiState.update { it.copy(error = null) }
                 }
                 
                 // Perform the search on IO thread
@@ -139,8 +140,7 @@ class SearchViewModel @Inject constructor(
                 withContext(Dispatchers.Main) {
                     _uiState.update { 
                         it.copy(
-                            searchResults = results,
-                            isLoading = false
+                            searchResults = results
                         )
                     }
                 }
@@ -151,8 +151,7 @@ class SearchViewModel @Inject constructor(
                     withContext(Dispatchers.Main) {
                         _uiState.update { 
                             it.copy(
-                                error = e.message ?: "An error occurred during search",
-                                isLoading = false
+                                error = e.message ?: "An error occurred during search"
                             )
                         }
                     }
@@ -176,6 +175,5 @@ data class SearchUiState(
     val query: String = "",
     val selectedFilter: SearchFilter = SearchFilter.BY_NAME,
     val searchResults: Flow<PagingData<TopRateMovieEntity>> = emptyFlow(),
-    val isLoading: Boolean = false,
     val error: String? = null
 )
