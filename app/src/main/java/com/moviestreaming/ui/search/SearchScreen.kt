@@ -389,7 +389,8 @@ fun FilterChips(
 
 private fun getFakePagingData(): PagingData<TopRateMovieEntity> {
     val movies = List(100) { index ->
-        TopRateMovieEntity(1,
+        TopRateMovieEntity(
+            1,
             "Inception",
             "",
             "Dream within a dream",

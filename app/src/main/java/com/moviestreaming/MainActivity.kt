@@ -14,16 +14,22 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.moviestreaming.ui.home.HomeScreen
-import com.moviestreaming.ui.navigation.BottomNavigationBar
-import com.moviestreaming.ui.navigation.NavigationGraph
+import androidx.navigation.navArgument
+import com.moviestreaming.data.model.MovieCategory
+import com.moviestreaming.ui.category.CategoryScreenRoute
+import com.moviestreaming.ui.category.CategoryViewModel
+import com.moviestreaming.ui.detail.DetailScreenRoute
+import com.moviestreaming.ui.detail.DetailViewModel
+import com.moviestreaming.ui.home.HomeScreenRoute
 import com.moviestreaming.ui.navigation.NavigationItem
-import com.moviestreaming.ui.search.SearchScreen
+import com.moviestreaming.ui.search.SearchScreenRoute
 import com.moviestreaming.ui.theme.MovieStreamingTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -64,10 +70,58 @@ fun NavigationGraph(navController: NavHostController) {
         startDestination = NavigationItem.Home.route
     ) {
         composable(NavigationItem.Home.route) {
-            HomeScreen()
+            HomeScreenRoute(
+                onClick = { movieId ->
+                    navController.navigate("movie/${movieId}")
+                },
+                onMoreClick = { category ->
+                    navController.navigate("category/${category}")
+                }
+            )
         }
         composable(NavigationItem.Search.route) {
-            SearchScreen()
+            SearchScreenRoute()
+        }
+        composable(
+            route = NavigationItem.MovieDetails.route,
+            arguments = listOf(
+                navArgument("movieId") { type = NavType.IntType }
+            )
+        ) { navBackStackEntry ->
+            val detailViewModel = hiltViewModel<DetailViewModel>()
+            DetailScreenRoute(
+                viewModel = detailViewModel,
+                onBackClick = {
+                    navController.popBackStack()
+                },
+                similarOnClick = { similarMovieId ->
+                    navController.navigate("movie/${similarMovieId}")
+                }
+            )
+        }
+        composable(
+            route = NavigationItem.Category.route,
+            arguments = listOf(
+                navArgument("category") { type = NavType.StringType }
+            )
+        ) { navBackStackEntry ->
+            val category = navBackStackEntry.arguments?.getString("category") ?: "POPULAR"
+            val categoryType = try {
+                MovieCategory.valueOf(category)
+            } catch (e: Exception) {
+                MovieCategory.POPULAR
+            }
+
+            CategoryScreenRoute(
+                viewModel = hiltViewModel<CategoryViewModel>(),
+                onBackClick = {
+                    navController.popBackStack()
+                },
+                category = categoryType,
+                onMovieClick = { movieId ->
+                    navController.navigate("movie/${movieId}")
+                }
+            )
         }
     }
 }
@@ -84,10 +138,12 @@ fun BottomNavigationBar(
         items.forEach { item ->
             NavigationBarItem(
                 icon = {
-                    Icon(
-                        painter = painterResource(id = item.icon),
-                        contentDescription = item.label
-                    )
+                    item.icon?.let { painterResource(id = it) }?.let {
+                        Icon(
+                            painter = it,
+                            contentDescription = item.label
+                        )
+                    }
                 },
                 label = { Text(text = item.label) },
                 selected = currentRoute == item.route,
