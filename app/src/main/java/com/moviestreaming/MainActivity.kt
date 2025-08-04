@@ -7,12 +7,15 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
+import androidx.compose.material3.NavigationBarDefaults
 import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
@@ -134,14 +137,17 @@ fun BottomNavigationBar(
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
 
-    NavigationBar {
+    NavigationBar(
+        containerColor = MovieStreamingTheme.colors.primary
+    ) {
         items.forEach { item ->
             NavigationBarItem(
                 icon = {
                     item.icon?.let { painterResource(id = it) }?.let {
                         Icon(
                             painter = it,
-                            contentDescription = item.label
+                            contentDescription = item.label,
+
                         )
                     }
                 },
@@ -155,7 +161,14 @@ fun BottomNavigationBar(
                         launchSingleTop = true
                         restoreState = true
                     }
-                }
+                },
+                colors = NavigationBarItemDefaults.colors(
+                    selectedIconColor = MovieStreamingTheme.colors.selectIndicatorColor,
+                    selectedTextColor = MovieStreamingTheme.colors.selectIndicatorColor,
+                    unselectedIconColor = MovieStreamingTheme.colors.genreBackgroundColor,
+                    unselectedTextColor = MovieStreamingTheme.colors.genreBackgroundColor,
+                    indicatorColor = Color.Transparent
+                )
             )
         }
     }
