@@ -38,8 +38,6 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
-
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -137,6 +135,11 @@ fun BottomNavigationBar(
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
 
+    val selectedRoute = when {
+        currentRoute?.startsWith("category/") == true || currentRoute?.startsWith("movie/") == true -> NavigationItem.Home.route
+        else -> currentRoute
+    }
+
     NavigationBar(
         containerColor = MovieStreamingTheme.colors.primary
     ) {
@@ -147,12 +150,11 @@ fun BottomNavigationBar(
                         Icon(
                             painter = it,
                             contentDescription = item.label,
-
                         )
                     }
                 },
                 label = { Text(text = item.label) },
-                selected = currentRoute == item.route,
+                selected = selectedRoute == item.route,
                 onClick = {
                     navController.navigate(item.route) {
                         popUpTo(navController.graph.startDestinationId) {
