@@ -4,20 +4,18 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
-import com.moviestreaming.domain.usecase.GetPopularMoviesUseCase
-import com.moviestreaming.domain.usecase.GetTopRatedMoviesUseCase
 import com.moviestreaming.data.model.TopRateMovieEntity
 import com.moviestreaming.data.model.TrendingEntity
 import com.moviestreaming.domain.repository.MovieRepository
-import com.moviestreaming.utils.parsError
+import com.moviestreaming.domain.usecase.GetPopularMoviesUseCase
+import com.moviestreaming.domain.usecase.GetTopRatedMoviesUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.emptyFlow
-import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -44,15 +42,7 @@ class HomeViewModel @Inject constructor(
         viewModelScope.launch {
             try {
                 val trending = async {
-                    movieRepository.getTrending()
-                        .catch { exception ->
-                            val errorResponse = parsError(exception)
-                            _uiState.value = _uiState.value.copy(
-                                isLoading = false,
-                                errorMessage = errorResponse.statusMessage
-                            )
-                        }
-                        .first()
+                    movieRepository.getTrending().firstOrNull() ?: emptyList()
                 }
                 _uiState.value = HomeUiState(
                     trendingMovies = trending.await(),
